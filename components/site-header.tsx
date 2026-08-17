@@ -43,10 +43,9 @@ export function SiteHeader() {
         )}
       >
         <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            D32
+          <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
+            <img src="images/logo.png" alt="Логотип 32Dent" />
           </span>
-          <span className="hidden sm:inline">Dent32</span>
         </Link>
 
         <div className="hidden flex-col gap-0.5 text-xs text-muted-foreground xl:flex">

@@ -8,6 +8,7 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbP
 import { Badge } from '@/components/ui/badge'
 import { getDoctorBySlug, doctors } from '@/lib/doctors-data'
 import { DoctorHeroCta, DoctorFinalCta } from '@/components/doctors/doctor-cta'
+import { Reveal } from '@/components/reveal'
 
 export function generateStaticParams() {
   return doctors.map((doctor) => ({ slug: doctor.slug }))
@@ -56,57 +57,67 @@ export default async function DoctorDetailPage({
       </Breadcrumb>
 
       {/* Hero */}
-      <div className="mb-16 flex flex-col gap-6 sm:flex-row sm:items-center">
-        <div className="relative aspect-square w-40 shrink-0 overflow-hidden rounded-2xl ring-1 ring-foreground/10 sm:w-48">
-          <Image src={doctor.photo} alt={doctor.name} fill className="object-cover" />
+      <Reveal delay={0}>
+        <div className="mb-16 flex flex-col gap-6 sm:flex-row sm:items-center">
+          <div className="relative aspect-square w-40 shrink-0 overflow-hidden rounded-2xl ring-1 ring-foreground/10 sm:w-48">
+            <Image src={doctor.photo} alt={doctor.name} fill className="object-cover" />
+          </div>
+          <div className="flex flex-col gap-3">
+            <h1 className="text-balance font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {doctor.name}
+            </h1>
+            <p className="text-lg text-muted-foreground">{doctor.specialization}</p>
+            <Badge variant="secondary" className="w-fit">
+              Стаж {doctor.experienceYears} лет
+            </Badge>
+            <DoctorHeroCta slug={doctor.slug} name={doctor.name} />
+          </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <h1 className="text-balance font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            {doctor.name}
-          </h1>
-          <p className="text-lg text-muted-foreground">{doctor.specialization}</p>
-          <Badge variant="secondary" className="w-fit">
-            Стаж {doctor.experienceYears} лет
-          </Badge>
-          <DoctorHeroCta slug={doctor.slug} name={doctor.name} />
-        </div>
-      </div>
+      </Reveal>
 
       {/* Bio */}
-      <div className="mb-16 flex flex-col gap-3">
-        <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">О враче</h2>
-        <p className="text-pretty leading-relaxed text-foreground">{doctor.bio}</p>
-        <p className="text-sm text-muted-foreground">Полную биографию врач добавит дополнительно</p>
-      </div>
+      <Reveal delay={1}>
+        <div className="mb-16 flex flex-col gap-3">
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">О враче</h2>
+          <p className="text-pretty leading-relaxed text-foreground">{doctor.bio}</p>
+          <p className="text-sm text-muted-foreground">Полную биографию врач добавит дополнительно</p>
+        </div>
+      </Reveal>
 
       {/* Directions */}
-      <div className="mb-16 flex flex-col gap-4">
-        <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Направления работы</h2>
-        <div className="flex flex-wrap gap-3">
-          {doctor.directions.map((direction) => (
-            <Link
-              key={direction.href}
-              href={direction.href}
-              className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              {direction.label}
-            </Link>
-          ))}
+      <Reveal delay={1}>
+        <div className="mb-16 flex flex-col gap-4">
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Направления работы</h2>
+          <div className="flex flex-wrap gap-3">
+            {doctor.directions.map((direction) => (
+              <Link
+                key={direction.href}
+                href={direction.href}
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                {direction.label}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* Certificates - only if hasCertificates */}
       {doctor.hasCertificates && (
-        <div className="mb-16 flex flex-col gap-4">
-          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Сертификаты</h2>
-          <div className="flex items-center gap-3 rounded-xl border border-border p-4 text-muted-foreground">
-            <Award className="size-5 text-primary" />
-            <span>Сертификаты будут добавлены</span>
+        <Reveal delay={1}>
+          <div className="mb-16 flex flex-col gap-4">
+            <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Сертификаты</h2>
+            <div className="flex items-center gap-3 rounded-xl border border-border p-4 text-muted-foreground">
+              <Award className="size-5 text-primary" />
+              <span>Сертификаты будут добавлены</span>
+            </div>
           </div>
-        </div>
+        </Reveal>
       )}
 
-      <DoctorFinalCta slug={doctor.slug} />
+      <Reveal delay={2}>
+        <DoctorFinalCta slug={doctor.slug} />
+      </Reveal>
     </div>
   )
 }

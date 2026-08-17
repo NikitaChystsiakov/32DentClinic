@@ -8,6 +8,7 @@ import { BookingModalProvider } from '@/components/booking-modal-provider'
 import { BookingModal } from '@/components/booking-modal'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { FloatingMessengers } from '@/components/floating-messengers'
 import { siteConfig } from '@/lib/site-config'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'], variable: '--font-inter' })
@@ -74,6 +75,7 @@ export default function RootLayout({
             <div className="flex min-h-dvh flex-col">
               <SiteHeader />
               <main className="flex-1">{children}</main>
+              <FloatingMessengers />
               <SiteFooter />
             </div>
             <BookingModal />

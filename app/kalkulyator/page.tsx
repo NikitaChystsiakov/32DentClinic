@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Calculator } from '@/components/calculator'
+import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Рассчитать стоимость лечения',
@@ -27,7 +28,9 @@ export default function CalculatorPage() {
         Рассчитать стоимость лечения
       </h1>
 
-      <Calculator showHeading={false} />
+      <Reveal delay={0}>
+        <Calculator showHeading={false} />
+      </Reveal>
     </div>
   )
 }

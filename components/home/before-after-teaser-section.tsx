@@ -1,13 +1,13 @@
-import Link from 'next/link'
-import { ArrowRight, SplitSquareHorizontal } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+"use client"
 
-const PLACEHOLDER_CARDS = [
-  { title: 'Протезирование' },
-  { title: 'Имплантация' },
-  { title: 'Реставрация зубов' },
-]
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+import { CASES, Compare } from '@/components/before-after'
+
+const TEASER_CASES = CASES.slice(0, 3)
 
 export function BeforeAfterTeaserSection() {
   return (
@@ -16,25 +16,33 @@ export function BeforeAfterTeaserSection() {
         <span className="text-sm font-medium text-secondary">Портфолио</span>
         <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">Наши результаты</h2>
         <p className="max-w-2xl text-pretty text-muted-foreground">
-          Клиника собирает фотографии до и после лечения — они появятся здесь по мере подготовки.
+          Передвиньте ползунок, чтобы увидеть, как меняется улыбка после лечения в DENT32.
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {PLACEHOLDER_CARDS.map((card) => (
-          <Card key={card.title} className="h-full">
-            <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
-              <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <SplitSquareHorizontal className="size-7" />
-              </span>
-              <div className="flex flex-col gap-1">
-                <p className="font-heading text-base font-semibold text-foreground">{card.title}</p>
-                <p className="text-sm text-muted-foreground">Фотографии добавляются</p>
+
+      <Tabs defaultValue={TEASER_CASES[0].id} className="mt-12">
+        <TabsList className="mx-auto flex h-auto flex-wrap justify-center gap-1 p-1.5">
+          {TEASER_CASES.map((c) => (
+            <TabsTrigger key={c.id} value={c.id} className="h-9 px-4">
+              {c.category}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {TEASER_CASES.map((c) => (
+          <TabsContent key={c.id} value={c.id} className="mt-8">
+            <div className="mx-auto max-w-3xl">
+              <Compare before={c.before} after={c.after} />
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <p className="text-sm font-medium text-foreground">{c.procedure}</p>
+                <p className="text-sm text-muted-foreground">{c.cost}</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </TabsContent>
         ))}
-      </div>
-      <div className="mt-8">
+      </Tabs>
+
+      <div className="mt-8 flex justify-center">
         <Button variant="outline" render={<Link href="/primery-rabot/" />} nativeButton={false}>
           Смотреть все работы
           <ArrowRight data-icon="inline-end" />

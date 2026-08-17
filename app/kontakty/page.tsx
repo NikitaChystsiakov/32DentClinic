@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { MapPin, Navigation, Send } from 'lucide-react'
 import { siteConfig } from '@/lib/site-config'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
+import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Контакты',
@@ -16,7 +17,8 @@ export default function ContactsPage() {
       </h1>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div className="flex flex-col gap-8">
+        <Reveal delay={0}>
+          <div className="flex flex-col gap-8">
           <div className="flex items-start gap-3">
             <MapPin className="mt-1 size-5 shrink-0 text-primary" />
             <div className="flex flex-col gap-1">
@@ -64,9 +66,11 @@ export default function ContactsPage() {
           </div>
 
           <ContactBookingButton />
-        </div>
+          </div>
+        </Reveal>
 
-        <div className="flex flex-col gap-4">
+        <Reveal delay={1}>
+          <div className="flex flex-col gap-4">
           <div className="flex aspect-square w-full flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-muted/40 p-8 text-center sm:aspect-4/3">
             <MapPin className="size-8 text-muted-foreground" />
             <p className="max-w-xs text-sm text-muted-foreground">
@@ -82,7 +86,8 @@ export default function ContactsPage() {
             <Navigation className="size-4" />
             Проложить маршрут
           </a>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </div>
   )

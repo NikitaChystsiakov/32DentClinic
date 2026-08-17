@@ -6,18 +6,35 @@ import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-
 import { WhyUsSection } from '@/components/home/why-us-section'
 import { ReviewsSection } from '@/components/home/reviews-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
+import { Reveal } from '@/components/reveal'
 
 export default function Page() {
   return (
     <>
-      <HeroSection />
-      <ServicesOverview />
-      <CalculatorTeaserSection />
-      <DoctorsCarouselSection />
-      <BeforeAfterTeaserSection />
-      <WhyUsSection />
-      <ReviewsSection />
-      <ContactCtaSection />
+      <Reveal delay={0}>
+        <HeroSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <ServicesOverview />
+      </Reveal>
+      <Reveal delay={2}>
+        <CalculatorTeaserSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <DoctorsCarouselSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <BeforeAfterTeaserSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <WhyUsSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <ReviewsSection />
+      </Reveal>
+      <Reveal delay={0}>
+        <ContactCtaSection />
+      </Reveal>
     </>
   )
 }

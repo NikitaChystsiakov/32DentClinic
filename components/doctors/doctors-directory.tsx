@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Reveal } from '@/components/reveal'
 import { useBookingModal } from '@/components/booking-modal-provider'
 import { doctors, doctorCategoryLabels, type DoctorCategory } from '@/lib/doctors-data'
 
@@ -71,19 +72,23 @@ export function DoctorsDirectory() {
 
   return (
     <Tabs value={filter} onValueChange={(value) => setFilter(value as 'all' | DoctorCategory)}>
-      <TabsList>
-        {FILTERS.map((f) => (
-          <TabsTrigger key={f.id} value={f.id}>
-            {f.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-      <TabsContent value={filter} className="mt-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredDoctors.map((doctor) => (
-            <DoctorCard key={doctor.slug} doctor={doctor} />
+      <Reveal delay={0}>
+        <TabsList>
+          {FILTERS.map((f) => (
+            <TabsTrigger key={f.id} value={f.id}>
+              {f.label}
+            </TabsTrigger>
           ))}
-        </div>
+        </TabsList>
+      </Reveal>
+      <TabsContent value={filter} className="mt-8">
+        <Reveal delay={1}>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredDoctors.map((doctor) => (
+              <DoctorCard key={doctor.slug} doctor={doctor} />
+            ))}
+          </div>
+        </Reveal>
       </TabsContent>
     </Tabs>
   )

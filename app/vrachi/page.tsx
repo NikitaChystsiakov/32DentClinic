@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { DoctorsDirectory } from '@/components/doctors/doctors-directory'
 import { DoctorsBottomCta } from '@/components/doctors/doctors-bottom-cta'
+import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Врачи',
@@ -22,7 +23,9 @@ export default function DoctorsPage() {
 
       <DoctorsDirectory />
 
-      <DoctorsBottomCta />
+      <Reveal delay={2}>
+        <DoctorsBottomCta />
+      </Reveal>
     </div>
   )
 }
