@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, ShieldCheck, Cpu, FlaskConical, HeartHandshake, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { PlaceholderGallery } from '@/components/about/placeholder-gallery'
 import { Reveal } from '@/components/reveal'
 import { siteConfig } from '@/lib/site-config'
 
@@ -12,23 +12,30 @@ export const metadata: Metadata = {
     'Стоматология Dent32 работает в Рогачёве и известна пациентам благодаря собственной зуботехнической лаборатории, современному оборудованию и вниманию к каждому пациенту.',
 }
 
-const infoBlocks = [
-  {
-    icon: HeartHandshake,
-    title: 'История',
-    body: `Клиника Dent32 работает в Рогачёве с ${siteConfig.foundedYear}.`,
-  },
-  {
-    icon: FlaskConical,
-    title: 'Собственная лаборатория',
-    body: 'Протезы и коронки изготавливаются в собственной зуботехнической лаборатории клиники — это ускоряет сроки лечения и позволяет контролировать качество на каждом этапе.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Сотрудничество со страховой',
-    body: `Dent32 сотрудничает со страховой компанией «${siteConfig.insurancePartner}».`,
-  },
-]
+function BlockHeading({ icon: Icon, children }: { icon: typeof HeartHandshake; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Icon className="size-5" />
+      </span>
+      <h2 className="font-heading text-xl font-semibold text-foreground">{children}</h2>
+    </div>
+  )
+}
+
+function ClinicImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover"
+      />
+    </div>
+  )
+}
 
 export default function AboutPage() {
   return (
@@ -45,47 +52,86 @@ export default function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-10">
-          {infoBlocks.map((block, index) => {
-            const Icon = block.icon
-            return (
-              <Reveal key={block.title} delay={index * 0.2}>
-                <div className="flex flex-col gap-3 border-t border-border pt-8 first:border-t-0 first:pt-0">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <Icon className="size-5" />
-                    </span>
-                    <h2 className="font-heading text-xl font-semibold text-foreground">{block.title}</h2>
-                  </div>
-                  <p className="text-pretty leading-relaxed text-muted-foreground">{block.body}</p>
-                </div>
-              </Reveal>
-            )
-          })}
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        {/* История */}
+        <Reveal delay={0}>
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <div className="flex flex-col gap-3">
+              <BlockHeading icon={HeartHandshake}>История</BlockHeading>
+              <p className="text-pretty leading-relaxed text-muted-foreground">
+                Клиника Dent32 работает в Рогачёве с {siteConfig.foundedYear}. За это время мы выстроили
+                процессы так, чтобы каждый пациент чувствовал себя спокойно и уверенно — от приёма у
+                администратора до сложного лечения.
+              </p>
+            </div>
+            <ClinicImage src="/clinic/reception.png" alt="Ресепшн стоматологии Dent32" />
+          </div>
+        </Reveal>
 
-          <Reveal delay={3 * 0.2}>
-            <div className="flex flex-col gap-3 border-t border-border pt-8">
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Cpu className="size-5" />
-                </span>
-                <h2 className="font-heading text-xl font-semibold text-foreground">Оборудование</h2>
-              </div>
+        {/* Оборудование */}
+        <Reveal delay={0}>
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <ClinicImage src="/clinic/equipment.png" alt="Современное оборудование в клинике Dent32" />
+            <div className="flex flex-col gap-3">
+              <BlockHeading icon={Cpu}>Оборудование</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
                 В клинике установлено современное стоматологическое оборудование от американских производителей,
                 включая щадящее рентген-оборудование с широким диапазоном возможностей.
               </p>
-              <div className="mt-2">
-                <PlaceholderGallery count={3} caption="Фотографии оборудования добавляются" />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Лаборатория */}
+        <Reveal delay={0}>
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <div className="flex flex-col gap-3">
+              <BlockHeading icon={FlaskConical}>Собственная лаборатория</BlockHeading>
+              <p className="text-pretty leading-relaxed text-muted-foreground">
+                Протезы и коронки изготавливаются в собственной зуботехнической лаборатории клиники — это
+                ускоряет сроки лечения и позволяет контролировать качество на каждом этапе.
+              </p>
+            </div>
+            <ClinicImage src="/clinic/laboratory.png" alt="Зуботехническая лаборатория Dent32" />
+          </div>
+        </Reveal>
+
+        {/* Страховая */}
+        <Reveal delay={0}>
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <div className="flex flex-col gap-3">
+              <BlockHeading icon={ShieldCheck}>Сотрудничество со страховой</BlockHeading>
+              <p className="text-pretty leading-relaxed text-muted-foreground">
+                Dent32 сотрудничает со страховой компанией «{siteConfig.insurancePartner}». Уточните условия
+                обслуживания по полису у администратора клиники.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
+                <Image
+                  src="/clinic/office.png"
+                  alt="Лечебный кабинет клиники Dent32"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
+                <Image
+                  src="/clinic/hall.png"
+                  alt="Холл клиники Dent32"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
               </div>
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </section>
 
       <section className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
-        <Reveal delay={4 * 0.2}>
+        <Reveal delay={0}>
           <div className="flex flex-col items-start gap-4 rounded-xl border border-border bg-muted/40 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
