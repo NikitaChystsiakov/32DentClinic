@@ -90,6 +90,13 @@ export function SiteHeader() {
           >
             <Send className="size-4" />
           </a>
+          <a
+            href={siteConfig.telegramHref}
+            aria-label="Telegram"
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Send className="size-4" />
+          </a>
           <ThemeToggle />
           <Button
             className="bg-accent text-accent-foreground hover:bg-accent/90"
