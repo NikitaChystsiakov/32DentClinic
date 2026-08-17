@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { CASES, Compare } from '@/components/before-after'
+import { Card, CardContent } from '@/components/ui/card'
+import { Compare } from '@/components/before-after'
+import { beforeAfterCases } from '@/lib/data/before-after'
 
-const TEASER_CASES = CASES.slice(0, 3)
+const TEASER_CASES = beforeAfterCases.slice(0, 4)
 
 export function BeforeAfterTeaserSection() {
   return (
@@ -20,31 +21,23 @@ export function BeforeAfterTeaserSection() {
         </p>
       </div>
 
-      <Tabs defaultValue={TEASER_CASES[0].id} className="mt-12">
-        <TabsList className="mx-auto flex h-auto flex-wrap justify-center gap-1 p-1.5">
-          {TEASER_CASES.map((c) => (
-            <TabsTrigger key={c.id} value={c.id} className="h-9 px-4">
-              {c.category}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {TEASER_CASES.map((c) => (
-          <TabsContent key={c.id} value={c.id} className="mt-8">
-            <div className="mx-auto max-w-3xl">
+          <Card key={c.id} className="h-full">
+            <CardContent className="flex h-full flex-col gap-3 p-3">
               <Compare before={c.before} after={c.after} />
-              <div className="mt-4 flex items-center justify-between gap-4">
-                <p className="text-sm font-medium text-foreground">{c.procedure}</p>
-                <p className="text-sm text-muted-foreground">{c.cost}</p>
+              <div className="flex flex-col gap-1 px-1 pb-1">
+                <h3 className="font-heading text-sm font-semibold text-foreground">{c.title}</h3>
+                <p className="text-xs text-muted-foreground">{c.description}</p>
               </div>
-            </div>
-          </TabsContent>
+            </CardContent>
+          </Card>
         ))}
-      </Tabs>
+      </div>
 
       <div className="mt-8 flex justify-center">
         <Button variant="outline" render={<Link href="/primery-rabot/" />} nativeButton={false}>
-          Смотреть все работы
+          Смотреть все примеры
           <ArrowRight data-icon="inline-end" />
         </Button>
       </div>
