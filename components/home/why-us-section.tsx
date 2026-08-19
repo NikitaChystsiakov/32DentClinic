@@ -1,50 +1,70 @@
-import { Building2, Microscope, ShieldCheck, Users } from 'lucide-react'
-import { siteConfig } from '@/lib/site-config'
+import { BadgePercent, ShieldCheck, Factory, CalendarClock, Cpu, Sofa, MapPin, Handshake } from 'lucide-react'
 
 const points = [
   {
-    icon: Users,
-    title: `${siteConfig.doctorsCount} врачей всех направлений`,
-    description: 'Терапевты, ортопеды и хирург-имплантолог — можно закрыть весь план лечения в одной клинике.',
-  },
-  {
-    icon: Building2,
-    title: 'Своя зуботехническая лаборатория',
-    description: 'Коронки и протезы изготавливаются на месте — быстрее и с контролем качества на каждом этапе.',
-  },
-  {
-    icon: Microscope,
-    title: 'Собственный рентген-кабинет',
-    description: 'Панорамные и прицельные снимки делаем в клинике, без направления в другое учреждение.',
+    icon: BadgePercent,
+    title: 'Честное соотношение цены и качества',
+    description: 'Считаем план лечения заранее, без навязанных услуг и доплат по ходу.',
   },
   {
     icon: ShieldCheck,
-    title: `Работаем по полису «${siteConfig.insurancePartner}»`,
-    description: 'Часть услуг можно получить по страховому полису — уточним детали на консультации.',
+    title: '2 года гарантии на услуги',
+    description: 'Несём ответственность за результат лечения и бесплатно устраняем недочёты.',
+  },
+  {
+    icon: Factory,
+    title: 'Собственная зуботехническая лаборатория',
+    description: 'Коронки и протезы делаем на месте — быстрее и с контролем качества на каждом этапе.',
+  },
+  {
+    icon: CalendarClock,
+    title: 'Гибкий график работы',
+    description: 'Принимаем по будням и субботам, а при острой боли — без записи.',
+  },
+  {
+    icon: Cpu,
+    title: 'Современное оборудование',
+    description: 'Аппаратура от американских производителей для точной и комфортной диагностики.',
+  },
+  {
+    icon: Sofa,
+    title: 'Уютный интерьер',
+    description: 'Продумали клинику так, чтобы визит к стоматологу не вызывал стресса.',
+  },
+  {
+    icon: MapPin,
+    title: 'Удобное расположение',
+    description: 'Находимся в центре города — легко добраться с любой точки Рогачёва.',
+  },
+  {
+    icon: Handshake,
+    title: 'Работаем со страховой компанией',
+    description: 'Часть услуг можно получить по полису — уточним детали на консультации.',
   },
 ]
 
 export function WhyUsSection() {
   return (
-    <section className="border-y border-border bg-muted/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-10 flex flex-col gap-2">
-          <span className="text-sm font-medium text-secondary">Почему Dent32</span>
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
-            Всё нужное — под одной крышей
-          </h2>
-        </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {points.map((point) => (
-            <div key={point.title} className="flex flex-col gap-3">
-              <div className="flex size-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <point.icon className="size-5" />
-              </div>
-              <h3 className="font-heading text-base font-semibold text-foreground">{point.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{point.description}</p>
+    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mb-10 flex flex-col gap-2">
+        <span className="text-sm font-medium text-secondary">Почему именно мы</span>
+        <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <span className="text-accent">32</span> причины выбрать Dent32
+        </h2>
+        <p className="max-w-2xl text-pretty text-muted-foreground">
+          Мы собрали главные из них — остальные вы поймёте на первом приёме.
+        </p>
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {points.map((point) => (
+          <div key={point.title} className="flex flex-col gap-3">
+            <div className="flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <point.icon className="size-5" />
             </div>
-          ))}
-        </div>
+            <h3 className="font-heading text-base font-semibold text-foreground">{point.title}</h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">{point.description}</p>
+          </div>
+        ))}
       </div>
     </section>
   )

@@ -5,6 +5,8 @@ import { DoctorsCarouselSection } from '@/components/home/doctors-carousel-secti
 import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-section'
 import { WhyUsSection } from '@/components/home/why-us-section'
 import { ReviewsSection } from '@/components/home/reviews-section'
+import { RatingsSection } from '@/components/home/ratings-section'
+import { FaqSection } from '@/components/home/faq-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
 import { Reveal } from '@/components/reveal'
 
@@ -31,6 +33,12 @@ export default function Page() {
       </Reveal>
       <Reveal delay={1}>
         <ReviewsSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <RatingsSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <FaqSection />
       </Reveal>
       <Reveal delay={0}>
         <ContactCtaSection />

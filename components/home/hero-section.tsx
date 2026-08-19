@@ -10,19 +10,32 @@ export function HeroSection() {
   const { openBookingModal } = useBookingModal()
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-muted/40">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:items-center md:py-20 lg:px-8">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+    <section className="relative overflow-hidden border-b border-border">
+      <div className="absolute inset-0">
+        <Image
+          src="/clinic/reception.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/45" />
+        <div className="absolute inset-0 bg-background/40" />
+      </div>
+
+      <div className="relative mx-auto flex min-h-svh max-w-6xl flex-col justify-center gap-6 px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+        <div className="flex max-w-2xl flex-col gap-6">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-foreground/10 backdrop-blur">
             <Star className="size-4 fill-accent text-accent" />
             <span>
               {siteConfig.rating} · {siteConfig.reviewsCount} отзывов на {siteConfig.reviewsSource}
             </span>
           </div>
-          <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Стоматология Dent32 в {siteConfig.city}
           </h1>
-          <p className="max-w-md text-pretty text-lg leading-relaxed text-muted-foreground">
+          <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
             Лечение, протезирование и имплантация зубов у {siteConfig.doctorsCount} врачей с собственной
             зуботехнической лабораторией. Работаем по полису «{siteConfig.insurancePartner}» и без записи по
             острой боли.
@@ -44,15 +57,6 @@ export function HeroSection() {
             <ShieldCheck className="size-4 text-secondary" />
             <span>{siteConfig.disclaimer}</span>
           </div>
-        </div>
-        <div className="relative aspect-4/3 overflow-hidden rounded-2xl ring-1 ring-foreground/10">
-          <Image
-            src="/images/hero-clinic.png"
-            alt="Приём пациента в клинике Dent32"
-            fill
-            priority
-            className="object-cover"
-          />
         </div>
       </div>
     </section>
