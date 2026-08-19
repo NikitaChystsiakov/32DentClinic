@@ -4,7 +4,7 @@ import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Цены',
-  description: 'Прайс-лист на услуги стоматологии Dent32 в Рогачёве — терапия, хирургия, протезирование и другие направления.',
+  description: 'Прайс-лист на услуги стоматологии 32Дент в Рогачёве — терапия, хирургия, протезирование и другие направления.',
 }
 
 export default function PricesPage() {
@@ -13,7 +13,7 @@ export default function PricesPage() {
       <Reveal delay={0}>
         <div className="mb-10 flex flex-col gap-4">
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Цены на услуги Dent32
+            Цены на услуги 32Дент
           </h1>
           <p className="max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
             Все цены — ориентировочные, точную стоимость врач определит после осмотра.

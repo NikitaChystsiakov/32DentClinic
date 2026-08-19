@@ -118,7 +118,7 @@ export function RatingsSection() {
           Нам доверяют на картах и в каталогах
         </h2>
         <p className="max-w-2xl text-pretty text-muted-foreground">
-          Посмотрите отзывы пациентов о клинике Dent32 на популярных сервисах.
+          Посмотрите отзывы пациентов о клинике 32Дент на популярных сервисах.
         </p>
       </div>
 

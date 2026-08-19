@@ -73,7 +73,7 @@ export function SiteFooter() {
             УНП {siteConfig.unp} · Лицензия № {siteConfig.license}
           </p>
           <p>{siteConfig.disclaimer}</p>
-          <p>© Dent32, 2026. Все права защищены.</p>
+          <p>© 32Дент, 2026. Все права защищены.</p>
         </div>
       </div>
     </footer>

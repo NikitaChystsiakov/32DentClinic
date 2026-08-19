@@ -6,14 +6,14 @@ import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Контакты',
-  description: `Адрес, телефон и часы работы стоматологии Dent32 в ${siteConfig.city}.`,
+  description: `Адрес, телефон и часы работы стоматологии 32Дент в ${siteConfig.city}.`,
 }
 
 export default function ContactsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
       <h1 className="mb-10 text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-        Контакты Dent32
+        Контакты 32Дент
       </h1>
 
       <div className="grid gap-10 md:grid-cols-2">
@@ -76,7 +76,7 @@ export default function ContactsPage() {
                 src="https://yandex.ru/map-widget/v1/?um=constructor%3Ac1f650571113f9c8206afea28bfd8a278ae9fe9beb9ef7fa6baf9730d9a63a6e&amp;source=constructor"
                 className="absolute inset-0 size-full border-0"
                 loading="lazy"
-                title="Карта проезда к Dent32"
+                title="Карта проезда к 32Дент"
               />
             </div>
 

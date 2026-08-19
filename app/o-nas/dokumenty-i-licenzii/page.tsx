@@ -11,8 +11,8 @@ import {
 import { PlaceholderGallery } from '@/components/about/placeholder-gallery'
 
 export const metadata: Metadata = {
-  title: 'Документы и лицензии — Dent32',
-  description: 'Документы и лицензии стоматологии Dent32.',
+  title: 'Документы и лицензии — 32Дент',
+  description: 'Документы и лицензии стоматологии 32Дент.',
 }
 
 export default function DocumentsPage() {

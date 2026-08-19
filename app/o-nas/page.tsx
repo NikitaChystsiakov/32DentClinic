@@ -7,9 +7,9 @@ import { Reveal } from '@/components/reveal'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
-  title: `О клинике Dent32 — стоматология в ${siteConfig.city}`,
+  title: `О клинике 32Дент — стоматология в ${siteConfig.city}`,
   description:
-    'Стоматология Dent32 работает в Рогачёве и известна пациентам благодаря собственной зуботехнической лаборатории, современному оборудованию и вниманию к каждому пациенту.',
+    'Стоматология 32Дент работает в Рогачёве и известна пациентам благодаря собственной зуботехнической лаборатории, современному оборудованию и вниманию к каждому пациенту.',
 }
 
 function BlockHeading({ icon: Icon, children }: { icon: typeof HeartHandshake; children: React.ReactNode }) {
@@ -43,10 +43,10 @@ export default function AboutPage() {
       <section className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
         <Reveal delay={0}>
           <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            О клинике Dent32
+            О клинике 32Дент
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-muted-foreground">
-            Стоматология Dent32 работает в Рогачёве и известна пациентам благодаря собственной зуботехнической
+            Стоматология 32Дент работает в Рогачёве и известна пациентам благодаря собственной зуботехнической
             лаборатории, современному оборудованию и вниманию к каждому пациенту.
           </p>
         </Reveal>
@@ -59,19 +59,19 @@ export default function AboutPage() {
             <div className="flex flex-col gap-3">
               <BlockHeading icon={HeartHandshake}>История</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
-                Клиника Dent32 работает в Рогачёве с {siteConfig.foundedYear}. За это время мы выстроили
+                Клиника 32Дент работает в Рогачёве с {siteConfig.foundedYear}. За это время мы выстроили
                 процессы так, чтобы каждый пациент чувствовал себя спокойно и уверенно — от приёма у
                 администратора до сложного лечения.
               </p>
             </div>
-            <ClinicImage src="/clinic/reception.jpg" alt="Ресепшн стоматологии Dent32" />
+            <ClinicImage src="/clinic/reception.jpg" alt="Ресепшн стоматологии 32Дент" />
           </div>
         </Reveal>
 
         {/* Оборудование */}
         <Reveal delay={0}>
           <div className="grid items-center gap-8 md:grid-cols-2">
-            <ClinicImage src="/clinic/equipment.jpg" alt="Современное оборудование в клинике Dent32" />
+            <ClinicImage src="/clinic/equipment.jpg" alt="Современное оборудование в клинике 32Дент" />
             <div className="flex flex-col gap-3">
               <BlockHeading icon={Cpu}>Оборудование</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
@@ -92,7 +92,7 @@ export default function AboutPage() {
                 ускоряет сроки лечения и позволяет контролировать качество на каждом этапе.
               </p>
             </div>
-            <ClinicImage src="/clinic/laboratory.jpg" alt="Зуботехническая лаборатория Dent32" />
+            <ClinicImage src="/clinic/laboratory.jpg" alt="Зуботехническая лаборатория 32Дент" />
           </div>
         </Reveal>
 
@@ -103,7 +103,7 @@ export default function AboutPage() {
               <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
                 <Image
                   src="/clinic/office.jpg"
-                  alt="Лечебный кабинет клиники Dent32"
+                  alt="Лечебный кабинет клиники 32Дент"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover"
@@ -112,7 +112,7 @@ export default function AboutPage() {
               <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
                 <Image
                   src="/clinic/office2.jpg"
-                  alt="Холл клиники Dent32"
+                  alt="Холл клиники 32Дент"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover"
@@ -122,7 +122,7 @@ export default function AboutPage() {
             <div className="flex flex-col gap-3">
               <BlockHeading icon={ShieldCheck}>Сотрудничество со страховой</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
-                Dent32 сотрудничает со страховой компанией «{siteConfig.insurancePartner}». Уточните условия
+                32Дент сотрудничает со страховой компанией «{siteConfig.insurancePartner}». Уточните условия
                 обслуживания по полису у администратора клиники.
               </p>
             </div>

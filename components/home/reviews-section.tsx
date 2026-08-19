@@ -72,7 +72,7 @@ export function ReviewsSection() {
             Что говорят наши пациенты
           </h2>
           <p className="max-w-2xl text-pretty text-muted-foreground">
-            Реальные впечатления пациентов о лечении в Dent32.
+            Реальные впечатления пациентов о лечении в 32Дент.
           </p>
         </div>
 

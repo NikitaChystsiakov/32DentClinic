@@ -49,7 +49,7 @@ export function WhyUsSection() {
       <div className="mb-10 flex flex-col gap-2">
         <span className="text-sm font-medium text-secondary">Почему именно мы</span>
         <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          <span className="text-accent">32</span> причины выбрать Dent32
+          <span className="text-accent">32</span> причины выбрать 32Дент
         </h2>
         <p className="max-w-2xl text-pretty text-muted-foreground">
           Мы собрали главные из них — остальные вы поймёте на первом приёме.

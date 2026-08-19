@@ -23,7 +23,7 @@ export function BeforeAfterTeaserSection() {
           <span className="text-sm font-medium text-secondary">Портфолио</span>
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">Наши результаты</h2>
           <p className="max-w-2xl text-pretty text-muted-foreground">
-            Передвиньте ползунок, чтобы увидеть, как меняется улыбка после лечения в DENT32.
+            Передвиньте ползунок, чтобы увидеть, как меняется улыбка после лечения в 32Дент.
           </p>
         </div>
 

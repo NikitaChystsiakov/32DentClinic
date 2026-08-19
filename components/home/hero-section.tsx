@@ -33,7 +33,7 @@ export function HeroSection() {
             </span>
           </div>
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Стоматология Dent32 в {siteConfig.city}
+            Стоматология 32Дент в {siteConfig.city}
           </h1>
           <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
             Лечение, протезирование и имплантация зубов у {siteConfig.doctorsCount} врачей с собственной

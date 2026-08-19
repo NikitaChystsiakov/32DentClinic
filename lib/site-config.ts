@@ -3,7 +3,7 @@
 // во всех компонентах сайта (шапка, подвал, контакты, JSON-LD и т.д.).
 
 export const siteConfig = {
-  name: 'Dent32',
+  name: '32Дент',
   city: 'Рогачёв',
   address: 'г. Рогачёв, ул. Ленина, 60',
   hoursShort: 'Пн–Сб 8:00–19:00',
@@ -16,7 +16,7 @@ export const siteConfig = {
   phoneHref: 'tel:+375297444033',
   whatsappHref: 'https://wa.me/375297444033',
   viberHref: 'https://viber.com/',
-  telegramHref: 'https://telegram.me/Dent32plus',
+  telegramHref: 'https://telegram.me/32Дентplus',
   // [TBD] — реквизиты уточняются
   unp: '[TBD]',
   license: '[TBD]',

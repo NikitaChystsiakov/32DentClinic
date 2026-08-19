@@ -6,7 +6,7 @@ import { GalleryFinalCta } from '@/components/gallery/gallery-final-cta'
 
 export const metadata: Metadata = {
   title: 'Примеры работ',
-  description: 'Фотографии результатов лечения в стоматологии Dent32 — примеры до и после.',
+  description: 'Фотографии результатов лечения в стоматологии 32Дент — примеры до и после.',
 }
 
 export default function GalleryPage() {
