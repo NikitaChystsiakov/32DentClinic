@@ -64,14 +64,14 @@ export default function AboutPage() {
                 администратора до сложного лечения.
               </p>
             </div>
-            <ClinicImage src="/clinic/reception.png" alt="Ресепшн стоматологии Dent32" />
+            <ClinicImage src="/clinic/reception.jpg" alt="Ресепшн стоматологии Dent32" />
           </div>
         </Reveal>
 
         {/* Оборудование */}
         <Reveal delay={0}>
           <div className="grid items-center gap-8 md:grid-cols-2">
-            <ClinicImage src="/clinic/equipment.png" alt="Современное оборудование в клинике Dent32" />
+            <ClinicImage src="/clinic/equipment.jpg" alt="Современное оборудование в клинике Dent32" />
             <div className="flex flex-col gap-3">
               <BlockHeading icon={Cpu}>Оборудование</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
@@ -92,24 +92,17 @@ export default function AboutPage() {
                 ускоряет сроки лечения и позволяет контролировать качество на каждом этапе.
               </p>
             </div>
-            <ClinicImage src="/clinic/laboratory.png" alt="Зуботехническая лаборатория Dent32" />
+            <ClinicImage src="/clinic/laboratory.jpg" alt="Зуботехническая лаборатория Dent32" />
           </div>
         </Reveal>
 
         {/* Страховая */}
         <Reveal delay={0}>
           <div className="grid items-center gap-8 md:grid-cols-2">
-            <div className="flex flex-col gap-3">
-              <BlockHeading icon={ShieldCheck}>Сотрудничество со страховой</BlockHeading>
-              <p className="text-pretty leading-relaxed text-muted-foreground">
-                Dent32 сотрудничает со страховой компанией «{siteConfig.insurancePartner}». Уточните условия
-                обслуживания по полису у администратора клиники.
-              </p>
-            </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
                 <Image
-                  src="/clinic/office.png"
+                  src="/clinic/office.jpg"
                   alt="Лечебный кабинет клиники Dent32"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
@@ -118,13 +111,20 @@ export default function AboutPage() {
               </div>
               <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-foreground/10">
                 <Image
-                  src="/clinic/hall.png"
+                  src="/clinic/office2.jpg"
                   alt="Холл клиники Dent32"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <BlockHeading icon={ShieldCheck}>Сотрудничество со страховой</BlockHeading>
+              <p className="text-pretty leading-relaxed text-muted-foreground">
+                Dent32 сотрудничает со страховой компанией «{siteConfig.insurancePartner}». Уточните условия
+                обслуживания по полису у администратора клиники.
+              </p>
             </div>
           </div>
         </Reveal>

@@ -88,12 +88,12 @@ export function SiteHeader() {
             aria-label="Viber"
             className="text-muted-foreground hover:text-primary"
           >
-            <Send className="size-4" />
+            <img src="images/viber.png" alt="viber" className='size-4'/>
           </a>
           <a
             href={siteConfig.telegramHref}
             aria-label="Telegram"
-            className="text-muted-foreground hover:text-primary"
+            className="text-muted-foreground hover:text-primary "
           >
             <Send className="size-4" />
           </a>
@@ -146,7 +146,7 @@ export function SiteHeader() {
             </div>
             <Button
               size="lg"
-              className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+              className="w-full bg-accent text-accent-foreground cursor-pointer hover:bg-accent/90"
               onClick={() => {
                 setDrawerOpen(false)
                 openBookingModal()

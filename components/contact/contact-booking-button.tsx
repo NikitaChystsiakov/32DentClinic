@@ -10,7 +10,7 @@ export function ContactBookingButton() {
     <Button
       size="lg"
       onClick={() => openBookingModal()}
-      className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-fit"
+      className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-fit cursor-pointer"
     >
       Записаться на приём
     </Button>

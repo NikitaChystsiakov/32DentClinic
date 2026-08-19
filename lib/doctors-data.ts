@@ -75,20 +75,6 @@ export const doctors: Doctor[] = [
     photo: '/images/doctors/bychkov-ivan.png',
   },
   {
-    slug: 'alekseychuk-vyacheslav',
-    name: 'Алексейчук Вячеслав Александрович',
-    specialization: 'Врач-терапевт-ортопед',
-    experienceYears: 12,
-    categories: ['terapevt', 'ortoped'],
-    bio: 'Вячеслав Александрович совмещает терапевтическое и ортопедическое направления — от лечения до протезирования у одного врача.',
-    directions: [
-      { label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' },
-      { label: 'Протезирование', href: '/uslugi/protezirovanie/' },
-    ],
-    hasCertificates: false,
-    photo: '/images/doctors/alekseychuk-vyacheslav.png',
-  },
-  {
     slug: 'kireev-vladislav',
     name: 'Владислав Киреев',
     specialization: 'Врач-стоматолог-ортопед',
@@ -109,17 +95,6 @@ export const doctors: Doctor[] = [
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
     photo: '/images/doctors/kovalchuk-igor.png',
-  },
-  {
-    slug: 'belousova-tatyana',
-    name: 'Татьяна Белоусова',
-    specialization: 'Врач-стоматолог-ортопед',
-    experienceYears: 6,
-    categories: ['ortoped'],
-    bio: 'Татьяна — врач-ортопед клиники.',
-    directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
-    hasCertificates: false,
-    photo: '/images/doctors/belousova-tatyana.png',
   },
   {
     slug: 'makhonko-pavel',
