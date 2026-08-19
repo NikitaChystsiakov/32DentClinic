@@ -30,7 +30,7 @@ export function BeforeAfterTeaserSection() {
         <Carousel opts={{ align: 'start', loop: true }} className="px-1">
           <CarouselContent>
             {beforeAfterCases.map((c) => (
-              <CarouselItem key={c.id} className="basis-full sm:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={c.id} className="basis-full my-2 sm:basis-1/2 lg:basis-1/3">
                 <Card className="h-full">
                   <CardContent className="flex h-full flex-col gap-3 p-3">
                     <Compare before={c.before} after={c.after} />

@@ -34,10 +34,14 @@ export function Compare({ before, after }: { before: string; after: string }) {
     <div
       ref={ref}
       className="relative aspect-[4/3] w-full touch-none overflow-hidden rounded-xl border border-border bg-muted select-none"
-      onPointerDown={(e) => {
+      onPointerDownCapture={(e) => {
+        e.stopPropagation()
         dragging.current = true
         setFromClientX(e.clientX)
       }}
+      onMouseDownCapture={(e) => e.stopPropagation()}
+      onTouchStartCapture={(e) => e.stopPropagation()}
+      onTouchMoveCapture={(e) => e.stopPropagation()}
     >
       {/* After (base) */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
