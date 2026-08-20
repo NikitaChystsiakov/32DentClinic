@@ -15,7 +15,7 @@ export const siteConfig = {
   phoneDisplay: '+375 (29) 744-40-33',
   phoneHref: 'tel:+375297444033',
   whatsappHref: 'https://wa.me/375297444033',
-  viberHref: 'https://viber.com/',
+  viberHref: 'https://viber.com/375297444033',
   telegramHref: 'https://telegram.me/32Дентplus',
   // [TBD] — реквизиты уточняются
   unp: '[TBD]',
@@ -38,10 +38,10 @@ export const siteConfig = {
 export const CONTACTS = {
   phone: "+7 (495) 120-45-67",
   phoneHref: "tel:+74951204567",
-  email: "info@dentpro.ru",
-  emailHref: "mailto:info@dentpro.ru",
-  whatsapp: "https://wa.me/74951204567",
-  telegram: "https://t.me/dentpro",
+  email: "info@32dent.ru",
+  emailHref: "mailto:info@32dent.ru",
+  whatsapp: "https://wa.me/375297444033",
+  telegram: "https://telegram.me/32Дентplus",
   address: "г. Москва, Комсомольский проспект, 24, 7 мин от м. Фрунзенская",
   hours: "Пн–Сб: 9:00–21:00 · Вс: 10:00–18:00",
 }
