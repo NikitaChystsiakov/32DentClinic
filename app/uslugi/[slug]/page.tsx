@@ -134,7 +134,7 @@ export default async function ServiceDetailPage({
                   className="group flex items-center gap-4 rounded-xl border border-border p-4 transition-colors hover:ring-1 hover:ring-primary/40"
                 >
                   <div className="relative size-16 shrink-0 overflow-hidden rounded-lg">
-                    <Image src={doctor.photo} alt={doctor.name} fill className="object-cover" />
+                    <Image src={doctor.photo} alt={doctor.name} fill sizes="64px" className="object-cover" />
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="font-heading text-sm font-semibold text-foreground">{doctor.name}</span>

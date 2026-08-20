@@ -60,7 +60,7 @@ export default async function DoctorDetailPage({
       <Reveal delay={0}>
         <div className="mb-16 flex flex-col gap-6 sm:flex-row sm:items-center">
           <div className="relative aspect-square w-40 shrink-0 overflow-hidden rounded-2xl ring-1 ring-foreground/10 sm:w-48">
-            <Image src={doctor.photo} alt={doctor.name} fill className="object-cover" />
+            <Image src={doctor.photo} alt={doctor.name} fill sizes="(max-width: 640px) 160px, 192px" className="object-cover" />
           </div>
           <div className="flex flex-col gap-3">
             <h1 className="text-balance font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

@@ -63,6 +63,8 @@ export default function RootLayout({
   return (
     <html lang="ru" className="bg-background" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://yandex.ru" />
+        <link rel="preconnect" href="https://yandex.ru" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
