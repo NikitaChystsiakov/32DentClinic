@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Phone, Send } from 'lucide-react'
 
 import { navLinks, siteConfig } from '@/lib/site-config'
@@ -11,7 +12,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
-              <img src="images/logo.png" alt="Логотип 32Dent" className='flex items-center justify-center '/>
+              <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Стоматология в Рогачёве. Гарантия 2 года на все виды работ.

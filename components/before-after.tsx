@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 
 export function Compare({ before, after }: { before: string; after: string }) {
@@ -44,11 +45,12 @@ export function Compare({ before, after }: { before: string; after: string }) {
       onTouchMoveCapture={(e) => e.stopPropagation()}
     >
       {/* After (base) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={after}
         alt="Результат после лечения"
-        className="absolute inset-0 size-full object-cover"
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        className="object-cover"
         draggable={false}
       />
       <span className="absolute top-2.5 right-2.5 rounded-full bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground shadow-sm">
@@ -60,11 +62,12 @@ export function Compare({ before, after }: { before: string; after: string }) {
         className="absolute inset-0"
         style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={before}
           alt="Состояние до лечения"
-          className="absolute inset-0 size-full object-cover"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
           draggable={false}
         />
         <span className="absolute top-2.5 left-2.5 rounded-full bg-foreground/80 px-2 py-0.5 text-xs font-medium text-background shadow-sm">

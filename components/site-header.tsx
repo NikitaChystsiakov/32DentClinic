@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, Phone, MapPin, Clock, Send } from 'lucide-react'
 
@@ -44,7 +45,7 @@ export function SiteHeader() {
       >
         <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
           <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
-            <img src="images/logo.png" alt="Логотип 32Dent" />
+            <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
           </span>
         </Link>
 

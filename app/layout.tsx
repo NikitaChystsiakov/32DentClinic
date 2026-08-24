@@ -5,7 +5,7 @@ import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
 import { BookingModalProvider } from '@/components/booking-modal-provider'
-import { BookingModal } from '@/components/booking-modal'
+import { BookingModalLoader } from '@/components/booking-modal-loader'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
@@ -63,8 +63,6 @@ export default function RootLayout({
   return (
     <html lang="ru" className="bg-background" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://yandex.ru" />
-        <link rel="preconnect" href="https://yandex.ru" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
@@ -80,7 +78,7 @@ export default function RootLayout({
               <FloatingMessengers />
               <SiteFooter />
             </div>
-            <BookingModal />
+            <BookingModalLoader />
           </BookingModalProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
