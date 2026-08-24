@@ -47,7 +47,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4">
             <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
-              <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
+              <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Стоматология {city?.name ? `в ${city.name}` : ''}. Гарантия 2 года на все виды работ.

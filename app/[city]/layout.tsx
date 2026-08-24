@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
+import type { City } from '@/config/cities'
 import { getCityBySlug, VALID_CITY_SLUGS } from '@/config/cities'
 import { getCityContent } from '@/content'
 import { CityProvider } from '@/lib/contexts/city-context'
@@ -17,20 +18,40 @@ export async function generateMetadata({
   const city = getCityBySlug(citySlug)
   if (!city) return {}
 
-  const content = getCityContent(citySlug)
-  if (!content) return {}
-
   return {
     title: {
-      default: content.metaTitle,
+      default: city.seoTitle,
       template: `%s | 32Дент, ${city.name}`,
     },
-    description: content.metaDescription,
+    description: city.seoDescription,
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `https://32dent-beta.vercel.app/${citySlug}`,
     },
   }
 }
+
+const generateJsonLd = (city: City) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Dentist',
+  name: city.name,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: city.address,
+    addressLocality: city.name,
+    addressCountry: 'BY',
+  },
+  telephone: city.phone,
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: city.coordinates.lat,
+    longitude: city.coordinates.lng,
+  },
+  openingHours: 'Mo-Sa 08:00-19:00',
+})
 
 export default async function CityLayout({
   children,
@@ -49,6 +70,11 @@ export default async function CityLayout({
   return (
     <CityProvider city={city} content={content}>
       {children}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(generateJsonLd(city)) }}
+      />
     </CityProvider>
   )
 }

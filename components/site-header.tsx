@@ -74,7 +74,7 @@ export function SiteHeader() {
       >
         <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
           <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
-            <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
+            <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
           </span>
         </Link>
 
@@ -118,7 +118,7 @@ export function SiteHeader() {
             aria-label="Viber"
             className="text-muted-foreground hover:text-primary"
           >
-            <img src="images/viber.png" alt="viber" className='size-4'/>
+            <img src="images/viber.svg" alt="viber" className='size-4'/>
           </a>
           <a
             href={telegramHref}

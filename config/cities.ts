@@ -10,6 +10,8 @@ export interface City {
     hasQuiz: boolean
     hasTransfer: boolean
   }
+  seoTitle: string
+  seoDescription: string
 }
 
 export const cities: City[] = [
@@ -25,6 +27,8 @@ export const cities: City[] = [
       hasQuiz: true,
       hasTransfer: true,
     },
+    seoTitle: 'Стоматология 32Дент Минск — лечение и имплантация',
+    seoDescription: '32Дент Минск: терапия, хирургия, ортодонтия и имплантация зубов. Собственная лаборатория, гарантия 2 года.',
   },
   {
     slug: 'rogachev',
@@ -38,6 +42,8 @@ export const cities: City[] = [
       hasQuiz: true,
       hasTransfer: false,
     },
+    seoTitle: 'Стоматология 32Дент Рогачёв — терапия и имплантация',
+    seoDescription: '32Дент Рогачёв: терапия, хирургия, ортодонтия и имплантация зубов. Собственная лаборатория, гарантия 2 года.',
   },
   {
     slug: 'zhlobin',
@@ -51,6 +57,8 @@ export const cities: City[] = [
       hasQuiz: false,
       hasTransfer: false,
     },
+    seoTitle: 'Стоматология 32Дент Жлобин — стоматологическая помощь',
+    seoDescription: '32Дент Жлобин: терапия, хирургия и имплантация зубов. Современное оборудование, гарантия 2 года.',
   },
 ]
 
