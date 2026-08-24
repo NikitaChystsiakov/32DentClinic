@@ -4,10 +4,13 @@ import Image from 'next/image'
 import { Star, ShieldCheck, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useBookingModal } from '@/components/booking-modal-provider'
-import { siteConfig } from '@/lib/site-config'
+import { useCity } from '@/lib/contexts/city-context'
+import { getDoctorsForCity } from '@/config/doctors'
 
 export function HeroSection() {
   const { openBookingModal } = useBookingModal()
+  const { city, content } = useCity()
+  const doctorsCount = getDoctorsForCity(city.slug).length
 
   return (
     <section className="relative overflow-hidden border-b border-border">
@@ -29,16 +32,14 @@ export function HeroSection() {
           <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-foreground/10 backdrop-blur">
             <Star className="size-4 fill-accent text-accent" />
             <span>
-              {siteConfig.rating} · {siteConfig.reviewsCount} отзывов на {siteConfig.reviewsSource}
+              {content.aggregators.reviewsCount} отзывов на {content.aggregators.source}
             </span>
           </div>
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Стоматология 32Дент в {siteConfig.city}
+            {content.hero.title}
           </h1>
           <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            Лечение, протезирование и имплантация зубов у {siteConfig.doctorsCount} врачей с собственной
-            зуботехнической лабораторией. Работаем по полису «{siteConfig.insurancePartner}» и без записи по
-            острой боли.
+            {content.hero.subtitle}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
@@ -49,13 +50,13 @@ export function HeroSection() {
               <Calendar data-icon="inline-start" />
               Записаться на приём
             </Button>
-            <Button size="lg" variant="outline" render={<a href="/ceny/" />} nativeButton={false}>
+            <Button size="lg" variant="outline" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
               Смотреть цены
             </Button>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <ShieldCheck className="size-4 text-secondary" />
-            <span>{siteConfig.disclaimer}</span>
+            <span>Есть противопоказания, необходима консультация специалиста.</span>
           </div>
         </div>
       </div>

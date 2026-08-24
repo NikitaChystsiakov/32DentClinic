@@ -3,10 +3,11 @@
 import { MapPin, Clock, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useBookingModal } from '@/components/booking-modal-provider'
-import { siteConfig } from '@/lib/site-config'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function ContactCtaSection() {
   const { openBookingModal } = useBookingModal()
+  const { city } = useCity()
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
@@ -21,15 +22,15 @@ export function ContactCtaSection() {
           <div className="flex flex-col gap-3 text-sm text-foreground">
             <div className="flex items-center gap-2">
               <MapPin className="size-4 text-primary" />
-              <span>{siteConfig.address}</span>
+              <span>{city.address}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="size-4 text-primary" />
-              <span>{siteConfig.hoursShort}</span>
+              <span>Пн–Сб 8:00–19:00</span>
             </div>
-            <a href={siteConfig.phoneHref} className="flex items-center gap-2 hover:text-primary">
+            <a href={city.phoneHref} className="flex items-center gap-2 hover:text-primary">
               <Phone className="size-4 text-primary" />
-              <span>{siteConfig.phoneDisplay}</span>
+              <span>{city.phone}</span>
             </a>
           </div>
         </div>
@@ -41,7 +42,7 @@ export function ContactCtaSection() {
           >
             Записаться онлайн
           </Button>
-          <Button size="lg" variant="outline" render={<a href="/kontakty/" />} nativeButton={false}>
+          <Button size="lg" variant="outline" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
             Как нас найти
           </Button>
         </div>

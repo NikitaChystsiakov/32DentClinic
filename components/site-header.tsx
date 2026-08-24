@@ -11,13 +11,42 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Sheet, SheetContent, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 import { useBookingModal } from '@/components/booking-modal-provider'
-import { navLinks, siteConfig } from '@/lib/site-config'
+import { getCityBySlug, type City } from '@/config/cities'
+import { siteConfig } from '@/lib/site-config'
+
+function useCurrentCity(): City | null {
+  const pathname = usePathname()
+  const match = pathname?.match(/^\/([a-z-]+)(\/|$)/)
+  if (match) {
+    const city = getCityBySlug(match[1])
+    if (city) return city
+  }
+  return null
+}
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
   const [drawerOpen, setDrawerOpen] = React.useState(false)
   const pathname = usePathname()
   const { openBookingModal } = useBookingModal()
+  const currentCity = useCurrentCity()
+  const citySlug = currentCity?.slug
+  const prefix = citySlug ? `/${citySlug}` : ''
+
+  const navLinks = [
+    { label: 'Услуги', href: `${prefix}/uslugi/` },
+    { label: 'Врачи', href: `${prefix}/vrachi/` },
+    { label: 'Цены', href: `${prefix}/ceny/` },
+    { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
+    { label: 'О нас', href: `${prefix}/o-nas/` },
+    { label: 'Контакты', href: `${prefix}/kontakty/` },
+  ]
+
+  const address = currentCity?.address ?? siteConfig.address
+  const phone = currentCity?.phone ?? siteConfig.phoneDisplay
+  const phoneHref = currentCity?.phoneHref ?? siteConfig.phoneHref
+  const viberHref = currentCity ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}` : siteConfig.viberHref
+  const telegramHref = siteConfig.telegramHref
 
   React.useEffect(() => {
     function onScroll() {
@@ -43,7 +72,7 @@ export function SiteHeader() {
           scrolled ? 'h-16' : 'h-20'
         )}
       >
-        <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
+        <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
           <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
             <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
           </span>
@@ -51,10 +80,10 @@ export function SiteHeader() {
 
         <div className="hidden flex-col gap-0.5 text-xs text-muted-foreground xl:flex">
           <span className="flex items-center gap-1.5">
-            <MapPin className="size-3.5" /> {siteConfig.address}
+            <MapPin className="size-3.5" /> {address}
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="size-3.5" /> {siteConfig.hoursShort}
+            <Clock className="size-3.5" /> Пн–Сб 8:00–19:00
           </span>
         </div>
 
@@ -78,21 +107,21 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <a
-            href={siteConfig.phoneHref}
+            href={phoneHref}
             className="flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary"
           >
             <Phone className="size-4" />
-            {siteConfig.phoneDisplay}
+            {phone}
           </a>
           <a
-            href={siteConfig.viberHref}
+            href={viberHref}
             aria-label="Viber"
             className="text-muted-foreground hover:text-primary"
           >
             <img src="images/viber.png" alt="viber" className='size-4'/>
           </a>
           <a
-            href={siteConfig.telegramHref}
+            href={telegramHref}
             aria-label="Telegram"
             className="text-muted-foreground hover:text-primary "
           >
@@ -108,7 +137,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-1 lg:hidden">
-          <a href={siteConfig.phoneHref} aria-label="Позвонить" className="p-2 text-foreground">
+          <a href={phoneHref} aria-label="Позвонить" className="p-2 text-foreground">
             <Phone className="size-5" />
           </a>
           <Button variant="ghost" size="icon" aria-label="Открыть меню" onClick={() => setDrawerOpen(true)}>
@@ -136,14 +165,14 @@ export function SiteHeader() {
           </nav>
           <div className="flex flex-col gap-3 border-t border-border p-4">
             <a
-              href={siteConfig.phoneHref}
+              href={phoneHref}
               className="flex items-center justify-center gap-2 text-base font-semibold text-foreground"
             >
               <Phone className="size-4" />
-              {siteConfig.phoneDisplay}
+              {phone}
             </a>
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-3.5" /> {siteConfig.address}
+              <MapPin className="size-3.5" /> {address}
             </div>
             <Button
               size="lg"

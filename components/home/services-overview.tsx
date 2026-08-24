@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowRight, Stethoscope, Scissors, Smile, Crown, Zap, Sparkles, ScanLine } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { serviceCategories } from '@/lib/services-data'
+import { useCity } from '@/lib/contexts/city-context'
+import { getServicesForCity } from '@/config/services'
 
 const icons = {
   Stethoscope,
@@ -14,6 +17,9 @@ const icons = {
 } as const
 
 export function ServicesOverview() {
+  const { city } = useCity()
+  const services = getServicesForCity(city.slug)
+
   return (
     <section className="border-y border-border bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
@@ -26,10 +32,10 @@ export function ServicesOverview() {
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceCategories.map((service) => {
+          {services.map((service) => {
             const Icon = icons[service.icon as keyof typeof icons]
             return (
-              <Link key={service.slug} href={`/uslugi/${service.slug}/`}>
+              <Link key={service.slug} href={`/${city.slug}/uslugi/${service.slug}/`}>
                 <Card className="h-full transition-colors hover:ring-primary/40">
                   <CardHeader>
                     <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">

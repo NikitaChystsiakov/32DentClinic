@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -9,9 +11,13 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
-import { doctors } from '@/lib/doctors-data'
+import { useCity } from '@/lib/contexts/city-context'
+import { getDoctorsForCity } from '@/config/doctors'
 
 export function DoctorsCarouselSection() {
+  const { city } = useCity()
+  const doctors = getDoctorsForCity(city.slug)
+
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -22,7 +28,7 @@ export function DoctorsCarouselSection() {
         <Button
           variant="outline"
           className="w-fit"
-          render={<Link href="/vrachi/" />}
+          render={<Link href={`/${city.slug}/vrachi/`} />}
           nativeButton={false}
         >
           Все врачи
@@ -34,7 +40,7 @@ export function DoctorsCarouselSection() {
           {doctors.map((doctor) => (
             <CarouselItem key={doctor.slug} className="basis-4/5 sm:basis-1/2 lg:basis-1/3">
               <Link
-                href={`/vrachi/${doctor.slug}/`}
+                href={`/${city.slug}/vrachi/${doctor.slug}/`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl ring-1 ring-foreground/10"
               >
                 <div className="relative aspect-square overflow-hidden">

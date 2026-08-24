@@ -12,9 +12,16 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel'
-import { reviews, type Review } from '@/lib/data/reviews'
-import { aggregatorRatings } from '@/lib/data/aggregators'
+import { useCity } from '@/lib/contexts/city-context'
 import { cn } from '@/lib/utils'
+
+interface Review {
+  id: string
+  quote: string
+  author: string
+  service?: string
+  doctor?: string
+}
 
 function ReviewCard({ review }: { review: Review }) {
   const initial = review.author.trim().charAt(0).toUpperCase()
@@ -50,6 +57,8 @@ function ReviewCard({ review }: { review: Review }) {
 export function ReviewsSection() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
+  const { city, content } = useCity()
+  const reviews = content.reviews as Review[]
 
   React.useEffect(() => {
     if (!api) return
@@ -60,8 +69,6 @@ export function ReviewsSection() {
       api.off('select', onSelect)
     }
   }, [api])
-
-  const aggregator = aggregatorRatings.find((a) => a.id === '103by')
 
   return (
     <section className="border-y border-border bg-muted/40">
@@ -113,7 +120,7 @@ export function ReviewsSection() {
           <Button
             size="lg"
             className="bg-accent text-accent-foreground hover:bg-accent/90"
-            render={<a href={aggregator?.href ?? '#'} />}
+            render={<a href="#" />}
             nativeButton={false}
           >
             Оставить отзыв
@@ -121,10 +128,10 @@ export function ReviewsSection() {
           <Button
             size="lg"
             variant="outline"
-            render={<a href={aggregator?.href ?? '#'} />}
+            render={<a href="#" />}
             nativeButton={false}
           >
-            Читать все отзывы на {aggregator?.name ?? '103.by'}
+            Читать все отзывы на {content.aggregators.source}
           </Button>
         </div>
       </div>

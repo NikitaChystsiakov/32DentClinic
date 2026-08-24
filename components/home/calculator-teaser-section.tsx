@@ -1,8 +1,13 @@
+'use client'
+
 import Link from 'next/link'
 import { Calculator, ArrowRight, Percent } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function CalculatorTeaserSection() {
+  const { city } = useCity()
+
   return (
     <section className="border-y border-border bg-primary text-primary-foreground">
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
@@ -26,7 +31,7 @@ export function CalculatorTeaserSection() {
           size="lg"
           variant="secondary"
           className="w-fit shrink-0"
-          render={<Link href="/kalkulyator/" />}
+          render={<Link href={`/${city.slug}/kalkulyator/`} />}
           nativeButton={false}
         >
           Рассчитать стоимость

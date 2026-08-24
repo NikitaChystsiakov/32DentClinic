@@ -14,8 +14,11 @@ import {
 } from '@/components/ui/carousel'
 import { Compare } from '@/components/before-after'
 import { beforeAfterCases } from '@/lib/data/before-after'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function BeforeAfterTeaserSection() {
+  const { city } = useCity()
+
   return (
     <section className="border-y border-border bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
@@ -48,7 +51,7 @@ export function BeforeAfterTeaserSection() {
         </Carousel>
 
         <div className="mt-8 flex justify-center">
-          <Button variant="outline" render={<Link href="/primery-rabot/" />} nativeButton={false}>
+          <Button variant="outline" render={<Link href={`/${city.slug}/primery-rabot/`} />} nativeButton={false}>
             Смотреть все примеры
             <ArrowRight data-icon="inline-end" />
           </Button>

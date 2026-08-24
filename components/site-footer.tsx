@@ -1,21 +1,56 @@
+'use client'
+
+import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, Send } from 'lucide-react'
 
-import { navLinks, siteConfig } from '@/lib/site-config'
-import { serviceCategories } from '@/lib/services-data'
+import { siteConfig } from '@/lib/site-config'
+import { getServicesForCity } from '@/config/services'
+import { getCityBySlug } from '@/config/cities'
+import { usePathname } from 'next/navigation'
+
+function useCurrentCitySlug(): string | null {
+  const pathname = usePathname()
+  const match = pathname?.match(/^\/([a-z-]+)(\/|$)/)
+  if (match) {
+    const city = getCityBySlug(match[1])
+    if (city) return city.slug
+  }
+  return null
+}
 
 export function SiteFooter() {
+  const citySlug = useCurrentCitySlug()
+  const prefix = citySlug ? `/${citySlug}` : ''
+  const city = citySlug ? getCityBySlug(citySlug) : null
+  const services = citySlug ? getServicesForCity(citySlug) : []
+
+  const address = city?.address ?? siteConfig.address
+  const phone = city?.phone ?? siteConfig.phoneDisplay
+  const phoneHref = city?.phoneHref ?? siteConfig.phoneHref
+  const viberHref = city ? `https://viber.com/${city.phone.replace(/[^0-9]/g, '')}` : siteConfig.viberHref
+  const telegramHref = siteConfig.telegramHref
+
+  const navLinks = [
+    { label: 'Услуги', href: `${prefix}/uslugi/` },
+    { label: 'Врачи', href: `${prefix}/vrachi/` },
+    { label: 'Цены', href: `${prefix}/ceny/` },
+    { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
+    { label: 'О нас', href: `${prefix}/o-nas/` },
+    { label: 'Контакты', href: `${prefix}/kontakty/` },
+  ]
+
   return (
     <footer className="border-t border-border bg-card">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
+            <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
               <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} />
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Стоматология в Рогачёве. Гарантия 2 года на все виды работ.
+              Стоматология {city?.name ? `в ${city.name}` : ''}. Гарантия 2 года на все виды работ.
             </p>
           </div>
 
@@ -30,10 +65,10 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3">
             <h3 className="font-heading text-sm font-semibold text-foreground">Услуги</h3>
-            {serviceCategories.map((s) => (
+            {services.map((s) => (
               <Link
                 key={s.slug}
-                href={`/uslugi/${s.slug}/`}
+                href={`${prefix}/uslugi/${s.slug}/`}
                 className="text-sm text-muted-foreground hover:text-primary"
               >
                 {s.shortName}
@@ -43,24 +78,22 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3">
             <h3 className="font-heading text-sm font-semibold text-foreground">Контакты</h3>
-            <p className="text-sm text-muted-foreground">{siteConfig.address}</p>
-            <a href={siteConfig.phoneHref} className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <Phone className="size-4" /> {siteConfig.phoneDisplay}
+            <p className="text-sm text-muted-foreground">{address}</p>
+            <a href={phoneHref} className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Phone className="size-4" /> {phone}
             </a>
             <p className="text-sm text-muted-foreground">
-              {siteConfig.hoursFull[0].days}: {siteConfig.hoursFull[0].time}
-              <br />
-              {siteConfig.hoursFull[1].days} — {siteConfig.hoursFull[1].time}
+              Пн–Сб: 8:00–19:00 · Вс: выходной
             </p>
             <div className="flex items-center gap-3">
               <a
-                href={siteConfig.viberHref}
+                href={viberHref}
                 className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
               >
                 <Send className="size-4" /> Viber
               </a>
               <a
-                href={siteConfig.telegramHref}
+                href={telegramHref}
                 className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
               >
                 <Send className="size-4" /> Telegram

@@ -1,11 +1,15 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import * as React from 'react'
 
-const BookingModal = dynamic(() => import('@/components/booking-modal'), {
-  ssr: false,
-})
+const BookingModal = React.lazy(() =>
+  import('@/components/booking-modal').then((mod) => ({ default: mod.BookingModal }))
+)
 
 export function BookingModalLoader() {
-  return <BookingModal />
+  return (
+    <React.Suspense fallback={null}>
+      <BookingModal />
+    </React.Suspense>
+  )
 }
