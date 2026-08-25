@@ -37,10 +37,10 @@ export function HomeHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full border-b border-transparent transition-all duration-300',
+        'sticky top-0 z-40 w-full border-b transition-all duration-300',
         scrolled
-          ? 'border-border bg-background/90 shadow-sm backdrop-blur-md'
-          : 'bg-background/60'
+          ? 'border-border bg-background/95 shadow-sm backdrop-blur-md'
+          : 'border-border/50 bg-background/80 backdrop-blur-sm'
       )}
     >
       <div
