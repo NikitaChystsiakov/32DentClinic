@@ -1,5 +1,7 @@
 const baseUrl = 'https://32dent-beta.vercel.app'
 
+export default robots
+
 export const robots = {
   rules: {
     userAgent: '*',

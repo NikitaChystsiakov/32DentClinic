@@ -3,6 +3,8 @@ import { cities } from '@/config/cities'
 export const dynamic = 'force-static'
 export const revalidate = 60 * 60 * 24 * 30
 
+export default { dynamic, revalidate, generateSitemap }
+
 export function generateSitemap() {
   const baseUrl = 'https://32dent-beta.vercel.app'
   const pages = [
