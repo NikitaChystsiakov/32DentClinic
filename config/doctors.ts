@@ -144,6 +144,73 @@ export const doctors: Doctor[] = [
     photo: '/images/doctors/rogachev/makhonko-pavel.png',
     cities: ['rogachev'],
   },
+
+  // --- Минск (заглушки — заменить на реальных врачей) ---
+  {
+    slug: 'minsk-terapevt-1',
+    name: 'Анна Иванова',
+    specialization: 'Врач-терапевт-стоматолог',
+    experienceYears: 14,
+    categories: ['terapevt'],
+    bio: 'Анна — врач-терапевт с 14-летним опытом, специализируется на лечении кариеса и эндодонтии.',
+    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/ilyushchenko-natalya.png',
+    cities: ['minsk'],
+  },
+  {
+    slug: 'minsk-terapevt-2',
+    name: 'Мария Петрова',
+    specialization: 'Врач-терапевт-стоматолог',
+    experienceYears: 9,
+    categories: ['terapevt'],
+    bio: 'Мария — врач-терапевт, принимает взрослых и детей.',
+    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/alekseychik-yuliya.png',
+    cities: ['minsk'],
+  },
+  {
+    slug: 'minsk-ortoped-1',
+    name: 'Дмитрий Козлов',
+    specialization: 'Врач-стоматолог-ортопед',
+    experienceYears: 8,
+    categories: ['ortoped'],
+    bio: 'Дмитрий — врач-ортопед, специализируется на коронках и мостовидных протезах.',
+    directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/kireev-vladislav.png',
+    cities: ['minsk'],
+  },
+
+  // --- Жлобин (заглушки — заменить на реальных врачей) ---
+  {
+    slug: 'zhlobin-terapevt-1',
+    name: 'Елена Сидорова',
+    specialization: 'Врач-терапевт-стоматолог',
+    experienceYears: 16,
+    categories: ['terapevt'],
+    bio: 'Елена — врач-терапевт с 16-летним стажем, принимает взрослых и детей.',
+    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/saykovskaya-tatyana.png',
+    cities: ['zhlobin'],
+  },
+  {
+    slug: 'zhlobin-hirurg-1',
+    name: 'Алексей Новиков',
+    specialization: 'Врач-стоматолог-хирург',
+    experienceYears: 10,
+    categories: ['hirurg'],
+    bio: 'Алексей — врач-хирург, специализируется на удалении зубов и имплантации.',
+    directions: [
+      { label: 'Хирургия', href: '/uslugi/khirurgiya/' },
+      { label: 'Имплантация', href: '/uslugi/implantaciya/' },
+    ],
+    hasCertificates: false,
+    photo: '/images/doctors/makhonko-pavel.png',
+    cities: ['zhlobin'],
+  },
 ]
 
 export function getDoctorBySlug(slug: string) {

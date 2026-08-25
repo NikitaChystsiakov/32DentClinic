@@ -6,7 +6,7 @@ import { Award } from 'lucide-react'
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Badge } from '@/components/ui/badge'
-import { getDoctorBySlug, doctors } from '@/lib/doctors-data'
+import { getDoctorBySlug, doctors } from '@/config/doctors'
 import { DoctorHeroCta, DoctorFinalCta } from '@/components/doctors/doctor-cta'
 import { Reveal } from '@/components/reveal'
 

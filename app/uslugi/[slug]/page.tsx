@@ -6,7 +6,7 @@ import { CheckCircle2, ShieldCheck } from 'lucide-react'
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { getServiceBySlug, serviceCategories } from '@/lib/services-data'
-import { getDoctorBySlug } from '@/lib/doctors-data'
+import { getDoctorBySlug } from '@/config/doctors'
 import { ServiceHeroCta } from '@/components/services/service-hero-cta'
 import { ProcedureTable } from '@/components/services/procedure-table'
 import { ServiceFaqSection } from '@/components/services/service-faq-section'

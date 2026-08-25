@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/select'
 import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
 import { serviceSelectOptions } from '@/lib/services-data'
-import { doctors } from '@/lib/doctors-data'
+import { doctors } from '@/config/doctors'
 import { siteConfig } from '@/lib/site-config'
 
 type FormState = 'default' | 'loading' | 'success' | 'error'

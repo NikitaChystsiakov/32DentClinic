@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
 import { useBookingModal } from '@/components/booking-modal-provider'
-import { doctors, doctorCategoryLabels, type DoctorCategory } from '@/lib/doctors-data'
+import { useCity } from '@/lib/contexts/city-context'
+import { getDoctorsForCity, doctorCategoryLabels, type DoctorCategory, type Doctor } from '@/config/doctors'
 
 const FILTERS: { id: 'all' | DoctorCategory; label: string }[] = [
   { id: 'all', label: 'Все' },
@@ -17,12 +18,12 @@ const FILTERS: { id: 'all' | DoctorCategory; label: string }[] = [
   { id: 'hirurg', label: doctorCategoryLabels.hirurg },
 ]
 
-function DoctorCard({ doctor }: { doctor: (typeof doctors)[number] }) {
+function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) {
   const { openBookingModal } = useBookingModal()
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl ring-1 ring-foreground/10">
-      <Link href={`/vrachi/${doctor.slug}/`} className="group relative aspect-square overflow-hidden">
+      <Link href={`/${citySlug}/vrachi/${doctor.slug}/`} className="group relative aspect-square overflow-hidden">
         <Image
           src={doctor.photo}
           alt={doctor.name}
@@ -33,7 +34,7 @@ function DoctorCard({ doctor }: { doctor: (typeof doctors)[number] }) {
         />
       </Link>
       <div className="flex flex-1 flex-col gap-2 bg-card p-4">
-        <Link href={`/vrachi/${doctor.slug}/`}>
+        <Link href={`/${citySlug}/vrachi/${doctor.slug}/`}>
           <h3 className="font-heading text-base font-semibold text-foreground hover:text-primary">
             {doctor.name}
           </h3>
@@ -47,7 +48,7 @@ function DoctorCard({ doctor }: { doctor: (typeof doctors)[number] }) {
             variant="outline"
             size="sm"
             className="flex-1"
-            render={<Link href={`/vrachi/${doctor.slug}/`} />}
+            render={<Link href={`/${citySlug}/vrachi/${doctor.slug}/`} />}
             nativeButton={false}
           >
             Подробнее
@@ -66,9 +67,11 @@ function DoctorCard({ doctor }: { doctor: (typeof doctors)[number] }) {
 }
 
 export function DoctorsDirectory() {
+  const { city } = useCity()
   const [filter, setFilter] = React.useState<'all' | DoctorCategory>('all')
 
-  const filteredDoctors = doctors.filter(
+  const cityDoctors = getDoctorsForCity(city.slug)
+  const filteredDoctors = cityDoctors.filter(
     (doctor) => filter === 'all' || doctor.categories.includes(filter)
   )
 
@@ -85,11 +88,17 @@ export function DoctorsDirectory() {
       </Reveal>
       <TabsContent value={filter} className="mt-8">
         <Reveal delay={1}>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredDoctors.map((doctor) => (
-              <DoctorCard key={doctor.slug} doctor={doctor} />
-            ))}
-          </div>
+          {filteredDoctors.length === 0 ? (
+            <p className="py-10 text-center text-muted-foreground">
+              Врачи в этом городе пока не добавлены. Попробуйте позже.
+            </p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredDoctors.map((doctor) => (
+                <DoctorCard key={doctor.slug} doctor={doctor} citySlug={city.slug} />
+              ))}
+            </div>
+          )}
         </Reveal>
       </TabsContent>
     </Tabs>
