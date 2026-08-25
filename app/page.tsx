@@ -9,6 +9,7 @@ import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
 import { Reveal } from '@/components/reveal'
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export default function Page() {
   return (
@@ -43,6 +44,7 @@ export default function Page() {
       <Reveal delay={0}>
         <ContactCtaSection />
       </Reveal>
+      <SpeedInsights />
     </>
   )
 }
