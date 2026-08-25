@@ -1,91 +1,110 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Phone, ArrowRight } from 'lucide-react'
+import { MapPin, Phone, ArrowRight, Shield, Building2, Users } from 'lucide-react'
 import { cities } from '@/config/cities'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export default function Page() {
   return (
-    <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-          <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Сеть стоматологий <span className="text-primary">32Дент</span>
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <h1 className="font-heading text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            Сеть стоматологий{' '}
+            <span className="text-primary">32Дент</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Современная стоматология в трёх городах Беларуси. Лечение, имплантация,
-            протезирование с гарантией 2 года на все виды работ.
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-500 sm:text-xl">
+            Современная стоматология в трёх городах Беларуси. Имплантация, лечение
+            и протезирование с гарантией до 15 лет.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-green-500" />
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
+              <Building2 className="size-4 text-primary" />
               3 клиники
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-green-500" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
+              <Users className="size-4 text-primary" />
               10+ врачей
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-green-500" />
-              Гарантия 2 года
+            <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
+              <Shield className="size-4 text-primary" />
+              Гарантия до 15 лет
             </span>
           </div>
         </div>
       </section>
 
-      <section id="city-cards" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <h2 className="mb-10 text-center font-heading text-2xl font-bold text-foreground">
+      {/* City Cards */}
+      <section id="city-cards" className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+        <h2 className="mb-12 text-center font-heading text-3xl font-bold tracking-tight text-slate-900">
           Выберите город
         </h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {cities.map((city) => (
             <Link
               key={city.slug}
               href={`/${city.slug}`}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-primary/40 hover:shadow-lg"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/60"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+              {/* Photo */}
+              <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                 <Image
-                  src="/images/hero-clinic.png"
+                  src={city.image}
                   alt={`32Дент ${city.name}`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4">
-                  <h3 className="font-heading text-xl font-bold text-white">32Дент {city.name}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
+                <div className="absolute bottom-4 left-5 right-5">
+                  <h3 className="font-heading text-2xl font-bold text-white">
+                    32Дент {city.name}
+                  </h3>
                 </div>
               </div>
-              <div className="flex flex-1 flex-col gap-3 p-5">
-                <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {city.address}
+
+              {/* Content */}
+              <div className="flex flex-1 flex-col gap-4 p-6">
+                {/* Address */}
+                <div className="flex items-start gap-2.5 text-sm text-slate-500">
+                  <MapPin className="mt-0.5 size-4 shrink-0 text-slate-400" />
+                  <span>{city.address}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Phone className="size-4 shrink-0 text-primary" />
-                  {city.phone}
+
+                {/* Phone */}
+                <div className="flex items-center gap-2.5 text-sm text-slate-500">
+                  <Phone className="size-4 shrink-0 text-slate-400" />
+                  <a href={city.phoneHref} className="font-medium text-slate-700 hover:text-primary">
+                    {city.phone}
+                  </a>
                 </div>
-                <div className="mt-auto flex flex-wrap gap-2 pt-2">
-                  {city.features.hasSurgery && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">Хирургия</span>
-                  )}
-                  {city.features.hasQuiz && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">Квиз</span>
-                  )}
-                  {city.features.hasTransfer && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">Трансфер</span>
-                  )}
+
+                {/* Feature Tags */}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {city.featureTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-                <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors group-hover:gap-2">
-                  Перейти на сайт города <ArrowRight className="size-4" />
-                </span>
+
+                {/* CTA */}
+                <div className="mt-auto pt-3">
+                  <span className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-colors duration-200 group-hover:bg-primary">
+                    Перейти на сайт города
+                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
         </div>
       </section>
       <SpeedInsights />
-    </>
+    </div>
   )
 }
