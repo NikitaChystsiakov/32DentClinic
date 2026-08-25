@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
+import { headers } from 'next/headers'
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -9,6 +10,7 @@ import { BookingModalLoader } from '@/components/booking-modal-loader'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
+import { GeoBanner } from '@/components/geo-banner'
 import { siteConfig } from '@/lib/site-config'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'], variable: '--font-inter' })
@@ -16,11 +18,11 @@ const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manr
 
 export const metadata: Metadata = {
   title: {
-    default: `Стоматология 32Дент в Рогачёве — лечение, имплантация, протезирование`,
-    template: `%s | 32Дент, Рогачёв`,
+    default: `Сеть стоматологий 32Дент — Минск, Рогачёв, Жлобин`,
+    template: `%s | 32Дент`,
   },
   description:
-    '32Дент — стоматология в Рогачёве. Терапия, хирургия, ортодонтия, протезирование и имплантация в одном месте. Гарантия 2 года на все виды работ.',
+    '32Дент — сеть стоматологий в Беларуси. Лечение, имплантация, протезирование в Минске, Рогачёве и Жлобине. Современное оборудование, гарантия 2 года.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -55,11 +57,18 @@ const jsonLd = {
   priceRange: '$$',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const hdrs = await headers()
+  const suggestedCitySlug = hdrs.get('x-suggested-city')
+  const suggestedCityName = hdrs.get('x-suggested-city-name')
+  const suggestedCity = suggestedCitySlug && suggestedCityName
+    ? { slug: suggestedCitySlug, name: suggestedCityName }
+    : null
+
   return (
     <html lang="ru" className="bg-background" suppressHydrationWarning>
       <head>
@@ -74,6 +83,7 @@ export default function RootLayout({
           <BookingModalProvider>
             <div className="flex min-h-dvh flex-col">
               <SiteHeader />
+              <GeoBanner suggestedCity={suggestedCity} />
               <main className="flex-1">{children}</main>
               <FloatingMessengers />
               <SiteFooter />
