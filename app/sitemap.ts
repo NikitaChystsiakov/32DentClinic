@@ -1,27 +1,23 @@
+import type { MetadataRoute } from 'next'
 import { cities } from '@/config/cities'
 
-export const dynamic = 'force-static'
-export const revalidate = 60 * 60 * 24 * 30
-
-export default { dynamic, revalidate, generateSitemap }
-
-export function generateSitemap() {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://32dent-beta.vercel.app'
   const pages = [
     {
       url: baseUrl,
-      lastmod: new Date(),
-      changeFrequency: ' daily ',
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
       priority: 1,
     },
   ]
 
   const cityUrls = cities.map((city) => ({
     url: `${baseUrl}/${city.slug}`,
-    lastmod: new Date(),
-    changeFrequency: ' monthly ' as const,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))
 
-  return [pages, cityUrls].flat()
+  return [...pages, ...cityUrls]
 }
