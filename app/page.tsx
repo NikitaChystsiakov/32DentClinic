@@ -33,7 +33,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+      <section id="city-cards" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <h2 className="mb-10 text-center font-heading text-2xl font-bold text-foreground">
           Выберите город
         </h2>

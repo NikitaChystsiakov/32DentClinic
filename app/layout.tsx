@@ -7,7 +7,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BookingModalProvider } from '@/components/booking-modal-provider'
 import { BookingModalLoader } from '@/components/booking-modal-loader'
-import { SiteHeader } from '@/components/site-header'
+import { HeaderSwitcher } from '@/components/header-switcher'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
 import { GeoBanner } from '@/components/geo-banner'
@@ -82,7 +82,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <BookingModalProvider>
             <div className="flex min-h-dvh flex-col">
-              <SiteHeader />
+              <HeaderSwitcher />
               <GeoBanner suggestedCity={suggestedCity} />
               <main className="flex-1">{children}</main>
               <FloatingMessengers />

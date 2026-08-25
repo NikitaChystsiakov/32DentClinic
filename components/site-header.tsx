@@ -47,7 +47,9 @@ export function SiteHeader() {
   const address = currentCity?.address ?? siteConfig.address
   const phone = currentCity?.phone ?? siteConfig.phoneDisplay
   const phoneHref = currentCity?.phoneHref ?? siteConfig.phoneHref
-  const viberHref = currentCity ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}` : siteConfig.viberHref
+  const viberHref = currentCity
+    ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}`
+    : siteConfig.viberHref
   const telegramHref = siteConfig.telegramHref
 
   React.useEffect(() => {
@@ -84,13 +86,18 @@ export function SiteHeader() {
           scrolled ? 'h-16' : 'h-20'
         )}
       >
-        <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
+        {/* Logo */}
+        <Link
+          href={prefix || '/'}
+          className="flex shrink-0 items-center gap-2 font-heading text-xl font-bold text-foreground"
+        >
           <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
             <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
           </span>
         </Link>
 
-        <div ref={cityDropdownRef} className="relative hidden lg:block">
+        {/* City dropdown — lg+ */}
+        <div ref={cityDropdownRef} className="relative hidden shrink-0 lg:block">
           <button
             type="button"
             onClick={() => setCityOpen((o) => !o)}
@@ -136,25 +143,31 @@ export function SiteHeader() {
           )}
         </div>
 
-        <div className="hidden flex-col gap-0.5 text-xs text-muted-foreground xl:flex">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="size-3.5" /> {address}
+        {/* Address + hours — xl only, nowrap */}
+        <div className="hidden shrink-0 flex-col gap-0.5 text-xs text-muted-foreground xl:flex">
+          <span className="whitespace-nowrap">
+            <MapPin className="mr-1 inline size-3.5" />
+            {address}
           </span>
-          <span className="flex items-center gap-1.5">
-            <Clock className="size-3.5" /> Пн–Сб 8:00–19:00
+          <span className="whitespace-nowrap">
+            <Clock className="mr-1 inline size-3.5" />
+            Пн–Сб 8:00–19:00
           </span>
         </div>
 
+        {/* Navigation — lg+ */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href))
+            const isActive =
+              pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href))
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
                   'relative py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground',
-                  isActive && 'text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-primary'
+                  isActive &&
+                    'text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-primary'
                 )}
               >
                 {link.label}
@@ -163,29 +176,35 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        {/* Right actions — lg+ */}
+        <div className="hidden shrink-0 items-center gap-3 lg:flex">
+          {/* Phone: icon-only on lg, full text on xl */}
           <a
             href={phoneHref}
-            className="flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary"
+            aria-label={phone}
+            className="flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
           >
-            <Phone className="size-4" />
-            {phone}
+            <Phone className="size-4 shrink-0" />
+            <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
           </a>
+
           <a
             href={viberHref}
             aria-label="Viber"
-            className="text-muted-foreground hover:text-primary"
+            className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            <img src="images/viber.svg" alt="viber" className='size-4'/>
+            <img src="/images/viber.svg" alt="viber" className="size-4" />
           </a>
           <a
             href={telegramHref}
             aria-label="Telegram"
-            className="text-muted-foreground hover:text-primary "
+            className="text-muted-foreground transition-colors hover:text-foreground"
           >
             <Send className="size-4" />
           </a>
+
           <ThemeToggle />
+
           <Button
             className="bg-accent text-accent-foreground hover:bg-accent/90"
             onClick={() => openBookingModal()}
@@ -194,16 +213,23 @@ export function SiteHeader() {
           </Button>
         </div>
 
+        {/* Mobile actions */}
         <div className="flex items-center gap-1 lg:hidden">
           <a href={phoneHref} aria-label="Позвонить" className="p-2 text-foreground">
             <Phone className="size-5" />
           </a>
-          <Button variant="ghost" size="icon" aria-label="Открыть меню" onClick={() => setDrawerOpen(true)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Открыть меню"
+            onClick={() => setDrawerOpen(true)}
+          >
             <Menu />
           </Button>
         </div>
       </div>
 
+      {/* Mobile drawer */}
       <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
         <SheetContent side="right" className="flex w-full max-w-none flex-col gap-0 sm:max-w-none">
           <SheetHeader className="border-b border-border">
@@ -260,7 +286,7 @@ export function SiteHeader() {
             </div>
             <Button
               size="lg"
-              className="w-full bg-accent text-accent-foreground cursor-pointer hover:bg-accent/90"
+              className="w-full cursor-pointer bg-accent text-accent-foreground hover:bg-accent/90"
               onClick={() => {
                 setDrawerOpen(false)
                 openBookingModal()
