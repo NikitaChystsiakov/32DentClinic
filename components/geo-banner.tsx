@@ -2,8 +2,10 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { X, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useClientGeo } from '@/lib/use-client-geo'
 
 const COOKIE_NAME = 'geo-dismissed'
 const COOKIE_DAYS = 30
@@ -24,20 +26,24 @@ interface GeoBannerProps {
 }
 
 export function GeoBanner({ suggestedCity }: GeoBannerProps) {
+  const pathname = usePathname()
+  const clientGeo = useClientGeo()
   const [dismissed, setDismissed] = React.useState(true)
 
+  const detectedCity = suggestedCity ?? clientGeo
+
   React.useEffect(() => {
-    if (suggestedCity && !getCookie(COOKIE_NAME)) {
+    if (pathname === '/' && detectedCity && !getCookie(COOKIE_NAME)) {
       setDismissed(false)
     }
-  }, [suggestedCity])
+  }, [detectedCity, pathname])
 
   function dismiss() {
     setDismissed(true)
     setCookie(COOKIE_NAME, '1', COOKIE_DAYS)
   }
 
-  if (!suggestedCity || dismissed) return null
+  if (pathname !== '/' || !detectedCity || dismissed) return null
 
   return (
     <div
@@ -47,10 +53,10 @@ export function GeoBanner({ suggestedCity }: GeoBannerProps) {
     >
       <MapPin className="size-4 shrink-0 text-primary" />
       <span className="text-foreground/80">
-        Вы из <strong className="font-semibold text-foreground">{suggestedCity.name}</strong>? Перейти на локальный сайт
+        Вы из <strong className="font-semibold text-foreground">{detectedCity.name}</strong>? Перейти на локальный сайт
       </span>
       <Link
-        href={`/${suggestedCity.slug}`}
+        href={`/${detectedCity.slug}`}
         className="ml-1 inline-flex items-center rounded-lg bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Перейти
