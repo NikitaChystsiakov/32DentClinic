@@ -8,6 +8,7 @@ import { ReviewsSection } from '@/components/home/reviews-section'
 import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
+import { TreatmentSteps } from '@/components/home/treatment-steps'
 import { Reveal } from '@/components/reveal'
 
 export default function CityPage() {
@@ -24,6 +25,9 @@ export default function CityPage() {
       </Reveal>
       <Reveal delay={1}>
         <DoctorsCarouselSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <TreatmentSteps />
       </Reveal>
       <Reveal delay={1}>
         <BeforeAfterTeaserSection />
