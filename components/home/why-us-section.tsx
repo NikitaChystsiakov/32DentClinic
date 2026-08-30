@@ -1,17 +1,27 @@
 'use client'
 
-import { BadgePercent, ShieldCheck, Factory, CalendarClock, Cpu, Sofa, MapPin, Handshake } from 'lucide-react'
+import {
+  IconDiscountCheckFilled,
+  IconShieldCheckFilled,
+  IconBuildingFactory2,
+  IconCalendarClock,
+  IconCpu2,
+  IconSofa,
+  IconMapPinFilled,
+  IconHeartHandshake,
+} from '@tabler/icons-react'
 import { useCity } from '@/lib/contexts/city-context'
 
+// Крупные акцентные карточки причин — иконки из @tabler/icons-react (см. пункт 0.5)
 const iconMap = {
-  BadgePercent,
-  ShieldCheck,
-  Factory,
-  CalendarClock,
-  Cpu,
-  Sofa,
-  MapPin,
-  Handshake,
+  BadgePercent: IconDiscountCheckFilled,
+  ShieldCheck: IconShieldCheckFilled,
+  Factory: IconBuildingFactory2,
+  CalendarClock: IconCalendarClock,
+  Cpu: IconCpu2,
+  Sofa: IconSofa,
+  MapPin: IconMapPinFilled,
+  Handshake: IconHeartHandshake,
 } as const
 
 export function WhyUsSection() {

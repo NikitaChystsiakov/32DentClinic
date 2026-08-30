@@ -1,19 +1,29 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Stethoscope, Scissors, Smile, Crown, Zap, Sparkles, ScanLine } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import {
+  IconStethoscope,
+  IconScissors,
+  IconMoodSmileFilled,
+  IconCrownFilled,
+  IconBoltFilled,
+  IconSparklesFilled,
+  IconScan,
+} from '@tabler/icons-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { useCity } from '@/lib/contexts/city-context'
 import { getServicesForCity } from '@/config/services'
 
+// Крупные акцентные карточки услуг — иконки из @tabler/icons-react (см. пункт 0.5)
 const icons = {
-  Stethoscope,
-  Scissors,
-  Smile,
-  Crown,
-  Zap,
-  Sparkles,
-  ScanLine,
+  Stethoscope: IconStethoscope,
+  Scissors: IconScissors,
+  Smile: IconMoodSmileFilled,
+  Crown: IconCrownFilled,
+  Zap: IconBoltFilled,
+  Sparkles: IconSparklesFilled,
+  ScanLine: IconScan,
 } as const
 
 export function ServicesOverview() {
