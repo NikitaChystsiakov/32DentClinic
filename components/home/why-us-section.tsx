@@ -22,7 +22,7 @@ export function WhyUsSection() {
   }))
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-10 flex flex-col gap-2">
         <span className="text-sm font-medium text-secondary">Почему именно мы</span>
         <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -34,11 +34,11 @@ export function WhyUsSection() {
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {points.map((point) => (
-          <div key={point.title} className="flex flex-col gap-3">
-            <div className="flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <point.icon className="size-5" />
+          <div key={point.title} className="flex flex-col gap-3 rounded-xl p-5">
+            <div className="flex size-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <point.icon className="size-6" />
             </div>
-            <h3 className="font-heading text-base font-semibold text-foreground">{point.title}</h3>
+            <h3 className="font-heading text-lg font-semibold text-foreground">{point.title}</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">{point.description}</p>
           </div>
         ))}

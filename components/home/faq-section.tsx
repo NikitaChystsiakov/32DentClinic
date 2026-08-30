@@ -8,7 +8,7 @@ export function FaqSection() {
 
   return (
     <section className="border-y border-border bg-muted/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-sm font-medium text-secondary">Вопросы</span>
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">

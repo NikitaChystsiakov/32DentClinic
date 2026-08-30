@@ -22,7 +22,7 @@ export function ServicesOverview() {
 
   return (
     <section className="border-y border-border bg-muted/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-sm font-medium text-secondary">Направления</span>
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">Что мы лечим</h2>
@@ -36,12 +36,12 @@ export function ServicesOverview() {
             const Icon = icons[service.icon as keyof typeof icons]
             return (
               <Link key={service.slug} href={`/${city.slug}/uslugi/${service.slug}/`}>
-                <Card className="h-full transition-colors hover:ring-primary/40">
+                <Card className="h-full [--card-spacing:--spacing(5)] transition-colors hover:ring-primary/40">
                   <CardHeader>
-                    <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <Icon className="size-5" />
+                    <div className="mb-2 flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Icon className="size-6" />
                     </div>
-                    <CardTitle className="text-lg">{service.shortName}</CardTitle>
+                    <CardTitle className="text-xl">{service.shortName}</CardTitle>
                     <CardDescription className="line-clamp-2">{service.cardDescription}</CardDescription>
                   </CardHeader>
                   <CardContent>

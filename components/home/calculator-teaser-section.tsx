@@ -10,7 +10,7 @@ export function CalculatorTeaserSection() {
 
   return (
     <section className="border-y border-border bg-primary text-primary-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
         <div className="flex flex-col gap-4">
           <div className="flex size-12 items-center justify-center rounded-lg bg-primary-foreground/10">
             <Calculator className="size-6" />
