@@ -45,7 +45,7 @@ export function HeroSection() {
             <Button
               size="lg"
               onClick={() => openBookingModal()}
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
+              className="shine-hover bg-accent text-accent-foreground hover:bg-accent/90"
             >
               <Calendar data-icon="inline-start" />
               Записаться на приём

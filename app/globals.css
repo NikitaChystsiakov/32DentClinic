@@ -126,3 +126,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Точечный "серебряный блик" — только для главных CTA, карточек сроков и плиток партнёров */
+.shine-hover {
+  position: relative;
+  overflow: hidden;
+}
+.shine-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.shine-hover:hover::after,
+.shine-hover:focus-visible::after {
+  transform: translateX(120%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shine-hover::after {
+    transition: none;
+  }
+}
+
+/* Статичный серебристый градиент-фон — подложка для промо-баннеров */
+.bg-silver-gradient {
+  background: linear-gradient(135deg, #eef0f2 0%, #ffffff 50%, #e6e9ec 100%);
+}

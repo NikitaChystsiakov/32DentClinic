@@ -130,7 +130,7 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
 
       {/* Guarantee */}
       <Reveal delay={1}>
-        <div className="mb-16 flex items-center gap-4 rounded-xl bg-secondary/10 p-6">
+        <div className="shine-hover mb-16 flex items-center gap-4 rounded-xl bg-secondary/10 p-6">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
             <ShieldCheck className="size-5" />
           </span>
