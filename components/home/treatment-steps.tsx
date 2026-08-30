@@ -66,6 +66,22 @@ function generateWavyPath(): string {
   return segments.join(' ')
 }
 
+/** Пронумерованная точка-маркер шага на линии пути */
+function StepDot({ step, isMilestone }: { step: number; isMilestone?: boolean }) {
+  return (
+    <div
+      className={cn(
+        'flex size-6 shrink-0 items-center justify-center rounded-full border-2 text-[11px] font-bold',
+        isMilestone
+          ? 'border-accent bg-accent text-accent-foreground'
+          : 'border-border bg-background text-muted-foreground'
+      )}
+    >
+      {step}
+    </div>
+  )
+}
+
 function StepCard({
   step,
   index,
@@ -86,14 +102,14 @@ function StepCard({
       className={cn(
         'relative flex items-start gap-3 rounded-xl border p-4 shadow-sm transition-shadow hover:shadow-md sm:gap-4 sm:p-5',
         isMilestone
-          ? 'border-accent bg-accent/5 ring-1 ring-accent/20'
+          ? 'shine-hover border-accent bg-accent/5 ring-1 ring-accent/25'
           : 'border-border bg-card'
       )}
     >
       <div
         className={cn(
           'flex size-10 shrink-0 items-center justify-center rounded-lg sm:size-12',
-          isMilestone ? 'bg-accent text-accent-foreground' : 'bg-primary/10 text-primary'
+          isMilestone ? 'bg-accent text-accent-foreground shadow-[0_0_0_4px_rgba(249,115,22,0.15)]' : 'bg-primary/10 text-primary'
         )}
       >
         {Icon && <Icon className={cn('size-5', isMilestone && 'sm:size-6')} />}
@@ -111,9 +127,9 @@ function StepCard({
           </span>
           <span
             className={cn(
-              'font-heading font-bold',
+              'rounded-full px-2 py-0.5 font-heading font-bold',
               isMilestone
-                ? 'text-base text-accent sm:text-lg'
+                ? 'bg-accent/10 text-base text-accent sm:text-lg'
                 : 'text-sm text-muted-foreground'
             )}
           >
@@ -172,26 +188,26 @@ export function TreatmentSteps() {
 
   if (!timeline?.steps?.length) return null
 
-  const { steps, gapLabels = [] } = timeline
+  const { steps, gapLabels = [], eyebrow, title, subtitle } = timeline
   const getGapAfter = (stepNum: number) =>
     gapLabels.find((g) => g.afterStep === stepNum)
 
   const wavyPath = generateWavyPath()
 
   return (
-    <section className="border-y border-border bg-muted/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-b border-border bg-muted/40">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-12 flex flex-col gap-2">
-          <span className="text-sm font-medium text-secondary">Путь пациента</span>
+          <span className="text-sm font-medium text-secondary">{eyebrow ?? 'Путь пациента'}</span>
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
-            Этапы лечения
+            {title ?? 'Этапы лечения'}
           </h2>
           <p className="max-w-2xl text-pretty text-muted-foreground">
-            От первого визита до улыбки мечты — каждый этап под контролем наших врачей.
+            {subtitle ?? 'От первого визита до улыбки мечты — каждый этап под контролем наших врачей.'}
           </p>
         </div>
 
-        {/* Mobile layout: line left, cards right */}
+        {/* Mobile layout: line + numbered dots left, cards right */}
         <div className="relative md:hidden">
           <div className="absolute left-[18px] top-0 h-full sm:left-[22px]">
             <svg
@@ -216,16 +232,22 @@ export function TreatmentSteps() {
             </svg>
           </div>
 
-          <div className="flex flex-col gap-6 pl-14">
+          <div className="flex flex-col gap-6">
             {steps.map((step, i) => {
               const gap = getGapAfter(step.step)
               const nextStep = steps[i + 1]
-              const extraGap =
-                step.isMilestone && nextStep ? 'mb-2' : ''
+              const extraGap = step.isMilestone && nextStep ? 'mb-2' : ''
 
               return (
                 <div key={step.step} className={extraGap}>
-                  <StepCard step={step} index={i} />
+                  <div className="flex items-start gap-3">
+                    <div className="relative z-10 mt-4 -ml-[3px]">
+                      <StepDot step={step.step} isMilestone={step.isMilestone} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <StepCard step={step} index={i} />
+                    </div>
+                  </div>
                   {gap && (
                     <div className="mt-3 flex justify-center">
                       <GapLabelCard gap={gap} />
@@ -237,7 +259,7 @@ export function TreatmentSteps() {
           </div>
         </div>
 
-        {/* Desktop layout: zigzag with centered line */}
+        {/* Desktop layout: zigzag with centered line and numbered dots */}
         <div className="relative hidden md:block">
           {/* Center line */}
           <div className="absolute left-1/2 top-0 h-full -translate-x-1/2">
@@ -268,22 +290,21 @@ export function TreatmentSteps() {
               const isLeft = i % 2 === 0
               const gap = getGapAfter(step.step)
               const nextStep = steps[i + 1]
-              const extraGap =
-                step.isMilestone && nextStep ? 'mb-4' : ''
+              const extraGap = step.isMilestone && nextStep ? 'mb-4' : ''
 
               return (
                 <div key={step.step} className={extraGap}>
                   <div className="grid grid-cols-12 items-start gap-6">
                     <div className="col-span-5">
-                      {isLeft && (
-                        <StepCard step={step} index={i} />
-                      )}
+                      {isLeft && <StepCard step={step} index={i} />}
                     </div>
-                    <div className="col-span-2" />
+                    <div className="col-span-2 flex justify-center pt-4">
+                      <div className="relative z-10">
+                        <StepDot step={step.step} isMilestone={step.isMilestone} />
+                      </div>
+                    </div>
                     <div className="col-span-5 col-start-8">
-                      {!isLeft && (
-                        <StepCard step={step} index={i} />
-                      )}
+                      {!isLeft && <StepCard step={step} index={i} />}
                     </div>
                   </div>
 

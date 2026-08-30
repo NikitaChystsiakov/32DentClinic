@@ -15,6 +15,9 @@ export interface TreatmentTimelineGapLabel {
 }
 
 export interface TreatmentTimeline {
+  eyebrow?: string
+  title?: string
+  subtitle?: string
   steps: TreatmentTimelineStep[]
   gapLabels?: TreatmentTimelineGapLabel[]
 }
