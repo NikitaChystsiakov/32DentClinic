@@ -13,7 +13,7 @@ export function HeroSection() {
   const doctorsCount = getDoctorsForCity(city.slug).length
 
   return (
-    <section className="relative overflow-hidden border-b border-border">
+    <section className="relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
           src="/clinic/reception.jpg"
@@ -26,6 +26,12 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/45" />
         <div className="absolute inset-0 bg-background/40" />
       </div>
+
+      {/* Диагональный переход в следующую секцию вместо прямой границы */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-br from-muted/20 via-muted/70 to-muted [clip-path:polygon(0_100%,100%_45%,100%_100%)] sm:h-24"
+      />
 
       <div className="relative mx-auto flex min-h-svh max-w-6xl flex-col justify-center gap-6 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <div className="flex max-w-2xl flex-col gap-6">

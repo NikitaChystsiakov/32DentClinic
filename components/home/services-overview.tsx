@@ -21,7 +21,7 @@ export function ServicesOverview() {
   const services = getServicesForCity(city.slug)
 
   return (
-    <section className="border-y border-border bg-muted/40">
+    <section className="border-b border-border bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-sm font-medium text-secondary">Направления</span>
