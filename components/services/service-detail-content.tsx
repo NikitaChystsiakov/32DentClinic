@@ -13,6 +13,11 @@ import { ProcedureTable } from '@/components/services/procedure-table'
 import { ServiceFaqSection } from '@/components/services/service-faq-section'
 import { ServiceFinalCta } from '@/components/services/service-final-cta'
 import { Reveal } from '@/components/reveal'
+import { PhotoPlaceholder } from '@/components/photo-placeholder'
+
+// У «Имплантации» вместо фото сейчас стоит англоязычная медицинская схема —
+// не подходит для сайта. Показываем заглушку, пока не заменят на реальное фото.
+const SERVICES_NEEDING_REAL_PHOTO = new Set(['implantaciya'])
 
 export function ServiceDetailContent({ slug }: { slug: string }) {
   const { city } = useCity()
@@ -52,7 +57,16 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
             <ServiceHeroCta slug={service.slug} />
           </div>
           <div className="relative aspect-4/3 overflow-hidden rounded-2xl ring-1 ring-foreground/10">
-            <Image src={service.image} alt={service.title} fill className="object-cover" />
+            {SERVICES_NEEDING_REAL_PHOTO.has(service.slug) ? (
+              <PhotoPlaceholder
+                label={`Фото приёма или оборудования для услуги «${service.shortName}»`}
+                width={1200}
+                height={900}
+                className="h-full rounded-none border-0"
+              />
+            ) : (
+              <Image src={service.image} alt={service.title} fill className="object-cover" />
+            )}
           </div>
         </div>
       </Reveal>

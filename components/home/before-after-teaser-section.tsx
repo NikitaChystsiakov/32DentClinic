@@ -1,7 +1,8 @@
 "use client"
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight, Quote } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -20,7 +21,7 @@ export function BeforeAfterTeaserSection() {
   const { city } = useCity()
 
   return (
-    <section className="border-y border-border bg-muted/40">
+    <section className="border-y border-silver/25 bg-silver-muted">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-sm font-medium text-secondary">Портфолио</span>
@@ -33,13 +34,32 @@ export function BeforeAfterTeaserSection() {
         <Carousel opts={{ align: 'start', loop: true }} className="px-1">
           <CarouselContent>
             {beforeAfterCases.map((c) => (
-              <CarouselItem key={c.id} className="basis-full my-2 sm:basis-1/2 lg:basis-1/3">
-                <Card className="h-full">
-                  <CardContent className="flex h-full flex-col gap-3 p-3">
+              <CarouselItem key={c.id} className="basis-[88%] my-2 sm:basis-1/2">
+                <Card className="h-full transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl">
+                  <CardContent className="flex h-full flex-col gap-4 p-4">
                     <Compare before={c.before} after={c.after} />
-                    <div className="flex flex-col gap-1 px-1 pb-1">
-                      <h3 className="font-heading text-sm font-semibold text-foreground">{c.title}</h3>
-                      <p className="text-xs text-muted-foreground">{c.description}</p>
+                    <div className="flex flex-col gap-1 px-1">
+                      <h3 className="font-heading text-lg font-semibold text-foreground">{c.title}</h3>
+                      <p className="text-sm text-muted-foreground">{c.description}</p>
+                    </div>
+                    <div className="mt-auto flex items-start gap-3 rounded-lg border border-silver/30 bg-silver-muted/70 p-3">
+                      <div className="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-silver/25">
+                        <Image
+                          src={c.doctorPhoto}
+                          alt={c.doctorName}
+                          fill
+                          sizes="44px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-foreground">{c.doctorName}</p>
+                        <p className="text-xs text-muted-foreground">{c.doctorSpecialization}</p>
+                        <p className="mt-1.5 flex gap-1.5 text-xs leading-relaxed text-muted-foreground">
+                          <Quote className="mt-0.5 size-3 shrink-0 text-secondary" />
+                          <span>{c.reasoning}</span>
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -51,7 +71,7 @@ export function BeforeAfterTeaserSection() {
         </Carousel>
 
         <div className="mt-8 flex justify-center">
-          <Button variant="outline" render={<Link href={`/${city.slug}/primery-rabot/`} />} nativeButton={false}>
+          <Button variant="silver" render={<Link href={`/${city.slug}/primery-rabot/`} />} nativeButton={false}>
             Смотреть все примеры
             <ArrowRight data-icon="inline-end" />
           </Button>

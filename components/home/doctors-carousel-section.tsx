@@ -26,7 +26,7 @@ export function DoctorsCarouselSection() {
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">Наши врачи</h2>
         </div>
         <Button
-          variant="outline"
+          variant="silver"
           className="w-fit"
           render={<Link href={`/${city.slug}/vrachi/`} />}
           nativeButton={false}
@@ -41,7 +41,7 @@ export function DoctorsCarouselSection() {
             <CarouselItem key={doctor.slug} className="basis-4/5 sm:basis-1/2 lg:basis-1/3">
               <Link
                 href={`/${city.slug}/vrachi/${doctor.slug}/`}
-                className="group flex h-full flex-col overflow-hidden rounded-xl ring-1 ring-foreground/10"
+                className="group flex h-full flex-col overflow-hidden rounded-xl ring-1 ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl hover:ring-primary/40"
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
@@ -50,7 +50,7 @@ export function DoctorsCarouselSection() {
                     fill
                     sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 33vw"
                     loading="eager"
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-1 bg-card p-4">

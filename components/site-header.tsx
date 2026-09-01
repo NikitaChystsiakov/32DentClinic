@@ -4,7 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, Phone, MapPin, Clock, Send, ChevronDown } from 'lucide-react'
+import { Menu, Phone, MapPin, Send, ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -143,20 +143,8 @@ export function SiteHeader() {
           )}
         </div>
 
-        {/* Address + hours — xl only, nowrap */}
-        <div className="hidden shrink-0 flex-col gap-0.5 text-xs text-muted-foreground xl:flex">
-          <span className="whitespace-nowrap">
-            <MapPin className="mr-1 inline size-3.5" />
-            {address}
-          </span>
-          <span className="whitespace-nowrap">
-            <Clock className="mr-1 inline size-3.5" />
-            Пн–Сб 8:00–19:00
-          </span>
-        </div>
-
         {/* Navigation — lg+ */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden shrink-0 items-center gap-5 lg:flex xl:gap-6">
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href))
@@ -165,7 +153,7 @@ export function SiteHeader() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'relative py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground',
+                  'relative whitespace-nowrap py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground',
                   isActive &&
                     'text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-primary'
                 )}

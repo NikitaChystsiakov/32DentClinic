@@ -38,6 +38,9 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-silver: var(--silver);
+  --color-silver-foreground: var(--silver-foreground);
+  --color-silver-muted: var(--silver-muted);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -55,18 +58,21 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #0369a1;
+  --primary: #0e5478;
   --primary-foreground: #ffffff;
-  --secondary: #0f766e;
+  --secondary: #0d6b63;
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9;
   --muted-foreground: #5a6b82;
-  --accent: #f97316;
+  --accent: #dd7935;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #0284c7;
+  --silver: #9aa1ab;
+  --silver-foreground: #33383e;
+  --silver-muted: #eef1f3;
   --chart-1: #0284c7;
   --chart-2: #0d9488;
   --chart-3: #f97316;
@@ -91,18 +97,21 @@
   --card-foreground: #f8fafc;
   --popover: #111827;
   --popover-foreground: #f8fafc;
-  --primary: #38bdf8;
+  --primary: #4db2e8;
   --primary-foreground: #0f172a;
-  --secondary: #14b8a6;
+  --secondary: #1ba99c;
   --secondary-foreground: #0f172a;
   --muted: #1e293b;
   --muted-foreground: #94a3b8;
-  --accent: #fb923c;
+  --accent: #e8935a;
   --accent-foreground: #0f172a;
   --destructive: oklch(0.704 0.191 22.216);
   --border: #1e293b;
   --input: #1e293b;
   --ring: #38bdf8;
+  --silver: #7a828c;
+  --silver-foreground: #e7e9ec;
+  --silver-muted: #171a1f;
   --chart-1: #38bdf8;
   --chart-2: #14b8a6;
   --chart-3: #fb923c;
@@ -123,6 +132,59 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply overflow-x-hidden bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Metallic sheen sweep, used on silver-toned surfaces (buttons, badges). */
+  .silver-sheen {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .silver-sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      115deg,
+      transparent 35%,
+      color-mix(in oklch, white, transparent 45%) 50%,
+      transparent 65%
+    );
+    background-size: 220% 100%;
+    background-position: 150% 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .silver-sheen:hover::after {
+    opacity: 1;
+    animation: silver-sheen-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes silver-sheen-sweep {
+    from {
+      background-position: 150% 0;
+    }
+    to {
+      background-position: -50% 0;
+    }
+  }
+
+  /* Slow-breathing ambient glow, used on decorative section backgrounds. */
+  .animate-glow-drift {
+    animation: glow-drift 16s ease-in-out infinite;
+  }
+  @keyframes glow-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translate3d(2%, -3%, 0) scale(1.1);
+      opacity: 0.9;
+    }
   }
 }

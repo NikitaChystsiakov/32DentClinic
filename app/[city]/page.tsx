@@ -4,6 +4,7 @@ import { CalculatorTeaserSection } from '@/components/home/calculator-teaser-sec
 import { DoctorsCarouselSection } from '@/components/home/doctors-carousel-section'
 import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-section'
 import { WhyUsSection } from '@/components/home/why-us-section'
+import { ClinicGallerySection } from '@/components/home/clinic-gallery-section'
 import { ReviewsSection } from '@/components/home/reviews-section'
 import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
@@ -34,6 +35,9 @@ export default function CityPage() {
       </Reveal>
       <Reveal delay={1}>
         <WhyUsSection />
+      </Reveal>
+      <Reveal delay={1}>
+        <ClinicGallerySection />
       </Reveal>
       <Reveal delay={1}>
         <ReviewsSection />

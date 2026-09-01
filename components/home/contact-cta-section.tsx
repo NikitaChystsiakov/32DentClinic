@@ -11,7 +11,7 @@ export function ContactCtaSection() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="grid gap-8 rounded-2xl bg-muted/40 p-8 ring-1 ring-foreground/10 md:grid-cols-2 md:p-12">
+      <div className="grid gap-8 rounded-2xl bg-muted/40 p-8 ring-1 ring-silver/25 md:grid-cols-2 md:p-12">
         <div className="flex flex-col gap-4">
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
             Приходите на консультацию

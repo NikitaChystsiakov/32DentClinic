@@ -29,7 +29,7 @@ export function HeroSection() {
 
       <div className="relative mx-auto flex min-h-svh max-w-6xl flex-col justify-center gap-6 px-4 py-16 sm:px-6 md:py-20 lg:px-8">
         <div className="flex max-w-2xl flex-col gap-6">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-foreground/10 backdrop-blur">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
             <Star className="size-4 fill-accent text-accent" />
             <span>
               {content.aggregators.reviewsCount} отзывов на {content.aggregators.source}
@@ -50,7 +50,7 @@ export function HeroSection() {
               <Calendar data-icon="inline-start" />
               Записаться на приём
             </Button>
-            <Button size="lg" variant="outline" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
+            <Button size="lg" variant="silver" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
               Смотреть цены
             </Button>
           </div>
