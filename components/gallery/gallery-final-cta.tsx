@@ -7,7 +7,7 @@ export function GalleryFinalCta() {
   const { openBookingModal } = useBookingModal()
 
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/40 p-8 text-center ring-1 ring-foreground/10 sm:p-12">
+    <div className="flex flex-col items-center gap-4 rounded-2xl bg-silver-muted p-8 text-center ring-1 ring-silver/25 sm:p-12">
       <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">
         Хотите такой же результат?
       </h2>

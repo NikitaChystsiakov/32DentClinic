@@ -35,7 +35,7 @@ export function BeforeAfterTeaserSection() {
           <CarouselContent>
             {beforeAfterCases.map((c) => (
               <CarouselItem key={c.id} className="basis-[88%] my-2 sm:basis-1/2">
-                <Card className="h-full transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl">
+                <Card className="h-full ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl">
                   <CardContent className="flex h-full flex-col gap-4 p-4">
                     <Compare before={c.before} after={c.after} />
                     <div className="flex flex-col gap-1 px-1">
