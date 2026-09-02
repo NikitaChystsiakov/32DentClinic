@@ -34,16 +34,6 @@ const iconMap: Record<string, LucideIcon> = {
   Hourglass,
 }
 
-// Реальные фото клиники, которые уже есть в проекте — используем как небольшие
-// живые миниатюры между карточками этапов, вместо ещё одних заглушек.
-const GAP_PHOTOS = [
-  '/clinic/equipment.jpg',
-  '/clinic/office.jpg',
-  '/clinic/laboratory.jpg',
-  '/clinic/office2.jpg',
-  '/clinic/reception.jpg',
-]
-
 const MILESTONE_PHOTO_HINTS: Record<string, string> = {
   Консультация: 'Фото приёма: врач и пациент в кабинете консультации',
   'Установка имплантов': 'Фото хирургического кабинета или стерильного набора инструментов (без открытой процедуры)',
@@ -344,20 +334,61 @@ function ArcConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' 
   )
 }
 
-// Стрелка-коннектор + маленькое круглое фото клиники поверх неё.
-function GapConnector({
-  direction,
-  photo,
-}: {
-  direction: 'toRight' | 'toLeft' | 'down'
-  photo: string
-}) {
+// Маленький глянцевый шарик — чисто декоративный акцент, без попытки быть
+// "фото" (на таком размере фото всё равно не читается).
+function Orb({ size, tone = 'silver' }: { size: number; tone?: 'silver' | 'accent' }) {
+  return (
+    <span
+      className="rounded-full shadow-md ring-1 ring-white/50"
+      style={{
+        width: size,
+        height: size,
+        background:
+          tone === 'accent'
+            ? 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--accent), white 40%), var(--accent) 75%)'
+            : 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--silver), white 55%), var(--silver) 80%)',
+      }}
+    />
+  )
+}
+
+// Стрелка-коннектор + небольшая россыпь декоративных шариков вокруг неё.
+function GapConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' }) {
   return (
     <div className="relative flex items-center justify-center">
       <ArcConnector direction={direction} />
-      <div className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full ring-4 ring-background shadow-md sm:size-14">
-        <Image src={photo} alt="" fill sizes="56px" className="object-cover" />
+      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-end gap-2">
+        <Orb size={9} />
+        <Orb size={20} tone="accent" />
+        <Orb size={13} />
       </div>
+    </div>
+  )
+}
+
+// Немного шариков просто в фоне секции — не привязаны к карточкам или стрелкам,
+// разбросаны по всей высоте, чтобы оживить пустые места.
+const BACKGROUND_ORBS: { top: string; left: string; size: number; tone?: 'silver' | 'accent' }[] = [
+  { top: '4%', left: '47%', size: 13 },
+  { top: '14%', left: '93%', size: 20, tone: 'accent' },
+  { top: '24%', left: '6%', size: 10 },
+  { top: '35%', left: '53%', size: 16 },
+  { top: '47%', left: '90%', size: 11 },
+  { top: '58%', left: '13%', size: 22, tone: 'accent' },
+  { top: '69%', left: '46%', size: 9 },
+  { top: '80%', left: '86%', size: 15 },
+  { top: '91%', left: '9%', size: 12 },
+  { top: '98%', left: '55%', size: 18, tone: 'accent' },
+]
+
+function BackgroundOrbs() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
+      {BACKGROUND_ORBS.map((orb, i) => (
+        <div key={i} className="absolute" style={{ top: orb.top, left: orb.left }}>
+          <Orb size={orb.size} tone={orb.tone} />
+        </div>
+      ))}
     </div>
   )
 }
@@ -398,6 +429,7 @@ export function TreatmentSteps() {
         minSize={1.6}
         maxSize={4.5}
       />
+      <BackgroundOrbs />
       <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
@@ -454,7 +486,7 @@ export function TreatmentSteps() {
                     </div>
                   ) : (
                     nextStep && (
-                      <GapConnector direction="down" photo={GAP_PHOTOS[i % GAP_PHOTOS.length]} />
+                      <GapConnector direction="down" />
                     )
                   )}
                 </div>
@@ -489,10 +521,7 @@ export function TreatmentSteps() {
                     </div>
                   ) : (
                     nextStep && (
-                      <GapConnector
-                        direction={isLeft ? 'toRight' : 'toLeft'}
-                        photo={GAP_PHOTOS[i % GAP_PHOTOS.length]}
-                      />
+                      <GapConnector direction={isLeft ? 'toRight' : 'toLeft'} />
                     )
                   )}
                 </div>
