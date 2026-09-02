@@ -37,7 +37,7 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
       {/* Hero */}
       <Reveal delay={0}>
         <div className="mb-16 flex flex-col gap-6 sm:flex-row sm:items-center">
-          <div className="relative aspect-square w-40 shrink-0 overflow-hidden rounded-2xl ring-1 ring-foreground/10 sm:w-48">
+          <div className="relative aspect-square w-40 shrink-0 overflow-hidden rounded-2xl shadow-lg ring-1 ring-silver/25 sm:w-48">
             <Image src={doctor.photo} alt={doctor.name} fill sizes="(max-width: 640px) 160px, 192px" className="object-cover" />
           </div>
           <div className="flex flex-col gap-3">
@@ -71,7 +71,7 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
               <Link
                 key={direction.href}
                 href={`/${city.slug}${direction.href}`}
-                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                className="rounded-lg border border-silver/30 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
               >
                 {direction.label}
               </Link>
@@ -85,7 +85,7 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
         <Reveal delay={1}>
           <div className="mb-16 flex flex-col gap-4">
             <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Сертификаты</h2>
-            <div className="flex items-center gap-3 rounded-xl border border-border p-4 text-muted-foreground">
+            <div className="flex items-center gap-3 rounded-xl border border-silver/30 p-4 text-muted-foreground">
               <Award className="size-5 text-primary" />
               <span>Сертификаты будут добавлены</span>
             </div>

@@ -22,15 +22,15 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
   const { openBookingModal } = useBookingModal()
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl ring-1 ring-foreground/10">
-      <Link href={`/${citySlug}/vrachi/${doctor.slug}/`} className="group relative aspect-square overflow-hidden">
+    <div className="group flex flex-col overflow-hidden rounded-xl ring-1 ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl hover:ring-primary/40">
+      <Link href={`/${citySlug}/vrachi/${doctor.slug}/`} className="relative aspect-square overflow-hidden">
         <Image
           src={doctor.photo}
           alt={doctor.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading="eager"
-          className="object-cover transition-transform group-hover:scale-105"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
         />
       </Link>
       <div className="flex flex-1 flex-col gap-2 bg-card p-4">
@@ -45,7 +45,7 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
         </Badge>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Button
-            variant="outline"
+            variant="silver"
             size="sm"
             className="flex-1"
             render={<Link href={`/${citySlug}/vrachi/${doctor.slug}/`} />}

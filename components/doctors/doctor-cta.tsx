@@ -24,7 +24,7 @@ export function DoctorFinalCta({ slug }: { slug: string }) {
   const { openBookingModal } = useBookingModal()
 
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/40 p-8 text-center ring-1 ring-foreground/10 sm:p-12">
+    <div className="flex flex-col items-center gap-4 rounded-2xl bg-silver-muted p-8 text-center ring-1 ring-silver/25 sm:p-12">
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button
           className="bg-accent text-accent-foreground hover:bg-accent/90"
@@ -32,7 +32,7 @@ export function DoctorFinalCta({ slug }: { slug: string }) {
         >
           Записаться к этому врачу
         </Button>
-        <Button variant="outline" render={<Link href="/vrachi/" />} nativeButton={false}>
+        <Button variant="silver" render={<Link href="/vrachi/" />} nativeButton={false}>
           Посмотреть всех врачей
         </Button>
       </div>
