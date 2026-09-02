@@ -10,45 +10,55 @@ export function PriceAccordion() {
   const { openBookingModal } = useBookingModal()
 
   return (
-    <Accordion multiple>
-      {serviceCategories.map((service) => (
-        <AccordionItem key={service.slug} value={service.slug}>
-          <AccordionTrigger>
-            <span className="flex flex-col items-start gap-0.5 py-1">
-              <span className="font-heading text-base font-semibold text-foreground">
-                {service.shortName}
+    <div className="rounded-2xl border border-silver/25 bg-card px-4 sm:px-6">
+      <Accordion multiple>
+        {serviceCategories.map((service) => (
+          <AccordionItem key={service.slug} value={service.slug}>
+            <AccordionTrigger className="aria-expanded:border-b aria-expanded:border-silver/25">
+              <span className="flex flex-wrap items-center gap-2 py-1">
+                <span className="font-heading text-base font-semibold text-foreground">
+                  {service.shortName}
+                </span>
+                <span className="rounded-full bg-silver-muted px-2 py-0.5 text-xs font-medium text-muted-foreground ring-1 ring-silver/25">
+                  от {service.priceFrom} BYN
+                </span>
               </span>
-              <span className="text-xs font-normal text-muted-foreground">от {service.priceFrom} BYN</span>
-            </span>
-          </AccordionTrigger>
-          <AccordionContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Процедура</TableHead>
-                  <TableHead>Цена</TableHead>
-                  <TableHead className="w-px" />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {service.procedures.map((procedure) => (
-                  <TableRow key={procedure.name}>
-                    <TableCell className="whitespace-normal font-medium text-foreground">
-                      {procedure.name}
-                    </TableCell>
-                    <TableCell>от {procedure.priceFrom} BYN</TableCell>
-                    <TableCell>
-                      <Button size="sm" onClick={() => openBookingModal({ service: service.slug })}>
-                        Записаться
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="mt-2 rounded-lg bg-silver-muted/60 px-3 py-1 sm:px-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Процедура</TableHead>
+                      <TableHead>Цена</TableHead>
+                      <TableHead className="w-px" />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {service.procedures.map((procedure) => (
+                      <TableRow key={procedure.name}>
+                        <TableCell className="whitespace-normal font-medium text-foreground">
+                          {procedure.name}
+                        </TableCell>
+                        <TableCell>от {procedure.priceFrom} BYN</TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            className="bg-accent text-accent-foreground hover:bg-accent/90"
+                            onClick={() => openBookingModal({ service: service.slug })}
+                          >
+                            Записаться
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
   )
 }
