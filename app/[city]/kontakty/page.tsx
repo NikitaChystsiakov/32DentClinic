@@ -2,6 +2,7 @@
 
 import { MapPin, Navigation, Send } from 'lucide-react'
 import { useCity } from '@/lib/contexts/city-context'
+import { ViberIcon } from '@/components/icons/viber-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
 
@@ -52,7 +53,7 @@ export default function ContactsPage() {
                   href={`https://viber.com/${city.phone.replace(/[^0-9]/g, '')}`}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                 >
-                  <Send className="size-4" /> Viber
+                  <ViberIcon className="size-4" /> Viber
                 </a>
                 <a
                   href="https://telegram.me/32Дентplus"

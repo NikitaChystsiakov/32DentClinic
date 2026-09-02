@@ -72,7 +72,7 @@ export function ServicesOverview() {
                           >
                             {service.shortName}
                           </h3>
-                          <span className="shrink-0 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-foreground backdrop-blur">
+                          <span className="shrink-0 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-slate-900 backdrop-blur">
                             от {service.priceFrom} р.
                           </span>
                         </div>

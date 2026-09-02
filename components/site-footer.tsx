@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, Send, MapPin } from 'lucide-react'
 
+import { ViberIcon } from '@/components/icons/viber-icon'
 import { siteConfig } from '@/lib/site-config'
 import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug } from '@/config/cities'
@@ -114,7 +115,7 @@ export function SiteFooter() {
                     href={`https://viber.com/${city!.phone.replace(/[^0-9]/g, '')}`}
                     className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                   >
-                    <Send className="size-4" /> Viber
+                    <ViberIcon className="size-4" /> Viber
                   </a>
                   <a
                     href={siteConfig.telegramHref}

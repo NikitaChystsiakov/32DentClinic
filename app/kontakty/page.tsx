@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { MapPin, Navigation, Send } from 'lucide-react'
 import { siteConfig } from '@/lib/site-config'
+import { ViberIcon } from '@/components/icons/viber-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
 
@@ -54,7 +55,7 @@ export default function ContactsPage() {
                   href={siteConfig.viberHref}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                 >
-                  <Send className="size-4" /> Viber
+                  <ViberIcon className="size-4" /> Viber
                 </a>
                 <a
                   href={siteConfig.telegramHref}

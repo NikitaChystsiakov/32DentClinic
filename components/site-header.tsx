@@ -9,6 +9,7 @@ import { Menu, Phone, MapPin, Send, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { ViberIcon } from '@/components/icons/viber-icon'
 import { Sheet, SheetContent, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 import { useBookingModal } from '@/components/booking-modal-provider'
 import { cities, getCityBySlug, type City } from '@/config/cities'
@@ -102,7 +103,7 @@ export function SiteHeader() {
             type="button"
             onClick={() => setCityOpen((o) => !o)}
             className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted',
+              'flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted',
               cityOpen && 'bg-muted'
             )}
           >
@@ -153,7 +154,7 @@ export function SiteHeader() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'relative whitespace-nowrap py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground',
+                  'relative whitespace-nowrap py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
                   isActive &&
                     'text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-primary'
                 )}
@@ -181,7 +182,7 @@ export function SiteHeader() {
             aria-label="Viber"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            <img src="/images/viber.svg" alt="viber" className="size-4" />
+            <ViberIcon className="size-4" />
           </a>
           <a
             href={telegramHref}
