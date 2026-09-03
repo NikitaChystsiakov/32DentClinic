@@ -223,12 +223,17 @@ function StepCard({
           {Icon && <Icon className={cn('size-5', isMilestone && 'sm:size-6')} />}
         </div>
 
+        {/* Внутри карточки цвета обычные (foreground/muted-foreground), а не
+            --panel-*: панельные токены рассчитаны на текст поверх самой панели
+            и у indigo-light жёстко тёмные в обеих темах. На bg-card это ломалось
+            в тёмной теме — карточка становилась почти чёрной, а текст оставался
+            тёмным и сливался с ней. */}
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <span
               className={cn(
                 'text-xs font-semibold uppercase tracking-wider',
-                isMilestone ? 'text-accent' : 'text-(--panel-body)'
+                isMilestone ? 'text-accent' : 'text-muted-foreground'
               )}
             >
               Шаг {step.step}
@@ -238,7 +243,7 @@ function StepCard({
                 'font-heading font-bold',
                 isMilestone
                   ? 'text-base text-accent sm:text-lg'
-                  : 'text-sm text-(--panel-body)'
+                  : 'text-sm text-muted-foreground'
               )}
             >
               {step.duration}
@@ -247,7 +252,7 @@ function StepCard({
 
           <h3
             className={cn(
-              'font-heading font-semibold text-(--panel-heading)',
+              'font-heading font-semibold text-foreground',
               isMilestone ? 'text-lg sm:text-xl' : 'text-base'
             )}
           >
@@ -256,7 +261,7 @@ function StepCard({
 
           <p
             className={cn(
-              'mt-1 leading-relaxed text-(--panel-body)',
+              'mt-1 leading-relaxed text-muted-foreground',
               isMilestone ? 'text-sm sm:text-base' : 'text-sm'
             )}
           >

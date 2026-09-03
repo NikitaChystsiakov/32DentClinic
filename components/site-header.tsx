@@ -14,6 +14,7 @@ import { useBookingModal } from '@/components/booking-modal-provider'
 import { getCityContent } from '@/content'
 import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
+import { formatAddressWithoutCity } from '@/lib/format-address'
 import { siteConfig } from '@/lib/site-config'
 import { aggregatorRatings } from '@/lib/data/aggregators'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
@@ -80,6 +81,7 @@ export function SiteHeader() {
   ]
 
   const address = currentCity?.address ?? siteConfig.address
+  const shortAddress = formatAddressWithoutCity(address)
   const phone = currentCity?.phone ?? siteConfig.phoneDisplay
   const phoneHref = currentCity?.phoneHref ?? siteConfig.phoneHref
   const viberHref = currentCity
@@ -152,9 +154,13 @@ export function SiteHeader() {
                 </span>
               </a>
             )}
+            {/* Адрес без города: город показывает переключатель справа, а
+                дублирующее «г. Минск, » раньше не влезало в строку и адрес
+                обрезался многоточием. Без max-w и truncate — улица с домом
+                короче прежнего лимита, поэтому помещается целиком. */}
             <span className="hidden items-center gap-2 text-base text-muted-foreground lg:flex">
               <MapPin className="size-5 shrink-0 text-primary" />
-              <span className="max-w-56 truncate">{address}</span>
+              <span className="whitespace-nowrap">{shortAddress}</span>
             </span>
           </div>
 

@@ -237,8 +237,16 @@
  */
 [data-variant='indigo-light'] {
   --panel-heading: #1c1d3d;
-  --panel-body: color-mix(in oklch, #1c1d3d, transparent 28%);
-  --panel-eyebrow: color-mix(in oklch, #1c1d3d, transparent 12%);
+  /*
+   * Без прозрачности, в отличие от светлых панелей. Запаса по контрасту тут
+   * почти нет: даже сплошной #1c1d3d даёт на #7c82e8 всего 4.81:1 при норме
+   * 4.5:1, а прежние color-mix с transparent 28%/12% опускали текст до
+   * 3.2:1 и 4.1:1 — он визуально сливался с фоном панели. Поэтому подпись и
+   * надзаголовок взяты чуть темнее заголовка (5.2:1), а иерархия держится на
+   * размере и насыщенности шрифта, а не на прозрачности.
+   */
+  --panel-body: #16172f;
+  --panel-eyebrow: #16172f;
   --panel-icon: #1c1d3d;
   --panel-active: #1c1d3d;
   --panel-active-track: color-mix(in oklch, #1c1d3d, transparent 75%);
