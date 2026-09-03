@@ -98,6 +98,20 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <BeforeAfterTeaserSection />
         </SectionPanel>
       </Reveal>
+      {/* A/B-сравнение (только Минск, временно): второй экземпляр «Примеров
+          работ» — тот же блок, но по три карточки в ряд. Оба варианта висят
+          на странице намеренно: их показывают людям, впервые видящим сайт,
+          чтобы выбрать вариант по живой реакции. Это не забытый мусор — не
+          удалять до решения. Когда вариант выберут, снести проигравший, а
+          если победят две карточки — заодно убрать проп columns в
+          before-after-teaser-section.tsx. */}
+      {citySlug === 'minsk' && (
+        <Reveal delay={1}>
+          <SectionPanel variant="mint-1">
+            <BeforeAfterTeaserSection columns={3} />
+          </SectionPanel>
+        </Reveal>
+      )}
       <Reveal delay={1}>
         <SectionPanel variant="rose-1">
           <WhyUsSection />

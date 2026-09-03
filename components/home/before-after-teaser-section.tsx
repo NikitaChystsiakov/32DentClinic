@@ -16,9 +16,20 @@ import {
 import { Compare } from '@/components/before-after'
 import { beforeAfterCases } from '@/lib/data/before-after'
 import { useCity } from '@/lib/contexts/city-context'
+import { cn } from '@/lib/utils'
 
-export function BeforeAfterTeaserSection() {
+interface BeforeAfterTeaserSectionProps {
+  /**
+   * Сколько карточек показывать в ряд на десктопе. При трёх карточка
+   * становится уже, поэтому внутренности слегка ужимаются — иначе цитата
+   * врача и подпись начинают рассыпаться по строкам.
+   */
+  columns?: 2 | 3
+}
+
+export function BeforeAfterTeaserSection({ columns = 2 }: BeforeAfterTeaserSectionProps) {
   const { city } = useCity()
+  const compact = columns === 3
 
   return (
     <>
@@ -35,16 +46,38 @@ export function BeforeAfterTeaserSection() {
         <Carousel opts={{ align: 'start', loop: true }} className="px-1">
           <CarouselContent>
             {beforeAfterCases.map((c) => (
-              <CarouselItem key={c.id} className="basis-[88%] my-2 sm:basis-1/2">
+              <CarouselItem
+                key={c.id}
+                className={cn('basis-[88%] my-2 sm:basis-1/2', compact && 'lg:basis-1/3')}
+              >
                 <Card className="h-full ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl">
-                  <CardContent className="flex h-full flex-col gap-4 p-4">
+                  <CardContent className={cn('flex h-full flex-col gap-4 p-4', compact && 'gap-3 p-3.5')}>
                     <Compare before={c.before} after={c.after} />
                     <div className="flex flex-col gap-1 px-1">
-                      <h3 className="font-heading text-lg font-semibold text-foreground">{c.title}</h3>
-                      <p className="text-sm text-muted-foreground">{c.description}</p>
+                      <h3
+                        className={cn(
+                          'font-heading font-semibold text-foreground',
+                          compact ? 'text-base' : 'text-lg'
+                        )}
+                      >
+                        {c.title}
+                      </h3>
+                      <p className={cn('text-muted-foreground', compact ? 'text-xs' : 'text-sm')}>
+                        {c.description}
+                      </p>
                     </div>
-                    <div className="mt-auto flex items-start gap-3 rounded-lg border border-silver/30 bg-silver-muted/70 p-3">
-                      <div className="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-silver/25">
+                    <div
+                      className={cn(
+                        'mt-auto flex items-start gap-3 rounded-lg border border-silver/30 bg-silver-muted/70 p-3',
+                        compact && 'gap-2.5 p-2.5'
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          'relative shrink-0 overflow-hidden rounded-full ring-1 ring-silver/25',
+                          compact ? 'size-9' : 'size-11'
+                        )}
+                      >
                         <Image
                           src={c.doctorPhoto}
                           alt={c.doctorName}
@@ -54,9 +87,18 @@ export function BeforeAfterTeaserSection() {
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-foreground">{c.doctorName}</p>
-                        <p className="text-xs text-muted-foreground">{c.doctorSpecialization}</p>
-                        <p className="mt-1.5 flex gap-1.5 text-xs leading-relaxed text-muted-foreground">
+                        <p className={cn('font-semibold text-foreground', compact ? 'text-xs' : 'text-sm')}>
+                          {c.doctorName}
+                        </p>
+                        <p className={cn('text-muted-foreground', compact ? 'text-[11px]' : 'text-xs')}>
+                          {c.doctorSpecialization}
+                        </p>
+                        <p
+                          className={cn(
+                            'mt-1.5 flex gap-1.5 leading-relaxed text-muted-foreground',
+                            compact ? 'text-[11px]' : 'text-xs'
+                          )}
+                        >
                           <Quote className="mt-0.5 size-3 shrink-0 text-secondary" />
                           <span>{c.reasoning}</span>
                         </p>
