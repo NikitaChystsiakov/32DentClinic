@@ -22,13 +22,17 @@ export function ClinicGallerySection() {
   const { city } = useCity()
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <>
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-secondary">Внутри клиники</span>
           <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">Территория 32Дент</h2>
+          {/* Без «собственная лаборатория»: у Минска лаборатория — партнёр,
+              а не часть клиники (см. content/minsk.ts → about.laboratory).
+              Формулировка нейтральная, чтобы не быть ложной ни для одного
+              города, а не city-aware — это декоративный тизер, не заявление. */}
           <p className="max-w-2xl text-pretty text-muted-foreground">
-            Современное оборудование, собственная лаборатория и кабинеты, в которых комфортно и взрослым, и детям.
+            Современное оборудование и кабинеты, в которых комфортно и взрослым, и детям.
           </p>
         </div>
         <Button
@@ -58,6 +62,6 @@ export function ClinicGallerySection() {
           </div>
         ))}
       </div>
-    </section>
+    </>
   )
 }

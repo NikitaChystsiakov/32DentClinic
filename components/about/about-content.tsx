@@ -79,7 +79,7 @@ export function AboutContent() {
         <Reveal delay={0}>
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div className="flex flex-col gap-3">
-              <BlockHeading icon={FlaskConical}>Собственная лаборатория</BlockHeading>
+              <BlockHeading icon={FlaskConical}>{content.about.laboratoryTitle}</BlockHeading>
               <p className="text-pretty leading-relaxed text-muted-foreground">
                 {content.about.laboratory}
               </p>

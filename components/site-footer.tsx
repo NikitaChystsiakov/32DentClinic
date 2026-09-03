@@ -9,6 +9,8 @@ import { ViberIcon } from '@/components/icons/viber-icon'
 import { siteConfig } from '@/lib/site-config'
 import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug } from '@/config/cities'
+import { getCityContent } from '@/content'
+import { formatCityHours } from '@/lib/format-hours'
 import { usePathname } from 'next/navigation'
 
 function useCurrentCitySlug(): string | null {
@@ -25,6 +27,7 @@ export function SiteFooter() {
   const citySlug = useCurrentCitySlug()
   const prefix = citySlug ? `/${citySlug}` : ''
   const city = citySlug ? getCityBySlug(citySlug) : null
+  const content = citySlug ? getCityContent(citySlug) : null
   const services = citySlug ? getServicesForCity(citySlug) : []
   const isHub = !citySlug
 
@@ -40,8 +43,10 @@ export function SiteFooter() {
       ]
 
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    // Футер собран той же панелью, что и секции страницы, чтобы низ сайта
+    // не выпадал из общей сетки скруглённых контейнеров.
+    <footer className="px-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1.5rem)] sm:px-6 lg:px-8 lg:pb-6">
+      <div className="mx-auto max-w-7xl rounded-3xl bg-card px-6 py-12 ring-1 ring-border sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="flex flex-col gap-4">
@@ -50,8 +55,10 @@ export function SiteFooter() {
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {isHub
-                ? 'Сеть стоматологий 32Дент. Гарантия 2 года на все виды работ.'
-                : `Стоматология в ${city!.name}. Гарантия 2 года на все виды работ.`}
+                ? // Условия гарантии различаются по городам (см. content/minsk.ts),
+                  // поэтому хаб-страница не называет конкретный срок.
+                  'Сеть стоматологий 32Дент в Минске, Рогачёве и Жлобине. Гарантия на все виды работ.'
+                : `Стоматология в ${city!.name}. ${content!.guaranteeSummary}`}
             </p>
           </div>
 
@@ -107,9 +114,7 @@ export function SiteFooter() {
                 <a href={city!.phoneHref} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary">
                   <Phone className="size-4" /> {city!.phone}
                 </a>
-                <p className="text-sm text-muted-foreground">
-                  Пн–Сб: 8:00–19:00 · Вс: выходной
-                </p>
+                <p className="text-sm text-muted-foreground">{formatCityHours(content!.contacts.hours)}</p>
                 <div className="flex items-center gap-3">
                   <a
                     href={`https://viber.com/${city!.phone.replace(/[^0-9]/g, '')}`}

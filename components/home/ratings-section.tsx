@@ -111,7 +111,7 @@ function RatingCard({ aggregator }: { aggregator: AggregatorRating }) {
 
 export function RatingsSection() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <>
       <div className="mb-10 flex flex-col gap-2">
         <span className="text-sm font-medium text-secondary">Оценки на площадках</span>
         <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
@@ -127,6 +127,6 @@ export function RatingsSection() {
           <RatingCard key={aggregator.id} aggregator={aggregator} />
         ))}
       </div>
-    </section>
+    </>
   )
 }

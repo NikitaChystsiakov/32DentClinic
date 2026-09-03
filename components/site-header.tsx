@@ -4,30 +4,63 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, Phone, MapPin, Send, ChevronDown } from 'lucide-react'
+import { Phone, MapPin, Send, ChevronDown, Star, Percent } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { ViberIcon } from '@/components/icons/viber-icon'
-import { Sheet, SheetContent, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 import { useBookingModal } from '@/components/booking-modal-provider'
-import { cities, getCityBySlug, type City } from '@/config/cities'
+import { getCityContent } from '@/content'
+import { cities } from '@/config/cities'
+import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { siteConfig } from '@/lib/site-config'
+import { aggregatorRatings } from '@/lib/data/aggregators'
+import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
-function useCurrentCity(): City | null {
-  const pathname = usePathname()
-  const match = pathname?.match(/^\/([a-z-]+)(\/|$)/)
-  if (match) {
-    const city = getCityBySlug(match[1])
-    if (city) return city
+// Логотип 258×171 — ширина каждого варианта посчитана от высоты по этим пропорциям,
+// чтобы не менять размер картинки через CSS.
+const LOGO_RATIO = 258 / 171
+
+const layoutStyles: Record<
+  HeaderLayout,
+  {
+    topBar: string
+    topBarScrolled: string
+    bottomBar: string
+    logoHeight: number
+    logoClass: string
+    navOffset: string
   }
-  return null
+> = {
+  compact: {
+    topBar: 'h-16',
+    topBarScrolled: 'h-14',
+    bottomBar: 'h-12',
+    logoHeight: 40,
+    logoClass: '',
+    navOffset: '',
+  },
+  balanced: {
+    topBar: 'h-20',
+    topBarScrolled: 'h-16',
+    bottomBar: 'h-13',
+    logoHeight: 56,
+    logoClass: '',
+    navOffset: '',
+  },
+  anchored: {
+    topBar: 'h-17',
+    topBarScrolled: 'h-17',
+    bottomBar: 'h-13',
+    logoHeight: 88,
+    logoClass: 'translate-y-4',
+    navOffset: 'lg:pl-34',
+  },
 }
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
   const [cityOpen, setCityOpen] = React.useState(false)
   const cityDropdownRef = React.useRef<HTMLDivElement>(null)
   const pathname = usePathname()
@@ -35,6 +68,7 @@ export function SiteHeader() {
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
+  const styles = layoutStyles[HEADER_LAYOUT]
 
   const navLinks = [
     { label: 'Услуги', href: `${prefix}/uslugi/` },
@@ -52,6 +86,10 @@ export function SiteHeader() {
     ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}`
     : siteConfig.viberHref
   const telegramHref = siteConfig.telegramHref
+  const rating = aggregatorRatings.find((a) => a.id === '103by')
+  // Шапка живёт вне CityProvider (в корневом layout), поэтому акцию берём
+  // по слагу города из URL, а на общих страницах сети не показываем.
+  const promo = citySlug ? getCityContent(citySlug)?.promo : undefined
 
   React.useEffect(() => {
     function onScroll() {
@@ -75,217 +113,186 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full border-b transition-all duration-300',
-        scrolled
-          ? 'border-border bg-background/95 shadow-sm backdrop-blur-md'
-          : 'border-border/50 bg-background/80 backdrop-blur-sm'
+        'sticky top-0 z-40 w-full transition-shadow duration-300',
+        scrolled ? 'bg-background/95 shadow-sm backdrop-blur-md' : 'bg-background/90 backdrop-blur-sm'
       )}
     >
-      <div
-        className={cn(
-          'mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 transition-all duration-300 sm:px-6 lg:px-8',
-          scrolled ? 'h-16' : 'h-20'
-        )}
-      >
-        {/* Logo */}
-        <Link
-          href={prefix || '/'}
-          className="flex shrink-0 items-center gap-2 font-heading text-xl font-bold text-foreground"
-        >
-          <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
-            <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
-          </span>
-        </Link>
-
-        {/* City dropdown — lg+ */}
-        <div ref={cityDropdownRef} className="relative hidden shrink-0 lg:block">
-          <button
-            type="button"
-            onClick={() => setCityOpen((o) => !o)}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted',
-              cityOpen && 'bg-muted'
-            )}
-          >
-            <MapPin className="size-3.5 text-primary" />
-            {currentCity?.name ?? 'Сеть клиник'}
-            <ChevronDown className={cn('size-3.5 transition-transform', cityOpen && 'rotate-180')} />
-          </button>
-          {cityOpen && (
-            <div className="absolute left-0 top-full z-50 mt-1 w-56 overflow-hidden rounded-xl border border-border bg-background shadow-lg">
-              <div className="p-1">
-                <Link
-                  href="/"
-                  onClick={() => setCityOpen(false)}
-                  className={cn(
-                    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted',
-                    !currentCity && 'bg-muted font-medium text-primary'
-                  )}
-                >
-                  <MapPin className="size-3.5" />
-                  Сеть клиник (все города)
-                </Link>
-                {cities.map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/${city.slug}`}
-                    onClick={() => setCityOpen(false)}
-                    className={cn(
-                      'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted',
-                      currentCity?.slug === city.slug && 'bg-muted font-medium text-primary'
-                    )}
-                  >
-                    <MapPin className="size-3.5" />
-                    {city.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
+      {/* Верхняя полоса: логотип, доверительные метки, контакты, CTA */}
+      <div className="border-b border-border/60">
+        <div
+          className={cn(
+            'mx-auto flex max-w-7xl items-center gap-4 px-4 transition-all duration-300 sm:px-6 lg:px-8',
+            scrolled ? styles.topBarScrolled : styles.topBar
           )}
-        </div>
+        >
+          <Link href={prefix || '/'} className="relative z-10 flex shrink-0 items-center">
+            <Image
+              src="/images/logo.png"
+              alt="Логотип 32Дент"
+              width={Math.round(styles.logoHeight * LOGO_RATIO)}
+              height={styles.logoHeight}
+              preload
+              className={styles.logoClass}
+            />
+          </Link>
 
-        {/* Navigation — lg+ */}
-        <nav className="hidden shrink-0 items-center gap-5 lg:flex xl:gap-6">
-          {navLinks.map((link) => {
-            const isActive =
-              pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href))
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
+          {/* Доверительные метки — от md */}
+          <div className="hidden items-center gap-4 md:flex">
+            {rating?.rating && (
+              <a
+                href={rating.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-base text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Star className="size-5 shrink-0 fill-accent text-accent" />
+                <span className="font-semibold text-foreground">{rating.rating}</span>
+                <span className="hidden whitespace-nowrap xl:inline">
+                  · {rating.reviewsCount} отзывов на {rating.name}
+                </span>
+              </a>
+            )}
+            <span className="hidden items-center gap-2 text-base text-muted-foreground lg:flex">
+              <MapPin className="size-5 shrink-0 text-primary" />
+              <span className="max-w-56 truncate">{address}</span>
+            </span>
+          </div>
+
+          <div className="ml-auto flex items-center gap-3">
+            {/* Выбор города — lg+ */}
+            <div ref={cityDropdownRef} className="relative hidden shrink-0 lg:block">
+              <button
+                type="button"
+                onClick={() => setCityOpen((o) => !o)}
                 className={cn(
-                  'relative whitespace-nowrap py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-                  isActive &&
-                    'text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-primary'
+                  'flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-base font-medium text-muted-foreground transition-colors hover:bg-muted',
+                  cityOpen && 'bg-muted'
                 )}
               >
-                {link.label}
-              </Link>
-            )
-          })}
-        </nav>
+                {currentCity?.name ?? 'Сеть клиник'}
+                <ChevronDown className={cn('size-3.5 transition-transform', cityOpen && 'rotate-180')} />
+              </button>
+              {cityOpen && (
+                <div className="absolute right-0 top-full z-50 mt-1 w-56 overflow-hidden rounded-xl border border-border bg-background shadow-lg">
+                  <div className="p-1">
+                    <Link
+                      href="/"
+                      onClick={() => setCityOpen(false)}
+                      className={cn(
+                        'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted',
+                        !currentCity && 'bg-muted font-medium text-primary'
+                      )}
+                    >
+                      <MapPin className="size-3.5" />
+                      Сеть клиник (все города)
+                    </Link>
+                    {cities.map((city) => (
+                      <Link
+                        key={city.slug}
+                        href={`/${city.slug}`}
+                        onClick={() => setCityOpen(false)}
+                        className={cn(
+                          'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted',
+                          currentCity?.slug === city.slug && 'bg-muted font-medium text-primary'
+                        )}
+                      >
+                        <MapPin className="size-3.5" />
+                        {city.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
-        {/* Right actions — lg+ */}
-        <div className="hidden shrink-0 items-center gap-3 lg:flex">
-          {/* Phone: icon-only on lg, full text on xl */}
-          <a
-            href={phoneHref}
-            aria-label={phone}
-            className="flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
-          >
-            <Phone className="size-4 shrink-0" />
-            <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
-          </a>
+            {/* Контакты и CTA — lg+ */}
+            <div className="hidden shrink-0 items-center gap-3 lg:flex">
+              <a
+                href={phoneHref}
+                aria-label={phone}
+                className="flex items-center gap-2 text-lg font-bold text-foreground transition-colors hover:text-primary"
+              >
+                <Phone className="size-5 shrink-0" />
+                <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
+              </a>
+              <a
+                href={viberHref}
+                aria-label="Viber"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ViberIcon className="size-5" />
+              </a>
+              <a
+                href={telegramHref}
+                aria-label="Telegram"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Send className="size-5" />
+              </a>
+              <ThemeToggle />
+              <Button
+                size="lg"
+                className="bg-accent text-accent-foreground hover:bg-accent/90"
+                onClick={() => openBookingModal()}
+              >
+                Записаться
+              </Button>
+            </div>
 
-          <a
-            href={viberHref}
-            aria-label="Viber"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ViberIcon className="size-4" />
-          </a>
-          <a
-            href={telegramHref}
-            aria-label="Telegram"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Send className="size-4" />
-          </a>
-
-          <ThemeToggle />
-
-          <Button
-            className="bg-accent text-accent-foreground hover:bg-accent/90"
-            onClick={() => openBookingModal()}
-          >
-            Записаться
-          </Button>
-        </div>
-
-        {/* Mobile actions */}
-        <div className="flex items-center gap-1 lg:hidden">
-          <a href={phoneHref} aria-label="Позвонить" className="p-2 text-foreground">
-            <Phone className="size-5" />
-          </a>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Открыть меню"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <Menu />
-          </Button>
+            {/* Мобильное действие: полное меню теперь в нижней навигации */}
+            <div className="flex items-center lg:hidden">
+              <a
+                href={phoneHref}
+                aria-label="Позвонить"
+                className="flex size-10 items-center justify-center rounded-full text-foreground"
+              >
+                <Phone className="size-5" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <SheetContent side="right" className="flex w-full max-w-none flex-col gap-0 sm:max-w-none">
-          <SheetHeader className="border-b border-border">
-            <SheetTitle className="font-heading text-lg">Меню</SheetTitle>
-          </SheetHeader>
-          <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
-            <Link
-              href="/"
-              onClick={() => setDrawerOpen(false)}
-              className={cn(
-                'flex min-h-11 items-center rounded-lg px-3 text-base font-medium text-foreground hover:bg-muted',
-                !currentCity && 'bg-muted text-primary'
-              )}
-            >
-              <MapPin className="mr-2 size-4" />
-              Сеть клиник
-            </Link>
-            {cities.map((city) => (
-              <Link
-                key={city.slug}
-                href={`/${city.slug}`}
-                onClick={() => setDrawerOpen(false)}
-                className={cn(
-                  'flex min-h-11 items-center rounded-lg px-3 text-base font-medium text-foreground hover:bg-muted',
-                  currentCity?.slug === city.slug && 'bg-muted text-primary'
-                )}
-              >
-                <MapPin className="mr-2 size-4" />
-                {city.name}
-              </Link>
-            ))}
-            <div className="my-2 h-px bg-border" />
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setDrawerOpen(false)}
-                className="flex min-h-11 items-center rounded-lg px-3 text-base font-medium text-foreground hover:bg-muted"
-              >
-                {link.label}
-              </Link>
-            ))}
+      {/* Нижняя полоса: навигация и анонс акции */}
+      <div className="border-b border-border bg-card">
+        <div
+          className={cn(
+            'mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8',
+            styles.bottomBar
+          )}
+        >
+          <nav className={cn('hidden shrink-0 items-center gap-6 lg:flex xl:gap-7', styles.navOffset)}>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || pathname?.startsWith(link.href)
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    'relative whitespace-nowrap text-base font-medium text-muted-foreground transition-colors hover:text-foreground',
+                    isActive && 'text-primary'
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
-          <div className="flex flex-col gap-3 border-t border-border p-4">
-            <a
-              href={phoneHref}
-              className="flex items-center justify-center gap-2 text-base font-semibold text-foreground"
+
+          {promo && (
+            <Link
+              href={promo.href}
+              className="group flex min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground lg:ml-auto"
             >
-              <Phone className="size-4" />
-              {phone}
-            </a>
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-3.5" /> {address}
-            </div>
-            <Button
-              size="lg"
-              className="w-full cursor-pointer bg-accent text-accent-foreground hover:bg-accent/90"
-              onClick={() => {
-                setDrawerOpen(false)
-                openBookingModal()
-              }}
-            >
-              Записаться
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
+              <Percent className="size-4 shrink-0 text-accent" />
+              <span className="truncate">{promo.text}</span>
+              <span className="hidden shrink-0 font-medium text-primary underline-offset-4 group-hover:underline sm:inline">
+                Подробнее
+              </span>
+            </Link>
+          )}
+        </div>
+      </div>
     </header>
   )
 }

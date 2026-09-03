@@ -13,6 +13,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel'
 import { useCity } from '@/lib/contexts/city-context'
+import { aggregatorRatings } from '@/lib/data/aggregators'
 import { cn } from '@/lib/utils'
 
 interface Review {
@@ -59,6 +60,7 @@ export function ReviewsSection() {
   const [current, setCurrent] = React.useState(0)
   const { city, content } = useCity()
   const reviews = content.reviews as Review[]
+  const mainRating = aggregatorRatings.find((a) => a.id === '103by')
 
   React.useEffect(() => {
     if (!api) return
@@ -71,14 +73,13 @@ export function ReviewsSection() {
   }, [api])
 
   return (
-    <section className="border-y border-border bg-muted/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-10 flex flex-col gap-2">
-          <span className="text-sm font-medium text-secondary">Отзывы</span>
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
+    <>
+      <div className="mb-10 flex flex-col gap-2">
+          <span className="text-sm font-medium text-(--panel-eyebrow)">Отзывы</span>
+          <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading)">
             Что говорят наши пациенты
           </h2>
-          <p className="max-w-2xl text-pretty text-muted-foreground">
+          <p className="max-w-2xl text-pretty text-(--panel-body)">
             Реальные впечатления пациентов о лечении в 32Дент.
           </p>
         </div>
@@ -110,7 +111,9 @@ export function ReviewsSection() {
               onClick={() => api?.scrollTo(index)}
               className={cn(
                 'size-2.5 rounded-full transition-colors',
-                index === current ? 'bg-primary' : 'bg-foreground/20 hover:bg-foreground/40'
+                index === current
+                  ? 'bg-(--panel-active)'
+                  : 'bg-(--panel-active-track) hover:opacity-80'
               )}
             />
           ))}
@@ -131,10 +134,9 @@ export function ReviewsSection() {
             render={<a href="#" />}
             nativeButton={false}
           >
-            Читать все отзывы на {content.aggregators.source}
+            Читать все отзывы на {mainRating?.name ?? '103.by'}
           </Button>
         </div>
-      </div>
-    </section>
+    </>
   )
 }

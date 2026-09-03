@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, type PointerEvent as ReactPointerEvent } from 'react'
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react'
 import Image from 'next/image'
 import { motion, useMotionValue, useSpring, type Variants } from 'motion/react'
 import { ParticleField } from '@/components/particle-field'
@@ -38,6 +38,8 @@ const MILESTONE_PHOTO_HINTS: Record<string, string> = {
   Консультация: 'Фото приёма: врач и пациент в кабинете консультации',
   'Установка имплантов': 'Фото хирургического кабинета или стерильного набора инструментов (без открытой процедуры)',
   'Финальные коронки': 'Фото зуботехнической лаборатории или готовой работы на модели',
+  'Лечение кариеса или пульпита': 'Фото стоматологического кабинета или оборудования во время лечения (без открытой полости зуба)',
+  'Пломбирование и реставрация': 'Фото готовой реставрации на модели или крупный план улыбки после лечения',
 }
 
 // Небольшая, но узнаваемая подборка врачей клиники для фото-кластера у вступления:
@@ -183,7 +185,10 @@ function StepCard({
       className={cn(
         'relative flex flex-col rounded-xl border p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5',
         isMilestone
-          ? 'border-accent bg-accent/5 ring-1 ring-accent/20'
+          ? // Заливка непрозрачная: при bg-accent/5 сквозь карточку просвечивала
+            // indigo-панель и тёмный текст на ней читался плохо. Оттенок акцента
+            // сохранён, но подмешан в непрозрачный --card.
+            'border-accent bg-[color-mix(in_oklch,var(--card),var(--accent)_8%)] ring-1 ring-accent/20'
           : 'border-border bg-card'
       )}
     >
@@ -192,11 +197,15 @@ function StepCard({
         aria-hidden
         className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 [background:radial-gradient(140px_circle_at_var(--mx)_var(--my),color-mix(in_oklch,var(--silver),transparent_55%),transparent_70%)]"
       />
+      {/* Крупный номер шага — decor watermark. Смещён дальше от карточки (85%,
+          не 70%), чтобы не проваливаться под полупрозрачные полоски
+          PhotoPlaceholder, и залит белым, а не --silver: на indigo-панели
+          светло-серый почти сливался с фоном, белый/25 держит контраст. */}
       <span
         aria-hidden
         className={cn(
-          'pointer-events-none absolute top-2 hidden select-none font-heading text-8xl leading-none font-bold text-silver/25 md:block',
-          isLeft ? 'right-0 translate-x-[70%]' : 'left-0 -translate-x-[70%]'
+          'pointer-events-none absolute top-2 hidden select-none font-heading text-7xl leading-none font-bold text-white/25 md:block',
+          isLeft ? 'right-0 translate-x-[85%]' : 'left-0 -translate-x-[85%]'
         )}
       >
         {String(step.step).padStart(2, '0')}
@@ -219,7 +228,7 @@ function StepCard({
             <span
               className={cn(
                 'text-xs font-semibold uppercase tracking-wider',
-                isMilestone ? 'text-accent' : 'text-muted-foreground'
+                isMilestone ? 'text-accent' : 'text-(--panel-body)'
               )}
             >
               Шаг {step.step}
@@ -229,7 +238,7 @@ function StepCard({
                 'font-heading font-bold',
                 isMilestone
                   ? 'text-base text-accent sm:text-lg'
-                  : 'text-sm text-muted-foreground'
+                  : 'text-sm text-(--panel-body)'
               )}
             >
               {step.duration}
@@ -238,7 +247,7 @@ function StepCard({
 
           <h3
             className={cn(
-              'font-heading font-semibold text-foreground',
+              'font-heading font-semibold text-(--panel-heading)',
               isMilestone ? 'text-lg sm:text-xl' : 'text-base'
             )}
           >
@@ -247,7 +256,7 @@ function StepCard({
 
           <p
             className={cn(
-              'mt-1 leading-relaxed text-muted-foreground',
+              'mt-1 leading-relaxed text-(--panel-body)',
               isMilestone ? 'text-sm sm:text-base' : 'text-sm'
             )}
           >
@@ -287,7 +296,7 @@ function ArcConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' 
     return (
       <svg
         viewBox="0 0 40 56"
-        className="mx-auto h-14 w-10 text-silver"
+        className="mx-auto h-14 w-10 text-white/55"
         fill="none"
         aria-hidden
       >
@@ -312,7 +321,7 @@ function ArcConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' 
     : `M${headX + 5},13 L${headX - 3},18 L${headX + 5},23`
 
   return (
-    <svg viewBox="0 0 100 26" preserveAspectRatio="none" className="h-14 w-full text-silver" fill="none" aria-hidden>
+    <svg viewBox="0 0 100 26" preserveAspectRatio="none" className="h-14 w-full text-white/55" fill="none" aria-hidden>
       <path
         d={d}
         stroke="currentColor"
@@ -334,19 +343,42 @@ function ArcConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' 
   )
 }
 
+type OrbTone = 'silver' | 'accent' | 'primary' | 'secondary' | 'white'
+
+const ORB_GRADIENTS: Record<OrbTone, string> = {
+  silver: 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--silver), white 55%), var(--silver) 80%)',
+  accent: 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--accent), white 40%), var(--accent) 75%)',
+  primary: 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--primary), white 45%), var(--primary) 78%)',
+  secondary:
+    'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--secondary), white 45%), var(--secondary) 78%)',
+  white: 'radial-gradient(circle at 30% 28%, white, color-mix(in oklch, white, transparent 30%) 80%)',
+}
+
 // Маленький глянцевый шарик — чисто декоративный акцент, без попытки быть
-// "фото" (на таком размере фото всё равно не читается).
-function Orb({ size, tone = 'silver' }: { size: number; tone?: 'silver' | 'accent' }) {
+// "фото" (на таком размере фото всё равно не читается). Шарики у стрелок-
+// коннекторов статичны (animate не передан); фоновая россыпь (BackgroundOrbs)
+// включает animate — те же координаты, что и весь фон, просто мягко дрейфуют.
+function Orb({
+  size,
+  tone = 'silver',
+  animate = false,
+  delay = 0,
+  duration = 14,
+}: {
+  size: number
+  tone?: OrbTone
+  animate?: boolean
+  delay?: number
+  duration?: number
+}) {
   return (
     <span
-      className="rounded-full shadow-md ring-1 ring-white/50"
+      className={cn('block rounded-full shadow-md ring-1 ring-white/50', animate && 'animate-orb-float')}
       style={{
         width: size,
         height: size,
-        background:
-          tone === 'accent'
-            ? 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--accent), white 40%), var(--accent) 75%)'
-            : 'radial-gradient(circle at 30% 28%, color-mix(in oklch, var(--silver), white 55%), var(--silver) 80%)',
+        background: ORB_GRADIENTS[tone],
+        ...(animate ? { animationDelay: `${delay}s`, animationDuration: `${duration}s` } : {}),
       }}
     />
   )
@@ -367,26 +399,135 @@ function GapConnector({ direction }: { direction: 'toRight' | 'toLeft' | 'down' 
 }
 
 // Немного шариков просто в фоне секции — не привязаны к карточкам или стрелкам,
-// разбросаны по всей высоте, чтобы оживить пустые места.
-const BACKGROUND_ORBS: { top: string; left: string; size: number; tone?: 'silver' | 'accent' }[] = [
-  { top: '4%', left: '47%', size: 13 },
-  { top: '14%', left: '93%', size: 20, tone: 'accent' },
-  { top: '24%', left: '6%', size: 10 },
-  { top: '35%', left: '53%', size: 16 },
-  { top: '47%', left: '90%', size: 11 },
-  { top: '58%', left: '13%', size: 22, tone: 'accent' },
-  { top: '69%', left: '46%', size: 9 },
-  { top: '80%', left: '86%', size: 15 },
-  { top: '91%', left: '9%', size: 12 },
-  { top: '98%', left: '55%', size: 18, tone: 'accent' },
+// разбросаны по всей высоте, чтобы оживить пустые места. Каждый мягко дрейфует
+// (animate-glow-drift), delay/duration разные — чтобы не двигались синхронно.
+const BACKGROUND_ORBS: { top: string; left: string; size: number; tone?: OrbTone; delay: number; duration: number }[] = [
+  { top: '3%', left: '47%', size: 13, tone: 'white', delay: 0, duration: 15 },
+  { top: '5%', left: '76%', size: 8, tone: 'primary', delay: 4.1, duration: 16 },
+  { top: '7%', left: '11%', size: 11, tone: 'accent', delay: 8.4, duration: 14 },
+  { top: '9%', left: '22%', size: 9, tone: 'secondary', delay: 3.4, duration: 18 },
+  { top: '12%', left: '58%', size: 7, delay: 6.1, duration: 13 },
+  { top: '14%', left: '93%', size: 20, tone: 'accent', delay: 1.2, duration: 16 },
+  { top: '17%', left: '38%', size: 12, tone: 'white', delay: 9.3, duration: 17 },
+  { top: '19%', left: '65%', size: 8, tone: 'primary', delay: 5.6, duration: 13 },
+  { top: '22%', left: '82%', size: 10, tone: 'secondary', delay: 2.4, duration: 19 },
+  { top: '24%', left: '6%', size: 10, delay: 2.1, duration: 17 },
+  { top: '27%', left: '49%', size: 15, tone: 'accent', delay: 7.8, duration: 15 },
+  { top: '30%', left: '78%', size: 14, tone: 'white', delay: 6.8, duration: 14 },
+  { top: '33%', left: '24%', size: 8, tone: 'primary', delay: 3.1, duration: 18 },
+  { top: '35%', left: '53%', size: 16, tone: 'primary', delay: 0.8, duration: 19 },
+  { top: '38%', left: '95%', size: 9, tone: 'white', delay: 9.7, duration: 13 },
+  { top: '41%', left: '30%', size: 11, tone: 'secondary', delay: 4.3, duration: 15 },
+  { top: '44%', left: '68%', size: 13, tone: 'accent', delay: 1.9, duration: 17 },
+  { top: '47%', left: '90%', size: 11, delay: 7.5, duration: 16 },
+  { top: '50%', left: '42%', size: 8, tone: 'white', delay: 5.4, duration: 14 },
+  { top: '52%', left: '17%', size: 19, tone: 'accent', delay: 2.9, duration: 18 },
+  { top: '55%', left: '73%', size: 10, tone: 'secondary', delay: 8.8, duration: 15 },
+  { top: '58%', left: '13%', size: 22, tone: 'accent', delay: 5.2, duration: 14 },
+  { top: '61%', left: '88%', size: 12, tone: 'primary', delay: 0.5, duration: 19 },
+  { top: '63%', left: '61%', size: 9, tone: 'white', delay: 1.6, duration: 17 },
+  { top: '66%', left: '27%', size: 14, tone: 'secondary', delay: 6.5, duration: 13 },
+  { top: '69%', left: '46%', size: 9, tone: 'primary', delay: 8.1, duration: 15 },
+  { top: '72%', left: '7%', size: 11, tone: 'white', delay: 3.9, duration: 18 },
+  { top: '74%', left: '85%', size: 13, tone: 'secondary', delay: 3.7, duration: 19 },
+  { top: '77%', left: '57%', size: 8, tone: 'accent', delay: 9.1, duration: 16 },
+  { top: '80%', left: '86%', size: 15, delay: 0.3, duration: 16 },
+  { top: '83%', left: '20%', size: 10, tone: 'primary', delay: 5.9, duration: 14 },
+  { top: '85%', left: '35%', size: 10, tone: 'white', delay: 6.2, duration: 13 },
+  { top: '88%', left: '66%', size: 12, tone: 'secondary', delay: 2.7, duration: 18 },
+  { top: '91%', left: '9%', size: 12, delay: 4.9, duration: 18 },
+  { top: '93%', left: '92%', size: 9, tone: 'accent', delay: 7.9, duration: 15 },
+  { top: '95%', left: '70%', size: 8, tone: 'primary', delay: 2.5, duration: 15 },
+  { top: '97%', left: '31%', size: 14, tone: 'white', delay: 1.1, duration: 17 },
+  { top: '98%', left: '55%', size: 18, tone: 'accent', delay: 7.2, duration: 17 },
 ]
 
+// Насколько далеко курсор ещё «цепляет» шарик и на сколько пикселей утягивает.
+const ORB_PULL_RADIUS = 340
+const ORB_PULL_STRENGTH = 34
+
 function BackgroundOrbs() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const orbRefs = useRef<(HTMLSpanElement | null)[]>([])
+  const pointer = useRef<{ x: number; y: number } | null>(null)
+  const frame = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    function update() {
+      frame.current = null
+      const container = containerRef.current
+      if (!container) return
+
+      const rect = container.getBoundingClientRect()
+      const p = pointer.current
+
+      BACKGROUND_ORBS.forEach((orb, i) => {
+        const el = orbRefs.current[i]
+        if (!el) return
+
+        let x = 0
+        let y = 0
+        if (p) {
+          // Опорная точка считается из процентов, а не из getBoundingClientRect:
+          // иначе к позиции примешался бы уже применённый transform и притяжение
+          // само себя раскачивало бы.
+          const baseX = rect.left + (parseFloat(orb.left) / 100) * rect.width
+          const baseY = rect.top + (parseFloat(orb.top) / 100) * rect.height
+          const dx = p.x - baseX
+          const dy = p.y - baseY
+          const distance = Math.hypot(dx, dy)
+          if (distance > 1 && distance < ORB_PULL_RADIUS) {
+            const pull = (1 - distance / ORB_PULL_RADIUS) * ORB_PULL_STRENGTH
+            x = (dx / distance) * pull
+            y = (dy / distance) * pull
+          }
+        }
+        el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`
+      })
+    }
+
+    function schedule() {
+      if (frame.current === null) frame.current = requestAnimationFrame(update)
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      pointer.current = { x: e.clientX, y: e.clientY }
+      schedule()
+    }
+
+    function onPointerOut(e: PointerEvent) {
+      // Курсор ушёл за пределы окна — отпускаем шарики по домам.
+      if (e.relatedTarget === null) {
+        pointer.current = null
+        schedule()
+      }
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    window.addEventListener('pointerout', onPointerOut, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerout', onPointerOut)
+      if (frame.current !== null) cancelAnimationFrame(frame.current)
+    }
+  }, [])
+
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
+    <div ref={containerRef} aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
       {BACKGROUND_ORBS.map((orb, i) => (
         <div key={i} className="absolute" style={{ top: orb.top, left: orb.left }}>
-          <Orb size={orb.size} tone={orb.tone} />
+          {/* Три слоя трансформаций, чтобы они не затирали друг друга:
+              позиция (этот div) → притяжение к курсору (span ниже) → дрейф (Orb). */}
+          <span
+            ref={(el) => {
+              orbRefs.current[i] = el
+            }}
+            className="block transition-transform duration-500 ease-out will-change-transform"
+          >
+            <Orb size={orb.size} tone={orb.tone} animate delay={orb.delay} duration={orb.duration} />
+          </span>
         </div>
       ))}
     </div>
@@ -397,7 +538,7 @@ function GapLabelCard({ gap }: { gap: TreatmentTimelineGapLabel }) {
   const Icon = gap.icon ? iconMap[gap.icon] : null
 
   return (
-    <div className="flex items-center gap-2 rounded-full border border-dashed border-accent/40 bg-accent/5 px-4 py-2 text-sm text-accent">
+    <div className="flex items-center gap-2 rounded-full border border-dashed border-accent/40 bg-[color-mix(in_oklch,var(--card),var(--accent)_8%)] px-4 py-2 text-sm text-accent">
       {Icon && <Icon className="size-4" />}
       <span className="font-medium">{gap.label}</span>
     </div>
@@ -418,7 +559,7 @@ export function TreatmentSteps() {
   const clusterDoctors = pickDoctorCluster(getDoctorsForCity(city.slug))
 
   return (
-    <section className="relative overflow-hidden border-y border-silver/25 bg-silver-muted">
+    <>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,color-mix(in_oklch,var(--primary),transparent_92%),transparent_50%),radial-gradient(circle_at_85%_60%,color-mix(in_oklch,var(--accent),transparent_93%),transparent_45%),radial-gradient(circle_at_30%_90%,color-mix(in_oklch,var(--secondary),transparent_94%),transparent_50%)]"
@@ -430,14 +571,17 @@ export function TreatmentSteps() {
         maxSize={4.5}
       />
       <BackgroundOrbs />
-      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="relative">
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-secondary">Путь пациента</span>
-            <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
+            <span className="text-sm font-medium text-(--panel-eyebrow)">Путь пациента</span>
+            {/* Только этот h2 — белый, а не --panel-heading: у крупного bold-заголовка
+                контраст с indigo-фоном достаточный, в отличие от мелких заголовков
+                карточек ниже, которым нужен тёмный текст. */}
+            <h2 className="font-heading text-3xl font-bold tracking-tight text-white [text-shadow:0_1px_10px_rgb(20_16_60/0.3)]">
               Этапы лечения
             </h2>
-            <p className="max-w-xl text-pretty text-muted-foreground">
+            <p className="max-w-xl text-pretty text-(--panel-body)">
               От первого визита до улыбки мечты — каждый этап под контролем наших врачей.
             </p>
           </div>
@@ -459,7 +603,7 @@ export function TreatmentSteps() {
             >
               <motion.path
                 d={wavyPath}
-                stroke="hsl(var(--accent))"
+                stroke="var(--accent)"
                 strokeWidth="2"
                 strokeDasharray="6 4"
                 strokeLinecap="round"
@@ -530,6 +674,6 @@ export function TreatmentSteps() {
           </div>
         </div>
       </div>
-    </section>
+    </>
   )
 }

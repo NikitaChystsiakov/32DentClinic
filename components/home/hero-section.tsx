@@ -39,12 +39,14 @@ export function HeroSection() {
 
       <div className="relative mx-auto flex min-h-160 max-w-6xl flex-col justify-center gap-8 px-4 py-16 sm:px-6 md:py-20 lg:min-h-180 lg:px-8">
         <div className="flex max-w-2xl flex-col gap-6">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
-            <Star className="size-4 fill-accent text-accent" />
-            <span>
-              {content.aggregators.reviewsCount} отзывов на {content.aggregators.source}
-            </span>
-          </div>
+          {mainRating && (
+            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
+              <Star className="size-4 fill-accent text-accent" />
+              <span>
+                {mainRating.reviewsCount} отзывов на {mainRating.name}
+              </span>
+            </div>
+          )}
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             {content.hero.title}
           </h1>

@@ -4,32 +4,32 @@ import { MapPin, Clock, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useBookingModal } from '@/components/booking-modal-provider'
 import { useCity } from '@/lib/contexts/city-context'
+import { formatCityHours } from '@/lib/format-hours'
 
 export function ContactCtaSection() {
   const { openBookingModal } = useBookingModal()
-  const { city } = useCity()
+  const { city, content } = useCity()
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="grid gap-8 rounded-2xl bg-muted/40 p-8 ring-1 ring-silver/25 md:grid-cols-2 md:p-12">
+    <div className="grid gap-8 md:grid-cols-2">
         <div className="flex flex-col gap-4">
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground">
+          <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading)">
             Приходите на консультацию
           </h2>
-          <p className="text-pretty text-muted-foreground">
+          <p className="text-pretty text-(--panel-body)">
             Расскажем, что можно сделать с вашей ситуацией, и составим план лечения без обязательств.
           </p>
-          <div className="flex flex-col gap-3 text-sm text-foreground">
+          <div className="flex flex-col gap-3 text-sm text-(--panel-heading)">
             <div className="flex items-center gap-2">
-              <MapPin className="size-4 text-primary" />
+              <MapPin className="size-4 text-(--panel-body)" />
               <span>{city.address}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="size-4 text-primary" />
-              <span>Пн–Сб 8:00–19:00</span>
+              <Clock className="size-4 shrink-0 text-(--panel-body)" />
+              <span>{formatCityHours(content.contacts.hours)}</span>
             </div>
-            <a href={city.phoneHref} className="flex items-center gap-2 hover:text-primary">
-              <Phone className="size-4 text-primary" />
+            <a href={city.phoneHref} className="flex items-center gap-2 hover:opacity-80">
+              <Phone className="size-4 text-(--panel-body)" />
               <span>{city.phone}</span>
             </a>
           </div>
@@ -42,11 +42,10 @@ export function ContactCtaSection() {
           >
             Записаться онлайн
           </Button>
-          <Button size="lg" variant="outline" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
+          <Button size="lg" variant="silver" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
             Как нас найти
           </Button>
         </div>
-      </div>
-    </section>
+    </div>
   )
 }

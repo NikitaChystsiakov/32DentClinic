@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, Manrope } from 'next/font/google'
+import { Golos_Text, Unbounded } from 'next/font/google'
 import { headers } from 'next/headers'
 import './globals.css'
 
@@ -10,11 +10,16 @@ import { BookingModalLoader } from '@/components/booking-modal-loader'
 import { HeaderSwitcher } from '@/components/header-switcher'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
+import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { GeoBanner } from '@/components/geo-banner'
 import { siteConfig } from '@/lib/site-config'
 
-const inter = Inter({ subsets: ['latin', 'cyrillic'], variable: '--font-inter' })
-const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manrope' })
+// Golos Text — основной текст, UI, кнопки, навигация. Unbounded — заголовки
+// и крупные цифры (насыщенные начертания 600-700). Оба — вариативные шрифты
+// с полноценной поддержкой кириллицы (subsets: cyrillic), поэтому вес не
+// фиксируем: конкретные font-weight задаются в компонентах через Tailwind.
+const golosText = Golos_Text({ subsets: ['latin', 'cyrillic'], variable: '--font-golos-text' })
+const unbounded = Unbounded({ subsets: ['latin', 'cyrillic'], variable: '--font-unbounded' })
 
 export const metadata: Metadata = {
   title: {
@@ -70,7 +75,7 @@ export default async function RootLayout({
     : null
 
   return (
-    <html lang="ru" className="bg-background" suppressHydrationWarning>
+    <html lang="ru" className="bg-(--page-surface)" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -78,7 +83,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${manrope.variable} font-sans antialiased`}>
+      <body className={`${golosText.variable} ${unbounded.variable} font-sans antialiased`}>
         <ThemeProvider>
           <BookingModalProvider>
             <div className="flex min-h-dvh flex-col">
@@ -87,6 +92,7 @@ export default async function RootLayout({
               <main className="flex-1">{children}</main>
               <FloatingMessengers />
               <SiteFooter />
+              <MobileBottomNav />
             </div>
             <BookingModalLoader />
           </BookingModalProvider>

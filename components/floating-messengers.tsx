@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site-config"
 
 export function FloatingMessengers() {
   return (
-    <div className="fixed right-4 bottom-20 z-40 flex flex-col gap-3 md:bottom-6">
+    <div className="fixed right-4 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-40 flex flex-col gap-3 lg:bottom-6">
       <a
         href={siteConfig.whatsappHref}
         target="_blank"

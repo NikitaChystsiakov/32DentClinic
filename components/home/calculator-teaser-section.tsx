@@ -9,20 +9,19 @@ export function CalculatorTeaserSection() {
   const { city } = useCity()
 
   return (
-    <section className="border-y border-border bg-primary text-primary-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+    <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-4">
-          <div className="flex size-12 items-center justify-center rounded-lg bg-primary-foreground/10">
+          <div className="flex size-12 items-center justify-center rounded-lg bg-primary-foreground/10 text-(--panel-icon)">
             <Calculator className="size-6" />
           </div>
-          <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-(--panel-heading) sm:text-3xl">
             Узнайте предварительную стоимость лечения
           </h2>
-          <p className="max-w-lg text-pretty text-primary-foreground/80">
+          <p className="max-w-lg text-pretty text-(--panel-body)">
             Ответьте на несколько вопросов о ваших зубах — получите план и ориентировочную цену, а заодно
             промокод на скидку при записи.
           </p>
-          <div className="flex items-center gap-2 text-sm text-primary-foreground/80">
+          <div className="flex items-center gap-2 text-sm text-(--panel-body)">
             <Percent className="size-4" />
             <span>Промокод действует 7 дней после расчёта</span>
           </div>
@@ -37,7 +36,6 @@ export function CalculatorTeaserSection() {
           Рассчитать стоимость
           <ArrowRight data-icon="inline-end" />
         </Button>
-      </div>
-    </section>
+    </div>
   )
 }
