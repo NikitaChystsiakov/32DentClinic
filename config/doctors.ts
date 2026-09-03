@@ -11,6 +11,13 @@ export interface Doctor {
   hasCertificates: boolean
   photo: string
   cities: string[] // список slug городов, где работает врач
+  /**
+   * Карточка-заглушка: имя выдумано, а фото взято у врача из Рогачёва.
+   * Такие записи нельзя показывать как реальных людей — страница «О нас»
+   * их отфильтровывает (см. getRealDoctorsForCity). Снимите флаг, когда
+   * клиника пришлёт настоящие имена и портреты.
+   */
+  isPlaceholder?: boolean
 }
 
 export const doctorCategoryLabels: Record<DoctorCategory, string> = {
@@ -157,6 +164,7 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/ilyushchenko-natalya.png',
     cities: ['minsk'],
+    isPlaceholder: true,
   },
   {
     slug: 'minsk-terapevt-2',
@@ -169,6 +177,7 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/alekseychik-yuliya.png',
     cities: ['minsk'],
+    isPlaceholder: true,
   },
   {
     slug: 'minsk-ortoped-1',
@@ -181,6 +190,7 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/kireev-vladislav.png',
     cities: ['minsk'],
+    isPlaceholder: true,
   },
 
   // --- Жлобин (заглушки — заменить на реальных врачей) ---
@@ -195,6 +205,7 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/saykovskaya-tatyana.png',
     cities: ['zhlobin'],
+    isPlaceholder: true,
   },
   {
     slug: 'zhlobin-hirurg-1',
@@ -210,6 +221,7 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/makhonko-pavel.png',
     cities: ['zhlobin'],
+    isPlaceholder: true,
   },
 ]
 
@@ -219,6 +231,14 @@ export function getDoctorBySlug(slug: string) {
 
 export function getDoctorsForCity(citySlug: string) {
   return doctors.filter((d) => d.cities.includes(citySlug))
+}
+
+/**
+ * Врачи города без карточек-заглушек. Используйте там, где врача показывают
+ * как реального человека (фото + имя), — например на странице «О нас».
+ */
+export function getRealDoctorsForCity(citySlug: string) {
+  return getDoctorsForCity(citySlug).filter((d) => !d.isPlaceholder)
 }
 
 export function getDoctorsBySlugAndCity(doctorSlug: string, citySlug: string) {

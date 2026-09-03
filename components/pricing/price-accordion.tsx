@@ -14,9 +14,15 @@ export function PriceAccordion() {
       <Accordion multiple>
         {serviceCategories.map((service) => (
           <AccordionItem key={service.slug} value={service.slug}>
-            <AccordionTrigger className="aria-expanded:border-b aria-expanded:border-silver/25">
+            {/* border-b-silver/25, а не border-silver/25: у триггера в базовом
+                стиле уже есть рамка со всех сторон (border-transparent), и общий
+                border-color красил все четыре стороны — открытая категория
+                обводилась прямоугольником. Красим только нижнюю грань.
+                hover:no-underline гасит подчёркивание из базового AccordionTrigger:
+                вместо него подсвечиваем заголовок акцентным цветом. */}
+            <AccordionTrigger className="items-center hover:no-underline aria-expanded:border-b-silver/25 **:data-[slot=accordion-trigger-icon]:text-accent!">
               <span className="flex flex-wrap items-center gap-2 py-1">
-                <span className="font-heading text-base font-semibold text-foreground">
+                <span className="font-heading text-base font-semibold text-foreground transition-colors group-hover/accordion-trigger:text-accent group-aria-expanded/accordion-trigger:text-accent">
                   {service.shortName}
                 </span>
                 <span className="rounded-full bg-silver-muted px-2 py-0.5 text-xs font-medium text-muted-foreground ring-1 ring-silver/25">
