@@ -15,6 +15,7 @@ import {
   Users,
   Building2,
   Info,
+  BookOpen,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -53,6 +54,7 @@ const NAV_ICONS = {
   'primery-rabot': Images,
   'o-nas': Info,
   kontakty: MapPin,
+  blog: BookOpen,
 } as const
 
 export function MobileMenuProvider({ children }: { children: React.ReactNode }) {
@@ -80,6 +82,8 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
     { key: 'primery-rabot', label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
     { key: 'o-nas', label: 'О нас', href: `${prefix}/o-nas/` },
     { key: 'kontakty', label: 'Контакты', href: `${prefix}/kontakty/` },
+    // Блог общий для сети, поэтому без префикса города.
+    { key: 'blog', label: 'Блог', href: '/blog/' },
   ] as const
 
   const phone = currentCity?.phone ?? siteConfig.phoneDisplay

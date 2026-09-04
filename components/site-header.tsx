@@ -80,6 +80,8 @@ export function SiteHeader() {
     { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
     { label: 'О нас', href: `${prefix}/o-nas/` },
     { label: 'Контакты', href: `${prefix}/kontakty/` },
+    // Блог общий для сети — без префикса города.
+    { label: 'Блог', href: '/blog/' },
   ]
 
   const address = currentCity?.address ?? siteConfig.address

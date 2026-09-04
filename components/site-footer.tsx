@@ -40,6 +40,8 @@ export function SiteFooter() {
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
         { label: 'О нас', href: `${prefix}/o-nas/` },
         { label: 'Контакты', href: `${prefix}/kontakty/` },
+        // Блог общий для сети — без префикса города (см. app/blog).
+        { label: 'Блог', href: '/blog/' },
       ]
 
   return (
