@@ -75,7 +75,7 @@ export function WhyUsSection() {
           ) : (
             <div className="absolute inset-0 bg-linear-to-b from-silver-muted to-transparent" />
           )}
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
+          <div className="photo-caption-veil pointer-events-none absolute inset-0" />
           <div className="relative flex flex-col gap-3 p-6">
             <span className="font-heading text-5xl font-bold tracking-tight text-white drop-shadow-sm">
               {doctorsCount}

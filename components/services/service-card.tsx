@@ -35,7 +35,7 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
             />
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-transparent" />
+            <div className="photo-caption-veil pointer-events-none absolute inset-0" />
             <h3 className="absolute inset-x-0 bottom-0 p-4 font-heading text-lg font-bold text-white drop-shadow-sm">
               {service.shortName}
             </h3>

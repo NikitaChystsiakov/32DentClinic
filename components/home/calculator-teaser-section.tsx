@@ -28,7 +28,7 @@ export function CalculatorTeaserSection() {
         </div>
         <Button
           size="lg"
-          variant="secondary"
+          variant="inverse"
           className="w-fit shrink-0"
           render={<Link href={`/${city.slug}/kalkulyator/`} />}
           nativeButton={false}

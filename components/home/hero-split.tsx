@@ -50,7 +50,9 @@ function SpinningBadge({ badge, className }: { badge: HeroBadge; className?: str
   return (
     <div
       className={cn(
-        'relative size-26 shrink-0 rounded-full bg-primary text-white shadow-lg ring-4 ring-white/85',
+        // Белый диск, а не bg-primary: hero теперь сам синий, и синий бейдж
+        // на нём переставал читаться как отдельный объект.
+        'relative size-26 shrink-0 rounded-full bg-white text-(--brand-ink) shadow-xl ring-4 ring-white/35',
         className
       )}
     >
@@ -62,7 +64,7 @@ function SpinningBadge({ badge, className }: { badge: HeroBadge; className?: str
             d={`M 50,50 m -${BADGE_RADIUS},0 a ${BADGE_RADIUS},${BADGE_RADIUS} 0 1,1 ${BADGE_RADIUS * 2},0 a ${BADGE_RADIUS},${BADGE_RADIUS} 0 1,1 -${BADGE_RADIUS * 2},0`}
           />
         </defs>
-        <text className="fill-white/85 text-[7.5px] font-semibold uppercase">
+        <text className="fill-(--brand-ink)/75 text-[7.5px] font-semibold uppercase">
           <textPath
             href={`#${pathId}`}
             startOffset="0"
@@ -75,7 +77,7 @@ function SpinningBadge({ badge, className }: { badge: HeroBadge; className?: str
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="font-heading text-2xl leading-none font-bold">{badge.centerValue}</span>
-        <span className="mt-0.5 text-[11px] tracking-wide text-white/75">{badge.centerLabel}</span>
+        <span className="mt-0.5 text-[11px] tracking-wide text-(--brand-ink)/70">{badge.centerLabel}</span>
       </div>
     </div>
   )
@@ -83,7 +85,9 @@ function SpinningBadge({ badge, className }: { badge: HeroBadge; className?: str
 
 function OfferCard({ offer }: { offer: HeroOffer }) {
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--hero-surface),var(--hero-surface-accent))] p-6 text-white">
+    // Светлая карточка на фоне синей левой: вся секция перестаёт быть одним
+    // сплошным цветным блоком, а «чистый» белый работает на ощущение клиники.
+    <div className="relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--card),var(--panel-sky))] p-6 text-card-foreground ring-1 ring-primary/12">
       {/* Слот под стикер: без рамки, ринга и обрезки — просто область
           200×200px под PNG-стикер без фона (схема имплантации, зубная дуга).
           Крупный и прижат к самому краю карточки — стикер здесь такой же
@@ -102,24 +106,25 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
 
       <div className="relative flex max-w-[54%] flex-1 flex-col gap-2">
         {offer.tag && (
-          <span className="w-fit rounded-md bg-accent px-2 py-1 text-[11px] font-bold tracking-wide text-accent-foreground uppercase">
+          <span className="w-fit rounded-md bg-secondary px-2 py-1 text-[11px] font-bold tracking-wide text-secondary-foreground uppercase">
             {offer.tag}
           </span>
         )}
-        <h2 className="font-heading text-xl leading-tight font-bold text-balance">{offer.title}</h2>
-        <p className="text-sm leading-relaxed text-white/70">{offer.description}</p>
+        <h2 className="font-heading text-xl leading-tight font-bold text-balance text-foreground">
+          {offer.title}
+        </h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">{offer.description}</p>
 
         <div className="mt-auto flex flex-col items-start gap-3 pt-5">
           <span className="flex items-baseline gap-2">
-            <span className="font-heading text-2xl font-bold">{offer.price}</span>
+            <span className="font-heading text-2xl font-bold text-primary">{offer.price}</span>
             {offer.oldPrice && (
-              <span className="text-sm text-white/50 line-through">{offer.oldPrice}</span>
+              <span className="text-sm text-muted-foreground line-through">{offer.oldPrice}</span>
             )}
           </span>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
             render={<Link href={offer.href} />}
             nativeButton={false}
           >
@@ -164,6 +169,13 @@ export function HeroSplit({
             data-variant="dark"
             className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--hero-surface),var(--hero-surface-accent))] p-6 sm:p-8 lg:p-10"
           >
+            {/* Два мягких пятна поверх ровного градиента: голубое сверху и
+                бирюзовое снизу. Оба сильно прозрачные — они добавляют глубины,
+                не затемняя фон (затемнение как раз и просили убрать). */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(255,255,255,0.28),transparent_45%),radial-gradient(circle_at_78%_112%,color-mix(in_oklch,var(--secondary),transparent_55%),transparent_55%)]"
+            />
             {/* Портрет врача — главный визуальный акцент карточки: большой,
                 прижат к правому краю на всю высоту карточки (bleed до самой
                 рамки, скругление обрезает её же родительским overflow-hidden).
@@ -201,7 +213,7 @@ export function HeroSplit({
                 поэтому ниже sm бейдж встаёт в их ряд как ещё один элемент. */}
             {countdown && (
               <span className="absolute top-5 right-5 z-10 hidden items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm backdrop-blur sm:flex">
-                <Flame className="size-3.5 text-accent" />
+                <Flame className="size-3.5 text-secondary" />
                 {countdown}
               </span>
             )}
@@ -212,7 +224,7 @@ export function HeroSplit({
               {(urgencyBadge || (tags && tags.length > 0) || countdown) && (
                 <div className="flex flex-wrap gap-2">
                   {urgencyBadge && (
-                    <span className="rounded-md bg-accent px-3 py-1.5 text-xs font-bold tracking-wide text-accent-foreground uppercase">
+                    <span className="rounded-md bg-secondary px-3 py-1.5 text-xs font-bold tracking-wide text-secondary-foreground uppercase">
                       {urgencyBadge}
                     </span>
                   )}
@@ -226,7 +238,7 @@ export function HeroSplit({
                   ))}
                   {countdown && (
                     <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm sm:hidden">
-                      <Flame className="size-3.5 text-accent" />
+                      <Flame className="size-3.5 text-secondary" />
                       {countdown}
                     </span>
                   )}
@@ -239,8 +251,8 @@ export function HeroSplit({
 
               <ul className="flex flex-col gap-2.5">
                 {highlights.map((highlight) => (
-                  <li key={highlight} className="flex items-start gap-3 text-white/85">
-                    <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                  <li key={highlight} className="flex items-start gap-3 text-white/95">
+                    <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-white text-(--brand-ink)">
                       <Check className="size-3.5" />
                     </span>
                     {highlight}
@@ -252,11 +264,7 @@ export function HeroSplit({
                   показывать вычисленный «ближайший слот» нельзя — это выглядело бы
                   как реальная запись, а по факту никем не подтверждено. */}
               <div className="relative mt-1 flex items-center gap-4">
-                <Button
-                  size="lg"
-                  onClick={() => openBookingModal()}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90"
-                >
+                <Button size="lg" variant="inverse" onClick={() => openBookingModal()}>
                   Записаться
                   <ArrowRight data-icon="inline-end" />
                 </Button>

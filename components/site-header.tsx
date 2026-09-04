@@ -151,7 +151,7 @@ export function SiteHeader() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-base text-muted-foreground transition-colors hover:text-foreground"
               >
-                <Star className="size-5 shrink-0 fill-accent text-accent" />
+                <Star className="size-5 shrink-0 fill-rating text-rating" />
                 <span className="font-semibold text-foreground">{rating.rating}</span>
                 <span className="hidden whitespace-nowrap xl:inline">
                   · {rating.reviewsCount} отзывов на {rating.name}
@@ -253,6 +253,9 @@ export function SiteHeader() {
                 панелью (MobileMenuProvider) — в шапке его ищут по привычке,
                 нижняя панель остаётся быстрым доступом к частым действиям. */}
             <div className="flex items-center gap-1 lg:hidden">
+              {/* Тот же размер и форма, что у соседних кнопок ряда: у самого
+                  ThemeToggle размер icon (36px), для тач-цели в шапке мало. */}
+              <ThemeToggle className="size-11 rounded-full active:bg-muted" />
               <a
                 href={phoneHref}
                 aria-label="Позвонить"

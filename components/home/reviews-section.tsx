@@ -34,7 +34,7 @@ function ReviewCard({ review }: { review: Review }) {
           <Quote className="size-7 fill-primary/10 text-primary" />
           <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((step) => (
-              <Star key={step} className="size-4 fill-accent text-accent" />
+              <Star key={step} className="size-4 fill-rating text-rating" />
             ))}
           </div>
         </div>

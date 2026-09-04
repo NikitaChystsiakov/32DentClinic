@@ -34,7 +34,7 @@ export default async function BlogIndexPage() {
       </Reveal>
 
       <Reveal delay={1}>
-        <SectionPanel variant="cool-1">
+        <SectionPanel variant="lavender">
           {posts.length === 0 ? (
             // Пустой блог — нормальное состояние до первой статьи: лучше честная
             // заглушка, чем выдуманные тексты ради заполнения раздела.

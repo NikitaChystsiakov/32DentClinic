@@ -46,7 +46,7 @@ function Stars({ rating }: { rating: number }) {
           key={step}
           className={cn(
             'size-4',
-            step <= Math.round(rating) ? 'fill-accent text-accent' : 'text-foreground/15'
+            step <= Math.round(rating) ? 'fill-rating text-rating' : 'text-foreground/15'
           )}
         />
       ))}
@@ -66,7 +66,7 @@ function RatingCard({ aggregator }: { aggregator: AggregatorRating }) {
         <CardContent className="flex h-full flex-col gap-4 p-6">
           <div className="flex items-center justify-between">
             <PlatformLogo id={aggregator.id} />
-            {aggregator.rating !== null && <Star className="size-5 fill-accent text-accent" />}
+            {aggregator.rating !== null && <Star className="size-5 fill-rating text-rating" />}
           </div>
 
           <div className="flex flex-1 flex-col gap-1.5">

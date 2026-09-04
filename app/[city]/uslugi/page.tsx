@@ -3,6 +3,7 @@
 import { useCity } from '@/lib/contexts/city-context'
 import { getServicesForCity } from '@/config/services'
 import { ServiceCard } from '@/components/services/service-card'
+import { ServicesHeroBanner } from '@/components/services/services-hero-banner'
 import { ServicesBottomCta } from '@/components/services/services-bottom-cta'
 import { Reveal } from '@/components/reveal'
 
@@ -13,13 +14,12 @@ export default function ServicesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
       <Reveal delay={0}>
-        <div className="mb-10 flex flex-col gap-4">
-          <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            {content.services.title}
-          </h1>
-          <p className="max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            {content.services.description}
-          </p>
+        <div className="mb-10">
+          <ServicesHeroBanner
+            title={content.services.title}
+            description={content.services.description}
+            calculatorHref={`/${city.slug}/kalkulyator/`}
+          />
         </div>
       </Reveal>
 

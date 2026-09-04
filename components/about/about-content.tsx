@@ -201,8 +201,8 @@ export function AboutContent() {
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <Button
                   size="lg"
+                  variant="inverse"
                   onClick={() => openBookingModal()}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90"
                 >
                   Записаться на приём
                   <ArrowRight data-icon="inline-end" />
@@ -238,7 +238,7 @@ export function AboutContent() {
       </Reveal>
 
       <Reveal delay={1}>
-        <SectionPanel variant="cool-1">
+        <SectionPanel variant="lavender">
           <TextWithPhoto block={about.history} icon={HeartHandshake} side="right" />
         </SectionPanel>
       </Reveal>
@@ -278,13 +278,13 @@ export function AboutContent() {
       </Reveal>
 
       <Reveal delay={1}>
-        <SectionPanel variant="warm-1">
+        <SectionPanel variant="sky">
           <TextWithPhoto block={about.equipment} icon={Cpu} side="left" />
         </SectionPanel>
       </Reveal>
 
       <Reveal delay={1}>
-        <SectionPanel variant="mint-1">
+        <SectionPanel variant="mint">
           <TextWithPhoto block={about.laboratory} icon={FlaskConical} side="right" />
         </SectionPanel>
       </Reveal>
@@ -294,7 +294,7 @@ export function AboutContent() {
           городов, где реальных карточек ещё нет, вместо людей показываем бриф
           на съёмку — как и в остальных блоках страницы. */}
       <Reveal delay={1}>
-          <SectionPanel variant="rose-1">
+          <SectionPanel variant="aqua">
             <div className="grid items-center gap-8 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-12">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -334,7 +334,7 @@ export function AboutContent() {
                         sizes="(max-width: 1024px) 50vw, 200px"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
-                      <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
+                      <div className="photo-caption-veil pointer-events-none absolute inset-0" />
                       <div className="absolute inset-x-0 bottom-0 p-3">
                         <p className="text-xs leading-tight font-semibold text-white drop-shadow-sm">
                           {doctor.name}
@@ -360,7 +360,7 @@ export function AboutContent() {
 
       {/* Страховая и документы — юридический «хвост» страницы. */}
       <Reveal delay={1}>
-        <SectionPanel variant="lavender-1">
+        <SectionPanel variant="ice">
           <div className="grid gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-4 rounded-2xl bg-card p-6 ring-1 ring-silver/25 sm:p-8">
               <span className="flex size-11 items-center justify-center rounded-xl bg-accent/12 text-accent ring-1 ring-accent/20">

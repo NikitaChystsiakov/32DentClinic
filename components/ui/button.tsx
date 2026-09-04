@@ -13,6 +13,10 @@ const buttonVariants = cva(
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
           "bg-accent text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--accent),var(--foreground)_5%)] aria-expanded:bg-accent aria-expanded:text-secondary-foreground",
+        // Кнопка поверх фирменной цветной плашки (hero, калькулятор, баннер
+        // услуг). Там bg-accent совпадает с фоном и кнопка исчезает, поэтому
+        // единственный надёжный вариант — белая заливка с индиговым текстом.
+        inverse: "bg-white text-(--brand-ink) shadow-md hover:bg-white/90",
         silver:
           "silver-sheen border-silver/40 bg-linear-to-b from-silver-muted to-silver/20 text-silver-foreground shadow-sm hover:border-silver/60 dark:text-foreground",
         ghost:

@@ -2,16 +2,18 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-// Палитра панелей: пять светлых оттенков (каждый закреплён за двумя
+// Палитра панелей: пять светлых холодных оттенков (каждый закреплён за двумя
 // секциями по кругу страницы) плюс три насыщенные indigo/perivinkle панели.
+// Имена вариантов = имена оттенков: лаванда, небо, мята, аква, лёд. Тёплых
+// (кремовых, розовых) панелей в палитре больше нет — вся гамма холодная.
 // Порядок вариантов на странице задаётся в app/[city]/page.tsx.
 type SectionPanelVariant =
   | 'neutral'
-  | 'cool-1'
-  | 'warm-1'
-  | 'mint-1'
-  | 'rose-1'
-  | 'lavender-1'
+  | 'lavender'
+  | 'sky'
+  | 'mint'
+  | 'aqua'
+  | 'ice'
   | 'indigo-bold'
   | 'indigo-light'
   | 'periwinkle'
@@ -19,11 +21,11 @@ type SectionPanelVariant =
 
 const variantClasses: Record<SectionPanelVariant, string> = {
   neutral: 'bg-card ring-1 ring-border',
-  'cool-1': 'bg-(--panel-cool-1)',
-  'warm-1': 'bg-(--panel-warm-1)',
-  'mint-1': 'bg-(--panel-mint-1)',
-  'rose-1': 'bg-(--panel-rose-1)',
-  'lavender-1': 'bg-(--panel-lavender-1)',
+  lavender: 'bg-(--panel-lavender)',
+  sky: 'bg-(--panel-sky)',
+  mint: 'bg-(--panel-mint)',
+  aqua: 'bg-(--panel-aqua)',
+  ice: 'bg-(--panel-ice)',
   'indigo-bold': 'bg-(--panel-indigo-bold)',
   'indigo-light': 'bg-(--panel-indigo-light)',
   periwinkle: 'bg-(--panel-periwinkle)',

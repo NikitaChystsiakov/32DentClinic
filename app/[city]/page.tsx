@@ -74,7 +74,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         )}
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="cool-1">
+        <SectionPanel variant="lavender">
           <ServicesOverview />
         </SectionPanel>
       </Reveal>
@@ -84,7 +84,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="warm-1">
+        <SectionPanel variant="sky">
           <DoctorsCarouselSection />
         </SectionPanel>
       </Reveal>
@@ -94,7 +94,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="mint-1">
+        <SectionPanel variant="mint">
           <BeforeAfterTeaserSection />
         </SectionPanel>
       </Reveal>
@@ -107,28 +107,28 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           before-after-teaser-section.tsx. */}
       {citySlug === 'minsk' && (
         <Reveal delay={1}>
-          <SectionPanel variant="mint-1">
+          <SectionPanel variant="mint">
             <BeforeAfterTeaserSection columns={3} />
           </SectionPanel>
         </Reveal>
       )}
       <Reveal delay={1}>
-        <SectionPanel variant="rose-1">
+        <SectionPanel variant="aqua">
           <WhyUsSection />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="lavender-1">
+        <SectionPanel variant="ice">
           <ClinicGallerySection />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="cool-1">
+        <SectionPanel variant="lavender">
           <ReviewsSection />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="warm-1">
+        <SectionPanel variant="sky">
           <RatingsSection />
         </SectionPanel>
       </Reveal>
@@ -138,7 +138,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         </SectionPanel>
       </Reveal>
       <Reveal delay={0}>
-        <SectionPanel variant="mint-1">
+        <SectionPanel variant="mint">
           <ContactCtaSection />
         </SectionPanel>
       </Reveal>

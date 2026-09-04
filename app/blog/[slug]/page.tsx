@@ -100,7 +100,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       {others.length > 0 && (
         <Reveal delay={1}>
-          <SectionPanel variant="cool-1">
+          <SectionPanel variant="lavender">
             <h2 className="mb-6 font-heading text-2xl font-bold tracking-tight text-(--panel-heading)">
               Другие статьи
             </h2>
