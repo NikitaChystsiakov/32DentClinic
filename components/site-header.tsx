@@ -220,7 +220,7 @@ export function SiteHeader() {
               <a
                 href={phoneHref}
                 aria-label={phone}
-                className="flex items-center gap-2 text-lg font-bold text-foreground transition-colors hover:text-primary"
+                className="flex items-center gap-2 text-lg font-semibold text-foreground transition-colors hover:text-primary"
               >
                 <Phone className="size-5 shrink-0" />
                 <span className="hidden whitespace-nowrap xl:inline">{phone}</span>

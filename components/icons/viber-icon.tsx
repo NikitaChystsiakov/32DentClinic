@@ -1,24 +1,29 @@
-// Viber-логотип как currentColor-иконка (через CSS mask), чтобы он вёл себя
-// как обычная lucide-иконка — наследовал цвет текста и был виден в тёмной теме.
-// Файл /images/viber.svg сам по себе — это картинка с зашитым фиксированным
-// fill="#404040", поэтому как <img> он не реагирует на цвет/тему.
+/*
+ * Viber-логотип, нарисованный в сетке lucide: viewBox 24, обводка 2, круглые
+ * концы. Раньше это была CSS-маска по /images/viber.svg — та картинка нарисована
+ * тонким контуром (~0.9px при размере 20px против 1.67px у соседнего Send) и
+ * занимала всю высоту бокса, тогда как lucide-иконки оставляют по 2 единицы
+ * полей. Из-за этого Viber выглядел светлее телеграма и визуально уезжал вверх:
+ * основная масса значка — пузырь — приходилась на верх бокса. Здесь та же
+ * сетка и та же толщина, что у Send, поэтому в строке они стоят вровень.
+ */
 export function ViberIcon({ className }: { className?: string }) {
   return (
-    <span
-      aria-hidden
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={className}
-      style={{
-        display: 'inline-block',
-        backgroundColor: 'currentColor',
-        WebkitMaskImage: 'url(/images/viber.svg)',
-        maskImage: 'url(/images/viber.svg)',
-        WebkitMaskSize: 'contain',
-        maskSize: 'contain',
-        WebkitMaskRepeat: 'no-repeat',
-        maskRepeat: 'no-repeat',
-        WebkitMaskPosition: 'center',
-        maskPosition: 'center',
-      }}
-    />
+      aria-hidden
+    >
+      {/* Пузырь с «хвостом» слева снизу */}
+      <path d="M8 3h8a5 5 0 0 1 5 5v6a5 5 0 0 1-5 5h-5l-4 3.5L8 19a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5Z" />
+      {/* Трубка: два «ушка» по краям и дуга между ними */}
+      <path d="M9.8 8.1a1.3 1.3 0 0 0-1.5 1.7 12 12 0 0 0 5.9 5.9 1.3 1.3 0 0 0 1.7-1.5" />
+    </svg>
   )
 }

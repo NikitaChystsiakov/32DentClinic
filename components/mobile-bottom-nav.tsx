@@ -51,7 +51,7 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-accent transition-transform active:scale-95"
+      className="flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground transition-transform active:scale-95 active:text-foreground"
     >
       <Icon className="size-5" />
       {label}
