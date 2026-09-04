@@ -23,7 +23,7 @@ export const rogachevContent = {
     },
     tags: ['Имплант под ключ'],
     photo: {
-      src: '/images/doctors/rogachev/saykovskaya-tatyana.png',
+      src: '/images/doctors/saykovskaya-tatyana.webp',
       alt: 'Врач-стоматолог 32Дент в Рогачёве',
     },
     // Видео в hero пока обкатывается только в Минске (см. hero-split.tsx) —
@@ -37,7 +37,7 @@ export const rogachevContent = {
       {
         title: 'Профгигиена и Air Flow',
         description: 'Снятие налёта и камня с полировкой — за один визит.',
-        image: '/images/services/gigiena.png',
+        image: '/images/services/gigiena.webp',
         price: '70 р.',
         oldPrice: '90 р.',
         href: '/rogachev/uslugi/prof-gigiena-i-otbelivanie/',

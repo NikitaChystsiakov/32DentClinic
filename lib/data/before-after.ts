@@ -28,7 +28,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-1-after.png',
     doctorName: 'Наталья Ильющенко',
     doctorSpecialization: 'Врач-терапевт-стоматолог',
-    doctorPhoto: '/images/doctors/rogachev/ilyushchenko-natalya.png',
+    doctorPhoto: '/images/doctors/ilyushchenko-natalya.webp',
     reasoning:
       'Скол не задел нерв, поэтому вместо коронки выбрали прямую реставрацию — она сохраняет больше собственной ткани зуба и делается за один визит.',
   },
@@ -41,7 +41,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-2-after.png',
     doctorName: 'Владислав Киреев',
     doctorSpecialization: 'Врач-стоматолог-ортопед',
-    doctorPhoto: '/images/doctors/rogachev/kireev-vladislav.png',
+    doctorPhoto: '/images/doctors/kireev-vladislav.webp',
     reasoning:
       'Скученность зубов была выраженной — брекет-система дала более предсказуемый результат за фиксированный срок, чем съёмные элайнеры.',
   },
@@ -54,7 +54,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-3-after.png',
     doctorName: 'Павел Махонько',
     doctorSpecialization: 'Врач-стоматолог-хирург-имплантолог',
-    doctorPhoto: '/images/doctors/rogachev/makhonko-pavel.png',
+    doctorPhoto: '/images/doctors/makhonko-pavel.webp',
     reasoning:
       'Соседние зубы были полностью здоровы — имплант позволил восстановить ряд, не обтачивая их под мост.',
   },
@@ -67,7 +67,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-4-after.png',
     doctorName: 'Игорь Ковальчук',
     doctorSpecialization: 'Врач-стоматолог-ортопед',
-    doctorPhoto: '/images/doctors/rogachev/kovalchuk-igor.png',
+    doctorPhoto: '/images/doctors/kovalchuk-igor.webp',
     reasoning:
       'Пациент хотел ощущения собственных зубов без необходимости их снимать — выбрали несъёмный протез на имплантах вместо съёмного.',
   },
@@ -80,7 +80,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-5-after.png',
     doctorName: 'Юлия Алексейчик',
     doctorSpecialization: 'Врач-терапевт-стоматолог',
-    doctorPhoto: '/images/doctors/rogachev/alekseychik-yuliya.png',
+    doctorPhoto: '/images/doctors/alekseychik-yuliya.webp',
     reasoning:
       'Перед отбеливанием провели профгигиену — без неё результат вышел бы неравномерным из-за налёта на эмали.',
   },
@@ -93,7 +93,7 @@ export const beforeAfterCases: BeforeAfterCase[] = [
     after: '/cases/case-6-after.png',
     doctorName: 'Павел Махонько',
     doctorSpecialization: 'Врач-стоматолог-хирург-имплантолог',
-    doctorPhoto: '/images/doctors/rogachev/makhonko-pavel.png',
+    doctorPhoto: '/images/doctors/makhonko-pavel.webp',
     reasoning:
       'Зуб мудрости рос горизонтально и давил на соседний — решили удалить, не дожидаясь осложнений и смещения ряда.',
   },

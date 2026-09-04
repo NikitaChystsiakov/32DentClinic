@@ -21,16 +21,18 @@ function setCookie(name: string, value: string, days: number) {
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`
 }
 
-interface GeoBannerProps {
-  suggestedCity: { slug: string; name: string } | null
-}
-
-export function GeoBanner({ suggestedCity }: GeoBannerProps) {
+/**
+ * Город определяется только на клиенте. Раньше сюда приходила ещё серверная
+ * подсказка из заголовков, которые ставил middleware, но она давно не
+ * работала: NextRequest.geo убрали в Next 15, поэтому заголовки не ставились
+ * никогда. Зато ради чтения этих заголовков корневой layout вызывал headers()
+ * и лишал статики весь сайт. Серверный путь удалён — работает то же, что и
+ * работало.
+ */
+export function GeoBanner() {
   const pathname = usePathname()
-  const clientGeo = useClientGeo()
+  const detectedCity = useClientGeo()
   const [dismissed, setDismissed] = React.useState(true)
-
-  const detectedCity = suggestedCity ?? clientGeo
 
   React.useEffect(() => {
     if (pathname === '/' && detectedCity && !getCookie(COOKIE_NAME)) {

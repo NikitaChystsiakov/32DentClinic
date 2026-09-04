@@ -28,7 +28,7 @@ export const doctors: Doctor[] = [
     bio: 'Наталья Николаевна — врач-терапевт с 20-летним опытом работы, принимает как взрослых, так и детей.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
-    photo: '/images/doctors/ilyushchenko-natalya.png',
+    photo: '/images/doctors/ilyushchenko-natalya.webp',
   },
   {
     slug: 'alekseychik-yuliya',
@@ -39,7 +39,7 @@ export const doctors: Doctor[] = [
     bio: 'Юлия — врач-терапевт с 17-летним опытом, специализируется на лечении кариеса и заболеваний дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
-    photo: '/images/doctors/alekseychik-yuliya.png',
+    photo: '/images/doctors/alekseychik-yuliya.webp',
   },
   {
     slug: 'pavlovich-sergey',
@@ -50,7 +50,7 @@ export const doctors: Doctor[] = [
     bio: 'Сергей Степанович — врач-терапевт с 15-летним стажем.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
-    photo: '/images/doctors/pavlovich-sergey.png',
+    photo: '/images/doctors/pavlovich-sergey.webp',
   },
   {
     slug: 'saykovskaya-tatyana',
@@ -61,7 +61,7 @@ export const doctors: Doctor[] = [
     bio: 'Татьяна — врач-терапевт с 12-летним опытом работы.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
-    photo: '/images/doctors/saykovskaya-tatyana.png',
+    photo: '/images/doctors/saykovskaya-tatyana.webp',
   },
   {
     slug: 'bychkov-ivan',
@@ -72,7 +72,7 @@ export const doctors: Doctor[] = [
     bio: 'Иван — врач-терапевт с 11-летним опытом работы.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
-    photo: '/images/doctors/bychkov-ivan.png',
+    photo: '/images/doctors/bychkov-ivan.webp',
   },
   {
     slug: 'kireev-vladislav',
@@ -83,7 +83,7 @@ export const doctors: Doctor[] = [
     bio: 'Владислав — врач-ортопед с 12-летним опытом протезирования зубов.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
-    photo: '/images/doctors/kireev-vladislav.png',
+    photo: '/images/doctors/kireev-vladislav.webp',
   },
   {
     slug: 'kovalchuk-igor',
@@ -94,7 +94,7 @@ export const doctors: Doctor[] = [
     bio: 'Игорь — врач-ортопед, специализируется на коронках и протезировании.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
-    photo: '/images/doctors/kovalchuk-igor.png',
+    photo: '/images/doctors/kovalchuk-igor.webp',
   },
   {
     slug: 'makhonko-pavel',
@@ -109,7 +109,7 @@ export const doctors: Doctor[] = [
       { label: 'Протезирование', href: '/uslugi/protezirovanie/' },
     ],
     hasCertificates: false,
-    photo: '/images/doctors/makhonko-pavel.png',
+    photo: '/images/doctors/makhonko-pavel.webp',
   },
 ]
 

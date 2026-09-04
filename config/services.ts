@@ -29,7 +29,7 @@ export interface ServiceCategory {
 export const serviceCategories: ServiceCategory[] = [
   {
     slug: 'terapevticheskaya-stomatologiya',
-    image: '/images/services/terapiya.png',
+    image: '/images/services/terapiya.webp',
     shortName: 'Терапия',
     title: 'Терапевтическая стоматология в Рогачёве',
     metaTitle: 'Лечение зубов и дёсен | 32Дент, Рогачёв',
@@ -79,7 +79,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'khirurgiya',
-    image: '/images/services/khirurgiya.png',
+    image: '/images/services/khirurgiya.webp',
     shortName: 'Хирургия',
     title: 'Хирургическая стоматология в Рогачёве',
     metaTitle: 'Удаление зубов и хирургия | 32Дент, Рогачёв',
@@ -117,7 +117,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'ortodontiya',
-    image: '/images/services/ortodontiya.png',
+    image: '/images/services/ortodontiya.webp',
     shortName: 'Ортодонтия',
     title: 'Ортодонтия — исправление прикуса в Рогачёве',
     metaTitle: 'Брекеты и исправление прикуса | 32Дент, Рогачёв',
@@ -147,7 +147,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'protezirovanie',
-    image: '/images/services/protezirovanie.png',
+    image: '/images/services/protezirovanie.webp',
     shortName: 'Протезирование',
     title: 'Протезирование зубов в Рогачёве',
     metaTitle: 'Коронки и протезы | 32Дент, Рогачёв',
@@ -188,7 +188,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'implantaciya',
-    image: '/images/services/implantaciya.png',
+    image: '/images/services/implantaciya.webp',
     shortName: 'Имплантация',
     title: 'Имплантация зубов в Рогачёве',
     metaTitle: 'Имплантация зубов | 32Дент, Рогачёв',
@@ -208,7 +208,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'prof-gigiena-i-otbelivanie',
-    image: '/images/services/gigiena.png',
+    image: '/images/services/gigiena.webp',
     shortName: 'Проф.гигиена и отбеливание',
     title: 'Профессиональная чистка и отбеливание зубов в Рогачёве',
     metaTitle: 'Чистка и отбеливание зубов | 32Дент, Рогачёв',
@@ -234,7 +234,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'diagnostika',
-    image: '/images/services/diagnostika.png',
+    image: '/images/services/diagnostika.webp',
     shortName: 'Диагностика',
     title: 'Диагностика и рентген зубов в Рогачёве',
     metaTitle: 'Рентген и диагностика зубов | 32Дент, Рогачёв',

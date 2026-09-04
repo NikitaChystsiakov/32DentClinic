@@ -47,7 +47,7 @@ export const cities: City[] = [
     phoneHref: 'tel:+375445595901', 
     address: 'г. Жлобин, ул. Петровского, 44', 
     coordinates: { lat: 52.8928, lng: 30.0228 },
-    image: '/images/services/terapiya.png',
+    image: '/images/services/terapiya.webp',
     featureTags: ['Терапия и Эстетика', 'Рассрочка 0%'],
     seoTitle: 'Стоматология 32Дент Жлобин — стоматологическая помощь',
     seoDescription: '32Дент Жлобин: терапия, хирургия и имплантация зубов. Современное оборудование, гарантия 2 года.',

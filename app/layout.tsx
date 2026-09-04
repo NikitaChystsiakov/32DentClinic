@@ -1,7 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Golos_Text, Unbounded } from 'next/font/google'
-import { headers } from 'next/headers'
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -63,18 +62,18 @@ const jsonLd = {
   priceRange: '$$',
 }
 
-export default async function RootLayout({
+/*
+ * Никаких headers()/cookies() в корневом layout: любое чтение запроса здесь
+ * отключает статическую генерацию сразу для всего сайта — раньше из 98
+ * страниц статикой оставалась одна, остальные рендерились на сервере при
+ * каждом запросе. Подсказку города определяет сам GeoBanner на клиенте
+ * (см. lib/use-client-geo.ts).
+ */
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const hdrs = await headers()
-  const suggestedCitySlug = hdrs.get('x-suggested-city')
-  const suggestedCityName = hdrs.get('x-suggested-city-name')
-  const suggestedCity = suggestedCitySlug && suggestedCityName
-    ? { slug: suggestedCitySlug, name: suggestedCityName }
-    : null
-
   return (
     <html lang="ru" className="bg-(--page-surface)" suppressHydrationWarning>
       <head>
@@ -90,7 +89,7 @@ export default async function RootLayout({
             <MobileMenuProvider>
             <div className="flex min-h-dvh flex-col">
               <HeaderSwitcher />
-              <GeoBanner suggestedCity={suggestedCity} />
+              <GeoBanner />
               <main className="flex-1">{children}</main>
               <FloatingMessengers />
               <SiteFooter />

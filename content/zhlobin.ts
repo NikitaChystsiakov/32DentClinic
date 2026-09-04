@@ -26,7 +26,7 @@ export const zhlobinContent = {
     },
     tags: ['Лечение за один визит'],
     photo: {
-      src: '/images/doctors/belousova-tatyana.png',
+      src: '/images/doctors/belousova-tatyana.webp',
       alt: 'Врач-стоматолог 32Дент в Жлобине',
     },
     video: undefined as string | undefined,
@@ -35,7 +35,7 @@ export const zhlobinContent = {
       {
         title: 'Лечение кариеса',
         description: 'Пломба светового отверждения с подбором оттенка эмали.',
-        image: '/images/services/terapiya.png',
+        image: '/images/services/terapiya.webp',
         price: '90 р.',
         oldPrice: '110 р.',
         href: '/zhlobin/uslugi/terapevticheskaya-stomatologiya/',
@@ -44,7 +44,7 @@ export const zhlobinContent = {
       {
         title: 'Профгигиена и Air Flow',
         description: 'Снятие налёта и камня с полировкой — за один визит.',
-        image: '/images/services/gigiena.png',
+        image: '/images/services/gigiena.webp',
         price: '70 р.',
         oldPrice: '90 р.',
         href: '/zhlobin/uslugi/prof-gigiena-i-otbelivanie/',

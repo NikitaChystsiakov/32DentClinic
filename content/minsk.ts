@@ -30,7 +30,7 @@ export const minskContent = {
     },
     tags: ['Имплантация под ключ'],
     photo: {
-      src: '/girlMain.png',
+      src: '/girlMain.webp',
       alt: 'Пациентка стоматологии 32Дент в Минске',
     },
     // Видео пока не готово в качестве без фона — используем статичное фото
@@ -41,7 +41,7 @@ export const minskContent = {
       {
         title: 'All-on-4 под ключ',
         description: 'Полный протез на четырёх имплантах с фиксацией за визит.',
-        image: '/all-on-4.png',
+        image: '/all-on-4.webp',
         price: '4 900 р.',
         oldPrice: '5 600 р.',
         href: '/minsk/uslugi/implantaciya/',
@@ -52,7 +52,7 @@ export const minskContent = {
         description: 'Полный протез на шести имплантах — усиленная опора для сложных случаев.',
         // TODO: подставить реальную цену, когда клиника её подтвердит —
         // не выдумываем цифру сами.
-        image: '/implants.png',
+        image: '/implants.webp',
         price: 'Цена по запросу',
         href: '/minsk/uslugi/implantaciya/',
       },
