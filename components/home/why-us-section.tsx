@@ -55,16 +55,22 @@ export function WhyUsSection() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-10">
-        {/* Ниже sm карточка с врачом заметно ниже: 380px фото плюс восемь
-            причин растягивали секцию почти на три экрана. */}
-        <div className="silver-sheen relative flex min-h-60 flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg sm:min-h-95">
+        {/* На телефоне карточка квадратная, а не низкая полоса: фото врача
+            квадратное, и в контейнере 326×240 object-cover срезал голову, а
+            подпись ложилась прямо на лицо. С квадратом кадр совпадает с
+            пропорциями исходника, а текст внизу остаётся на плечах.
+            С sm возвращается прежняя высокая карточка десктопа. */}
+        <div className="silver-sheen relative flex aspect-square flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg sm:aspect-auto sm:min-h-95">
           {showcaseDoctor ? (
             <Image
               src={showcaseDoctor.photo}
               alt={showcaseDoctor.name}
               fill
               sizes="(max-width: 1024px) 100vw, 300px"
-              className="object-cover"
+              // object-top только на телефоне: если кадр всё же придётся
+              // подрезать, обрезается низ, а не голова. На десктопе карточка
+              // высокая и центрирование даёт лучший кадр — поэтому sm:object-center.
+              className="object-cover object-top sm:object-center"
             />
           ) : (
             <div className="absolute inset-0 bg-linear-to-b from-silver-muted to-transparent" />
