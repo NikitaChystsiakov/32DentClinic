@@ -14,6 +14,7 @@ import {
   Crown,
   Sparkles,
   Hourglass,
+  ChevronDown,
   type LucideIcon,
 } from 'lucide-react'
 import { useCity } from '@/lib/contexts/city-context'
@@ -69,29 +70,6 @@ const cardVariants: Variants = {
       ease: [0.22, 1, 0.36, 1],
     },
   }),
-}
-
-const lineVariants: Variants = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
-function generateWavyPath(): string {
-  const segments: string[] = ['M 12 0']
-  const amplitude = 3
-  const period = 16
-  const totalHeight = 1600
-
-  for (let y = 0; y < totalHeight; y += period) {
-    const cpX = y % (period * 2) === 0 ? 12 + amplitude : 12 - amplitude
-    segments.push(`Q ${cpX} ${y + period / 2} 12 ${y + period}`)
-  }
-
-  return segments.join(' ')
 }
 
 // Крупный, заметный кластер фото врачей рядом со вступительной фразой секции —
@@ -282,11 +260,14 @@ function StepCard({
         </div>
       ) : (
         photoHint && (
+          // Только с md: на телефоне бриф на съёмку добавлял к каждой карточке
+          // ~300px пустой высоты, из-за чего секция растягивалась на четыре
+          // экрана. Реальное фото (ветка выше) показывается на всех ширинах.
           <PhotoPlaceholder
             label={photoHint}
             width={1600}
             height={900}
-            className="relative z-10 mt-4 aspect-video"
+            className="relative z-10 mt-4 hidden aspect-video md:flex"
           />
         )
       )}
@@ -560,7 +541,6 @@ export function TreatmentSteps() {
   const getGapAfter = (stepNum: number) =>
     gapLabels.find((g) => g.afterStep === stepNum)
 
-  const wavyPath = generateWavyPath()
   const clusterDoctors = pickDoctorCluster(getDoctorsForCity(city.slug))
 
   return (
@@ -569,8 +549,10 @@ export function TreatmentSteps() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,color-mix(in_oklch,var(--primary),transparent_92%),transparent_50%),radial-gradient(circle_at_85%_60%,color-mix(in_oklch,var(--accent),transparent_93%),transparent_45%),radial-gradient(circle_at_30%_90%,color-mix(in_oklch,var(--secondary),transparent_94%),transparent_50%)]"
       />
+      {/* Частицы и шарики — только с md: на телефоне мелкий декор поверх
+          узкой колонки читается как грязь и зря нагружает отрисовку. */}
       <ParticleField
-        className="pointer-events-none absolute inset-0 size-full"
+        className="pointer-events-none absolute inset-0 hidden size-full md:block"
         particleCount={180}
         minSize={1.6}
         maxSize={4.5}
@@ -595,47 +577,27 @@ export function TreatmentSteps() {
           </div>
         </div>
 
-        {/* Mobile layout: line left, cards right */}
+        {/* Мобильная раскладка: карточки во всю ширину.
+            Раньше слева шла декоративная волнистая линия, а список был сдвинут
+            на pl-14 — на экране 390px карточке оставалось ~250px, и описание
+            рвалось на шесть строк. Линию и сдвиг убрали, последовательность
+            держат номер шага в карточке и стрелка между ними. */}
         <div className="relative md:hidden">
-          <div className="absolute left-[18px] top-0 h-full sm:left-[22px]">
-            <svg
-              width="24"
-              height="100%"
-              viewBox="0 0 24 1600"
-              preserveAspectRatio="none"
-              fill="none"
-              className="h-full"
-            >
-              <motion.path
-                d={wavyPath}
-                stroke="var(--accent)"
-                strokeWidth="2"
-                strokeDasharray="6 4"
-                strokeLinecap="round"
-                variants={lineVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              />
-            </svg>
-          </div>
-
-          <div className="flex flex-col gap-2 pl-14">
+          <div className="flex flex-col gap-3">
             {steps.map((step, i) => {
               const gap = getGapAfter(step.step)
               const nextStep = steps[i + 1]
-              const extraGap = step.isMilestone && nextStep ? 'mb-1' : ''
 
               return (
-                <div key={step.step} className={extraGap}>
+                <div key={step.step} className="flex flex-col gap-3">
                   <StepCard step={step} index={i} />
                   {gap ? (
-                    <div className="mt-3 flex justify-center">
+                    <div className="flex justify-center">
                       <GapLabelCard gap={gap} />
                     </div>
                   ) : (
                     nextStep && (
-                      <GapConnector direction="down" />
+                      <ChevronDown aria-hidden className="mx-auto size-5 text-white/60" />
                     )
                   )}
                 </div>

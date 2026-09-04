@@ -25,7 +25,11 @@ export function ServicesOverview() {
           историей лечения у каждого пациента.
         </p>
       </div>
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* На телефоне — плитка 2×N: одной колонкой семь карточек с картинкой,
+          описанием и ссылкой растягивались на три экрана. В узкой карточке
+          описание и «Подробнее» скрыты (вся карточка и так ссылка), остаются
+          картинка, название и цена — этого хватает, чтобы выбрать направление. */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
         {services.map((service) => {
           const needsPlaceholder = SERVICES_NEEDING_REAL_PHOTO.has(service.slug)
           return (
@@ -47,18 +51,22 @@ export function ServicesOverview() {
                     src={service.image}
                     alt={service.shortName}
                     fill
-                    sizes="(max-width: 640px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 50vw, 33vw"
                     className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   />
                 )}
               </div>
-              <div className="flex flex-1 flex-col gap-2 p-4">
-                <div className="flex items-baseline justify-between gap-2">
-                  <h3 className="font-heading text-lg font-bold text-foreground">{service.shortName}</h3>
+              <div className="flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
+                  <h3 className="font-heading text-base font-bold text-balance text-foreground sm:text-lg">
+                    {service.shortName}
+                  </h3>
                   <span className="shrink-0 text-sm font-semibold text-primary">от {service.priceFrom} р.</span>
                 </div>
-                <p className="line-clamp-2 text-sm text-muted-foreground">{service.cardDescription}</p>
-                <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-medium text-primary transition-transform duration-300 group-hover:gap-2">
+                <p className="hidden line-clamp-2 text-sm text-muted-foreground sm:block">
+                  {service.cardDescription}
+                </p>
+                <span className="mt-auto hidden items-center gap-1 pt-1 text-sm font-medium text-primary transition-transform duration-300 group-hover:gap-2 sm:inline-flex">
                   Подробнее
                   <ArrowRight className="size-4" />
                 </span>

@@ -11,6 +11,7 @@ import { HeaderSwitcher } from '@/components/header-switcher'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
+import { MobileMenuProvider } from '@/components/mobile-menu-provider'
 import { GeoBanner } from '@/components/geo-banner'
 import { siteConfig } from '@/lib/site-config'
 
@@ -86,6 +87,7 @@ export default async function RootLayout({
       <body className={`${golosText.variable} ${unbounded.variable} font-sans antialiased`}>
         <ThemeProvider>
           <BookingModalProvider>
+            <MobileMenuProvider>
             <div className="flex min-h-dvh flex-col">
               <HeaderSwitcher />
               <GeoBanner suggestedCity={suggestedCity} />
@@ -94,6 +96,7 @@ export default async function RootLayout({
               <SiteFooter />
               <MobileBottomNav />
             </div>
+            </MobileMenuProvider>
             <BookingModalLoader />
           </BookingModalProvider>
         </ThemeProvider>

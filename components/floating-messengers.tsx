@@ -6,7 +6,11 @@ import { siteConfig } from "@/lib/site-config"
 
 export function FloatingMessengers() {
   return (
-    <div className="fixed right-4 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-40 flex flex-col gap-3 lg:bottom-6">
+    // Только с lg. На телефоне эти две кнопки висели над нижней панелью, рядом
+    // с поднятым бургером — угол экрана превращался в кашу из трёх кружков
+    // поверх контента. Мессенджеры переехали в мобильное меню
+    // (mobile-menu-provider.tsx), где у них есть подписи.
+    <div className="fixed right-4 bottom-6 z-40 hidden flex-col gap-3 lg:flex">
       <a
         href={siteConfig.whatsappHref}
         target="_blank"

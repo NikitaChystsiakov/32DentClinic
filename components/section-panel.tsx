@@ -38,11 +38,14 @@ interface SectionPanelProps {
 
 export function SectionPanel({ variant = 'neutral', className, children }: SectionPanelProps) {
   return (
-    <section className="px-4 py-6 sm:px-6 lg:px-8">
+    // Поля на телефоне заметно уже: при px-4 снаружи и p-8 внутри на экране
+    // 390px контенту оставалось ~294px — текст рвался на короткие строки.
+    // Теперь остаётся ~326px, а с sm вёрстка возвращается к прежним отступам.
+    <section className="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
       <div
         data-variant={variant}
         className={cn(
-          'relative mx-auto max-w-6xl rounded-3xl p-8 sm:p-12',
+          'relative mx-auto max-w-6xl rounded-3xl p-5 sm:p-8 lg:p-12',
           variantClasses[variant],
           className
         )}

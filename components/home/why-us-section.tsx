@@ -54,8 +54,10 @@ export function WhyUsSection() {
         </h2>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-10">
-        <div className="silver-sheen relative flex min-h-95 flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-10">
+        {/* Ниже sm карточка с врачом заметно ниже: 380px фото плюс восемь
+            причин растягивали секцию почти на три экрана. */}
+        <div className="silver-sheen relative flex min-h-60 flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg sm:min-h-95">
           {showcaseDoctor ? (
             <Image
               src={showcaseDoctor.photo}
@@ -81,13 +83,16 @@ export function WhyUsSection() {
           </div>
         </div>
 
-        <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 sm:gap-y-6">
           {points.map((point, index) => (
             <div
               key={point.title}
               className={cn(
-                'group flex items-start gap-3.5 pb-6',
-                index < points.length - 2 && 'border-b border-border/60'
+                'group flex items-start gap-3 pb-4 sm:gap-3.5 sm:pb-6',
+                // На телефоне колонка одна, поэтому разделитель нужен у всех,
+                // кроме последнего; в две колонки — кроме последней пары.
+                index < points.length - 1 && 'border-b border-border/60',
+                index >= points.length - 2 && 'sm:border-b-0'
               )}
             >
               <point.icon className="mt-0.5 size-5 shrink-0 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:text-accent" />

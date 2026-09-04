@@ -62,8 +62,11 @@ export function DoctorsCarouselSection() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        {/* Стрелки только с sm: они вынесены на 48px наружу карусели
+            (-left-12/-right-12) и на телефоне вылезали за край экрана, давая
+            горизонтальную прокрутку. Листается свайпом. */}
+        <CarouselPrevious className="hidden sm:flex" />
+        <CarouselNext className="hidden sm:flex" />
       </Carousel>
     </>
   )

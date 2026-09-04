@@ -4,7 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Phone, MapPin, Send, ChevronDown, Star, Percent } from 'lucide-react'
+import { Phone, MapPin, Send, ChevronDown, Star, Percent, Menu } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -15,6 +15,7 @@ import { getCityContent } from '@/content'
 import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
+import { useMobileMenu } from '@/components/mobile-menu-provider'
 import { siteConfig } from '@/lib/site-config'
 import { aggregatorRatings } from '@/lib/data/aggregators'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
@@ -37,7 +38,7 @@ const layoutStyles: Record<
   compact: {
     topBar: 'h-16',
     topBarScrolled: 'h-14',
-    bottomBar: 'h-12',
+    bottomBar: 'lg:h-12',
     logoHeight: 40,
     logoClass: '',
     navOffset: '',
@@ -45,7 +46,7 @@ const layoutStyles: Record<
   balanced: {
     topBar: 'h-20',
     topBarScrolled: 'h-16',
-    bottomBar: 'h-13',
+    bottomBar: 'lg:h-13',
     logoHeight: 56,
     logoClass: '',
     navOffset: '',
@@ -53,7 +54,7 @@ const layoutStyles: Record<
   anchored: {
     topBar: 'h-17',
     topBarScrolled: 'h-17',
-    bottomBar: 'h-13',
+    bottomBar: 'lg:h-13',
     logoHeight: 88,
     logoClass: 'translate-y-4',
     navOffset: 'lg:pl-34',
@@ -66,6 +67,7 @@ export function SiteHeader() {
   const cityDropdownRef = React.useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const { openBookingModal } = useBookingModal()
+  const { openMenu } = useMobileMenu()
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
@@ -245,25 +247,47 @@ export function SiteHeader() {
               </Button>
             </div>
 
-            {/* Мобильное действие: полное меню теперь в нижней навигации */}
-            <div className="flex items-center lg:hidden">
+            {/* Мобильные действия: звонок и бургер. Меню общее с нижней
+                панелью (MobileMenuProvider) — в шапке его ищут по привычке,
+                нижняя панель остаётся быстрым доступом к частым действиям. */}
+            <div className="flex items-center gap-1 lg:hidden">
               <a
                 href={phoneHref}
                 aria-label="Позвонить"
-                className="flex size-10 items-center justify-center rounded-full text-foreground"
+                className="flex size-11 items-center justify-center rounded-full text-foreground active:bg-muted"
               >
                 <Phone className="size-5" />
               </a>
+              <button
+                type="button"
+                aria-label="Открыть меню"
+                onClick={openMenu}
+                className="flex size-11 items-center justify-center rounded-full text-foreground active:bg-muted"
+              >
+                <Menu className="size-6" />
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Нижняя полоса: навигация и анонс акции */}
-      <div className="border-b border-border bg-card">
+      {/* Нижняя полоса: навигация и анонс акции.
+          На телефоне после прокрутки полоса скрывается: там в ней только анонс
+          акции, а вместе с верхней полосой шапка занимала ~240px — почти треть
+          экрана, постоянно. На lg+ полоса содержит навигацию и остаётся всегда. */}
+      <div
+        className={cn(
+          'border-b border-border bg-card lg:block',
+          scrolled && 'hidden'
+        )}
+      >
+        {/* Высота полосы фиксирована только с lg: на телефоне здесь остаётся
+            один анонс акции, и в одну строку он обрывался посреди слова
+            («…и КТ бесплатн…»). Теперь строка переносится на две, а высоту
+            задаёт содержимое. */}
         <div
           className={cn(
-            'mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8',
+            'mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-2 sm:px-6 lg:px-8 lg:py-0',
             styles.bottomBar
           )}
         >
@@ -288,10 +312,10 @@ export function SiteHeader() {
           {promo && (
             <Link
               href={promo.href}
-              className="group flex min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground lg:ml-auto"
+              className="group flex min-w-0 items-start gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground lg:ml-auto lg:items-center"
             >
-              <Percent className="size-4 shrink-0 text-accent" />
-              <span className="truncate">{promo.text}</span>
+              <Percent className="mt-0.5 size-4 shrink-0 text-accent lg:mt-0" />
+              <span className="line-clamp-2 lg:truncate">{promo.text}</span>
               <span className="hidden shrink-0 font-medium text-primary underline-offset-4 group-hover:underline sm:inline">
                 Подробнее
               </span>
