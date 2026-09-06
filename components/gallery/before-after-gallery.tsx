@@ -41,7 +41,10 @@ export function BeforeAfterGallery() {
               'rounded-lg border px-4 py-2 text-sm font-medium transition-colors',
               filter === f.id
                 ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-silver/30 text-foreground hover:border-primary/40 hover:text-primary'
+                : // Тот же язык, что у вторичной кнопки (variant="outline"):
+                  // индиговый контур и текст, на hover контур плотнее и
+                  // появляется лёгкая заливка.
+                  'border-primary/30 text-primary hover:border-primary/50 hover:bg-primary/8'
             )}
           >
             {f.label}

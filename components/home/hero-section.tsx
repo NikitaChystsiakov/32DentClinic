@@ -37,7 +37,10 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-background/40" />
       </div>
 
-      <div className="relative mx-auto flex min-h-160 max-w-6xl flex-col justify-center gap-8 px-4 py-16 sm:px-6 md:py-20 lg:min-h-180 lg:px-8">
+      {/* Ровно первый экран: 100svh минус залипающая шапка (--header-h, см.
+          globals.css). svh, а не vh, — на телефоне vh считается по свёрнутой
+          адресной строке, и низ секции уезжал под неё. */}
+      <div className="relative mx-auto flex min-h-[calc(100svh-var(--header-h))] max-w-6xl flex-col justify-center gap-8 px-4 py-16 sm:px-6 md:py-20 lg:px-8">
         <div className="flex max-w-2xl flex-col gap-6">
           {mainRating && (
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
@@ -62,7 +65,7 @@ export function HeroSection() {
               <Calendar data-icon="inline-start" />
               Записаться на приём
             </Button>
-            <Button size="lg" variant="silver" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
+            <Button size="lg" variant="outline" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
               Смотреть цены
             </Button>
           </div>

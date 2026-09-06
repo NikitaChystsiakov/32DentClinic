@@ -42,7 +42,7 @@ export function ContactCtaSection() {
           >
             Записаться онлайн
           </Button>
-          <Button size="lg" variant="silver" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
+          <Button size="lg" variant="outline" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
             Как нас найти
           </Button>
         </div>

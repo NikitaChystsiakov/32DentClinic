@@ -173,7 +173,7 @@ function StepCard({
       <div
         ref={glowRef}
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 [background:radial-gradient(140px_circle_at_var(--mx)_var(--my),color-mix(in_oklch,var(--silver),transparent_55%),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 [background:radial-gradient(140px_circle_at_var(--mx)_var(--my),color-mix(in_oklch,var(--primary),transparent_88%),transparent_70%)]"
       />
       {/* Крупный номер шага — decor watermark. Смещён дальше от карточки (85%,
           не 70%), чтобы не проваливаться под полупрозрачные полоски
@@ -195,7 +195,7 @@ function StepCard({
             'flex size-10 shrink-0 items-center justify-center rounded-lg sm:size-12',
             isMilestone
               ? 'bg-accent text-accent-foreground'
-              : 'silver-sheen bg-linear-to-b from-silver-muted to-silver/25 text-silver-foreground ring-1 ring-silver/30 dark:text-foreground'
+              : 'bg-(--panel-sky) text-primary ring-1 ring-primary/20'
           )}
         >
           {Icon && <Icon className={cn('size-5', isMilestone && 'sm:size-6')} />}

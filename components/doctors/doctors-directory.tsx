@@ -45,7 +45,7 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
         </Badge>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Button
-            variant="silver"
+            variant="outline"
             size="sm"
             className="flex-1"
             render={<Link href={`/${citySlug}/vrachi/${doctor.slug}/`} />}

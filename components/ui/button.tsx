@@ -9,16 +9,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // Единственная вторичная кнопка сайта. Раньше их было две — нейтральная
+        // outline и серебристая silver с бликом; серебро выбивалось из холодной
+        // индиговой палитры, поэтому вариант убран, а его места переведены сюда.
+        // Контур и текст берут --primary, чтобы вторичная кнопка звучала тем же
+        // цветом, что и основная (bg-accent), но оставалась заметно тише неё.
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-primary/30 bg-background text-primary hover:border-primary/50 hover:bg-primary/8 aria-expanded:border-primary/50 aria-expanded:bg-primary/8",
         secondary:
           "bg-accent text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--accent),var(--foreground)_5%)] aria-expanded:bg-accent aria-expanded:text-secondary-foreground",
         // Кнопка поверх фирменной цветной плашки (hero, калькулятор, баннер
         // услуг). Там bg-accent совпадает с фоном и кнопка исчезает, поэтому
         // единственный надёжный вариант — белая заливка с индиговым текстом.
         inverse: "bg-white text-(--brand-ink) shadow-md hover:bg-white/90",
-        silver:
-          "silver-sheen border-silver/40 bg-linear-to-b from-silver-muted to-silver/20 text-silver-foreground shadow-sm hover:border-silver/60 dark:text-foreground",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:

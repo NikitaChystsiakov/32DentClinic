@@ -30,9 +30,14 @@ export function FaqSection() {
               value={`faq-${index}`}
               className="rounded-2xl border border-white/35 bg-white/15 px-5 backdrop-blur-sm not-last:border-white/35"
             >
-              {/* Стрелка красится через **:…-icon: с !, иначе её проигрывает
-                  цвет text-muted-foreground, зашитый в самом AccordionTrigger. */}
-              <AccordionTrigger className="py-4 text-base text-white **:data-[slot=accordion-trigger-icon]:text-white!">
+              {/* hover:no-underline — подчёркивание из базового AccordionTrigger
+                  здесь лишнее: вопрос и так подсвечен «пузырём», а линия под
+                  белым текстом с тенью читалась как дефект.
+                  Стрелка красится через **:…-icon: с !, иначе её проигрывает
+                  цвет text-muted-foreground, зашитый в самом AccordionTrigger;
+                  толщина обводки и тень взяты как у текста рядом, чтобы она не
+                  выглядела тоньше и бледнее вопроса. */}
+              <AccordionTrigger className="py-4 text-base text-white hover:no-underline **:data-[slot=accordion-trigger-icon]:text-white! **:data-[slot=accordion-trigger-icon]:[stroke-width:2.5] **:data-[slot=accordion-trigger-icon]:drop-shadow-[0_1px_8px_rgb(20_16_60/0.45)]">
                 {item.question}
               </AccordionTrigger>
               <AccordionContent>

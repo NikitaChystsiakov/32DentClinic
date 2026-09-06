@@ -71,7 +71,7 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
               <Link
                 key={direction.href}
                 href={`/${city.slug}${direction.href}`}
-                className="rounded-lg border border-silver/30 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                className="rounded-lg border border-primary/30 px-4 py-2 text-sm font-medium text-primary transition-colors hover:border-primary/50 hover:bg-primary/8"
               >
                 {direction.label}
               </Link>

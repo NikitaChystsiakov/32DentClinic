@@ -138,6 +138,13 @@
   --chart-3: #5457d6;
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+  /*
+   * Высота залипающей шапки — от неё считается полная высота первого экрана
+   * (см. hero-split.tsx / hero-section.tsx: min-h-[calc(100svh-var(--header-h))]).
+   * До lg видна только верхняя полоса шапки (h-20 = 5rem); с lg к ней
+   * добавляется полоса навигации (lg:h-13 = 3.25rem).
+   */
+  --header-h: 5rem;
   --radius: 0.75rem;
   --sidebar: #f6f8fd;
   --sidebar-foreground: #131a2e;
@@ -199,6 +206,12 @@
   --sidebar-accent-foreground: #f5f8fd;
   --sidebar-border: #1e2941;
   --sidebar-ring: #8f95f5;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 8.25rem;
+  }
 }
 
 /*
@@ -307,38 +320,19 @@
     );
   }
 
-  /* Metallic sheen sweep, used on silver-toned surfaces (buttons, badges). */
-  .silver-sheen {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+  /*
+   * Иконка-действие в шапке: Viber, Telegram и переключатель темы. Один класс
+   * на все три, чтобы совпадали и тач-цель, и поведение при наведении —
+   * раньше мессенджеры только меняли цвет, а тема была ghost-кнопкой, которая
+   * вдобавок подпрыгивала на пиксель, и три соседние иконки вели себя
+   * по-разному.
+   */
+  .icon-action {
+    @apply inline-flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-[color,background-color,transform] duration-200 hover:scale-110 hover:bg-muted hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none active:scale-95;
   }
-  .silver-sheen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-      115deg,
-      transparent 35%,
-      color-mix(in oklch, white, transparent 45%) 50%,
-      transparent 65%
-    );
-    background-size: 220% 100%;
-    background-position: 150% 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .silver-sheen:hover::after {
-    opacity: 1;
-    animation: silver-sheen-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  @keyframes silver-sheen-sweep {
-    from {
-      background-position: 150% 0;
-    }
-    to {
-      background-position: -50% 0;
+  @media (prefers-reduced-motion: reduce) {
+    .icon-action {
+      @apply hover:scale-100 active:scale-100;
     }
   }
 

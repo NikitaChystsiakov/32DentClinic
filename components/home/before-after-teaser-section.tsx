@@ -43,12 +43,12 @@ export function BeforeAfterTeaserSection({ columns = 2 }: BeforeAfterTeaserSecti
           </p>
         </div>
 
-        <Carousel opts={{ align: 'start', loop: true }} className="px-1">
+        <Carousel opts={{ align: 'start', loop: true }} className="px-1 sm:px-12">
           <CarouselContent>
             {beforeAfterCases.map((c) => (
               <CarouselItem
                 key={c.id}
-                className={cn('basis-[88%] my-2 sm:basis-1/2', compact && 'lg:basis-1/3')}
+                className={cn('basis-[88%] sm:basis-1/2', compact && 'lg:basis-1/3')}
               >
                 <Card className="h-full ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl">
                   <CardContent className={cn('flex h-full flex-col gap-4 p-4', compact && 'gap-3 p-3.5')}>
@@ -109,12 +109,12 @@ export function BeforeAfterTeaserSection({ columns = 2 }: BeforeAfterTeaserSecti
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden left-0 sm:flex" />
+          <CarouselNext className="hidden right-0 sm:flex" />
         </Carousel>
 
         <div className="mt-8 flex justify-center">
-          <Button variant="silver" render={<Link href={`/${city.slug}/primery-rabot/`} />} nativeButton={false}>
+          <Button variant="outline" render={<Link href={`/${city.slug}/primery-rabot/`} />} nativeButton={false}>
             Смотреть все примеры
             <ArrowRight data-icon="inline-end" />
           </Button>

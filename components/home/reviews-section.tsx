@@ -87,20 +87,20 @@ export function ReviewsSection() {
         <Carousel
           opts={{ align: 'start', loop: true }}
           setApi={setApi}
-          className="px-1"
+          className="px-1 sm:px-12"
         >
           <CarouselContent>
             {reviews.map((review) => (
               <CarouselItem
                 key={review.id}
-                className="basis-[85%] py-1 sm:basis-1/2 lg:basis-1/3"
+                className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
               >
                 <ReviewCard review={review} />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden left-0 sm:flex" />
+          <CarouselNext className="hidden right-0 sm:flex" />
         </Carousel>
 
         <div className="mt-6 flex justify-center gap-2">

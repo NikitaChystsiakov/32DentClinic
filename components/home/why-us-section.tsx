@@ -60,7 +60,7 @@ export function WhyUsSection() {
             подпись ложилась прямо на лицо. С квадратом кадр совпадает с
             пропорциями исходника, а текст внизу остаётся на плечах.
             С sm возвращается прежняя высокая карточка десктопа. */}
-        <div className="silver-sheen relative flex aspect-square flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg sm:aspect-auto sm:min-h-95">
+        <div className="relative flex aspect-square flex-col justify-end overflow-hidden rounded-2xl border border-silver/30 shadow-lg sm:aspect-auto sm:min-h-95">
           {showcaseDoctor ? (
             <Image
               src={showcaseDoctor.photo}

@@ -136,9 +136,18 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   const { carouselRef, orientation } = useCarousel()
 
   return (
+    // Вертикальный «воздух» внутри окна прокрутки. overflow-hidden нужен только
+    // по горизонтали, но обрезал он всё: карточка на hover поднимается и
+    // отбрасывает тень, а окно срезало её ровной прямой — тень выглядела
+    // прямоугольной рамкой, а не мягкой подложкой под карточкой. Паддинг даёт
+    // запас под тень и подъём, отрицательный margin возвращает окно на прежнее
+    // место, поэтому вёрстка вокруг не сдвигается.
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className={cn(
+        "overflow-hidden",
+        orientation === "horizontal" ? "-my-6 py-6" : "-mx-6 px-6"
+      )}
       data-slot="carousel-content"
     >
       <div

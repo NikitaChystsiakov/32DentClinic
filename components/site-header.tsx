@@ -65,6 +65,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
   const [cityOpen, setCityOpen] = React.useState(false)
   const cityDropdownRef = React.useRef<HTMLDivElement>(null)
+  const headerRef = React.useRef<HTMLElement>(null)
   const pathname = usePathname()
   const { openBookingModal } = useBookingModal()
   const { openMenu } = useMobileMenu()
@@ -106,6 +107,28 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  /*
+   * Реальная высота шапки уезжает в --header-h: от неё считается высота
+   * первого экрана (см. hero-split.tsx и hero-section.tsx). Меряем, а не
+   * берём из констант: полосы шапки разной высоты в разных HEADER_LAYOUT, а
+   * нижняя на телефоне ещё и растёт на вторую строку, когда в ней длинный
+   * анонс акции — из-за этого hero не дотягивал ровно до края экрана.
+   * Пока страница прокручена, шапка сжата (и на телефоне нижняя полоса
+   * спрятана) — в этом состоянии значение не трогаем, иначе hero менял бы
+   * высоту вместе с шапкой прямо во время прокрутки.
+   */
+  React.useEffect(() => {
+    const el = headerRef.current
+    if (!el || scrolled) return
+    const write = () => {
+      document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`)
+    }
+    write()
+    const observer = new ResizeObserver(write)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [scrolled])
+
   React.useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (cityDropdownRef.current && !cityDropdownRef.current.contains(e.target as Node)) {
@@ -118,6 +141,7 @@ export function SiteHeader() {
 
   return (
     <header
+      ref={headerRef}
       className={cn(
         'sticky top-0 z-40 w-full transition-shadow duration-300',
         scrolled ? 'bg-background/95 shadow-sm backdrop-blur-md' : 'bg-background/90 backdrop-blur-sm'
@@ -217,26 +241,23 @@ export function SiteHeader() {
 
             {/* Контакты и CTA — lg+ */}
             <div className="hidden shrink-0 items-center gap-3 lg:flex">
+              {/* Телефон чуть плотнее окружения (medium против normal у адреса
+                  и рейтинга), но не полужирный: раньше text-lg/semibold делал
+                  его самым тяжёлым элементом строки и перебивал кнопку «Записаться». */}
               <a
                 href={phoneHref}
                 aria-label={phone}
-                className="flex items-center gap-2 text-lg font-semibold text-foreground transition-colors hover:text-primary"
+                className="flex items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary"
               >
                 <Phone className="size-5 shrink-0" />
                 <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
               </a>
-              <a
-                href={viberHref}
-                aria-label="Viber"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
+              {/* Viber, Telegram и тема — один класс .icon-action на всех трёх,
+                  чтобы наведение вело себя одинаково (см. globals.css). */}
+              <a href={viberHref} aria-label="Viber" className="icon-action">
                 <ViberIcon className="size-5" />
               </a>
-              <a
-                href={telegramHref}
-                aria-label="Telegram"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
+              <a href={telegramHref} aria-label="Telegram" className="icon-action">
                 <Send className="size-5" />
               </a>
               <ThemeToggle />
@@ -253,9 +274,9 @@ export function SiteHeader() {
                 панелью (MobileMenuProvider) — в шапке его ищут по привычке,
                 нижняя панель остаётся быстрым доступом к частым действиям. */}
             <div className="flex items-center gap-1 lg:hidden">
-              {/* Тот же размер и форма, что у соседних кнопок ряда: у самого
-                  ThemeToggle размер icon (36px), для тач-цели в шапке мало. */}
-              <ThemeToggle className="size-11 rounded-full active:bg-muted" />
+              {/* Тот же размер и форма, что у соседних кнопок ряда: базовые
+                  40px .icon-action для тач-цели в шапке маловато. */}
+              <ThemeToggle className="size-11 rounded-full" />
               <a
                 href={phoneHref}
                 aria-label="Позвонить"

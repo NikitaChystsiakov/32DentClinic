@@ -32,7 +32,7 @@ export function DoctorFinalCta({ slug }: { slug: string }) {
         >
           Записаться к этому врачу
         </Button>
-        <Button variant="silver" render={<Link href="/vrachi/" />} nativeButton={false}>
+        <Button variant="outline" render={<Link href="/vrachi/" />} nativeButton={false}>
           Посмотреть всех врачей
         </Button>
       </div>

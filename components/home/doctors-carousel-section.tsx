@@ -26,7 +26,7 @@ export function DoctorsCarouselSection() {
           <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading)">Наши врачи</h2>
         </div>
         <Button
-          variant="silver"
+          variant="outline"
           className="w-fit"
           render={<Link href={`/${city.slug}/vrachi/`} />}
           nativeButton={false}
@@ -35,7 +35,7 @@ export function DoctorsCarouselSection() {
           <ArrowRight data-icon="inline-end" />
         </Button>
       </div>
-      <Carousel opts={{ align: 'start' }} className="px-1">
+      <Carousel opts={{ align: 'start' }} className="px-1 sm:px-12">
         <CarouselContent>
           {doctors.map((doctor) => (
             <CarouselItem key={doctor.slug} className="basis-4/5 sm:basis-1/2 lg:basis-1/3">
@@ -62,11 +62,11 @@ export function DoctorsCarouselSection() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        {/* Стрелки только с sm: они вынесены на 48px наружу карусели
-            (-left-12/-right-12) и на телефоне вылезали за край экрана, давая
-            горизонтальную прокрутку. Листается свайпом. */}
-        <CarouselPrevious className="hidden sm:flex" />
-        <CarouselNext className="hidden sm:flex" />
+        {/* Стрелки только с sm: на телефоне под жёлоб нет места (карточка и так
+            узкая), а листается там свайпом. С sm они стоят в собственном жёлобе
+            карусели (sm:px-12), внутри панели, а не на её границе. */}
+        <CarouselPrevious className="hidden left-0 sm:flex" />
+        <CarouselNext className="hidden right-0 sm:flex" />
       </Carousel>
     </>
   )

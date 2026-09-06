@@ -9,11 +9,6 @@ import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCity } from '@/lib/contexts/city-context'
 import { getServicesForCity } from '@/config/services'
-import { PhotoPlaceholder } from '@/components/photo-placeholder'
-
-// У «Имплантации» в данных вместо фото стоит англоязычная медицинская схема —
-// не подходит для сайта. Показываем заглушку, пока не заменят на реальное фото.
-const SERVICES_NEEDING_REAL_PHOTO = new Set(['implantaciya'])
 
 export function ServicesOverview() {
   const { city } = useCity()
@@ -67,7 +62,6 @@ export function ServicesOverview() {
       <div ref={emblaRef} className="-mx-5 overflow-hidden px-0 sm:mx-0 sm:overflow-visible">
         <div className="-ml-3 flex sm:ml-0 sm:grid sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {services.map((service, index) => {
-            const needsPlaceholder = SERVICES_NEEDING_REAL_PHOTO.has(service.slug)
             const isActive = index === selected
             return (
               <div
@@ -95,22 +89,13 @@ export function ServicesOverview() {
                   data-active={isActive}
                 >
                   <div className="relative aspect-4/3 w-full overflow-hidden">
-                    {needsPlaceholder ? (
-                      <PhotoPlaceholder
-                        label={`Фото приёма или оборудования для услуги «${service.shortName}»`}
-                        width={1200}
-                        height={900}
-                        className="h-full rounded-none border-0"
-                      />
-                    ) : (
-                      <Image
-                        src={service.image}
-                        alt={service.shortName}
-                        fill
-                        sizes="(max-width: 640px) 72vw, 33vw"
-                        className="object-cover transition-transform duration-500 ease-out sm:group-hover:scale-105"
-                      />
-                    )}
+                    <Image
+                      src={service.image}
+                      alt={service.shortName}
+                      fill
+                      sizes="(max-width: 640px) 72vw, 33vw"
+                      className="object-cover transition-transform duration-500 ease-out sm:group-hover:scale-105"
+                    />
                   </div>
 
                   <div className="flex flex-1 flex-col gap-2 p-4">
@@ -136,16 +121,20 @@ export function ServicesOverview() {
                     {/* Раскрытие активной карточки: сетка 0fr → 1fr вместо
                         max-height, чтобы высота анимировалась ровно по контенту
                         и не приходилось угадывать её в пикселях. С sm описание
-                        видно всегда — там карточки не листаются. */}
+                        видно всегда — там карточки не листаются.
+                        Там же блок забирает всю оставшуюся высоту карточки
+                        (sm:flex-1), а «Подробнее» прижимается к её низу
+                        (sm:mt-auto): описания разной длины, и без этого ссылка
+                        в каждой карточке ряда стояла на своей высоте. */}
                     <div
                       data-active={isActive}
-                      className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[active=true]:grid-rows-[1fr] sm:grid-rows-[1fr]"
+                      className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[active=true]:grid-rows-[1fr] sm:grid-rows-[1fr] sm:flex-1"
                     >
-                      <div className="overflow-hidden">
+                      <div className="overflow-hidden sm:flex sm:h-full sm:flex-col">
                         <p className="text-sm leading-relaxed text-muted-foreground">
                           {service.cardDescription}
                         </p>
-                        <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary transition-[gap] duration-300 sm:group-hover:gap-2">
+                        <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-primary transition-[gap] duration-300 sm:mt-auto sm:pt-3 sm:group-hover:gap-2">
                           Подробнее
                           <ArrowRight className="size-4" />
                         </span>
