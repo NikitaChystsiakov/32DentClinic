@@ -328,12 +328,30 @@
    * по-разному.
    */
   .icon-action {
-    @apply inline-flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-[color,background-color,transform] duration-200 hover:scale-110 hover:bg-muted hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none active:scale-95;
+    /* В списке transition именно scale, а не transform: утилита scale-110 в
+       Tailwind v4 пишет отдельное свойство scale, и с transform увеличение
+       происходило скачком, пока цвет плавно переезжал. */
+    @apply inline-flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-[color,background-color,scale] duration-200 hover:scale-110 hover:bg-muted hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none active:scale-95;
   }
   @media (prefers-reduced-motion: reduce) {
     .icon-action {
       @apply hover:scale-100 active:scale-100;
     }
+  }
+
+  /*
+   * Знак Viber (см. components/icons/viber-icon.tsx). Маска, а не svg:
+   * фирменный глиф со сплошной трубкой и дугами сигнала точнее взять из
+   * самой картинки, чем перерисовывать его контурами. Цвет — currentColor,
+   * поэтому знак ведёт себя как обычная иконка: наследует цвет ссылки и
+   * плавно меняется вместе с ней на ховере.
+   */
+  .viber-glyph {
+    display: inline-block;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask: url('/images/viber-icon.png') no-repeat center / contain;
+    mask: url('/images/viber-icon.png') no-repeat center / contain;
   }
 
   /* Круговой бейдж в hero: текст по окружности вращается вокруг статичного центра. */

@@ -46,9 +46,14 @@ export function SiteFooter() {
 
   return (
     // Футер собран той же панелью, что и секции страницы, чтобы низ сайта
-    // не выпадал из общей сетки скруглённых контейнеров.
-    <footer className="px-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1.5rem)] sm:px-6 lg:px-8 lg:pb-6">
-      <div className="mx-auto max-w-7xl rounded-3xl bg-card px-6 py-12 ring-1 ring-border sm:px-8 lg:px-10">
+    // не выпадал из общей сетки скруглённых контейнеров. Поля, максимальная
+    // ширина и внутренние отступы взяты один в один из SectionPanel: раньше
+    // здесь стоял max-w-7xl против max-w-6xl у секций, и футер торчал по
+    // 64px с каждой стороны — на широком экране это было заметно.
+    // Нижний отступ больше обычного: на телефоне под футером висит
+    // фиксированная панель навигации, с lg она пропадает.
+    <footer className="px-3 pt-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1.5rem)] sm:px-6 sm:pt-6 lg:px-8 lg:pb-6">
+      <div className="mx-auto max-w-6xl rounded-3xl bg-card px-5 py-12 ring-1 ring-border sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="flex flex-col gap-4">

@@ -43,6 +43,27 @@ export function BookingModal() {
   const [state, setState] = React.useState<FormState>('default')
   const [showErrors, setShowErrors] = React.useState(false)
 
+  /*
+   * Списки для селектов держим отдельно и передаём в <Select items>: без
+   * этого пропа base-ui рисует в поле сырое значение, то есть слаг
+   * («terapiya», «ilyushchenko-natalya»), а не подпись. Тот же массив
+   * раскладывается в пункты списка — так подпись в поле и подпись в списке
+   * не могут разъехаться. Варианты «не знаю» / «без предпочтений» лежат
+   * здесь же: у них нет слага в данных, но в поле они тоже должны читаться
+   * по-русски.
+   */
+  const serviceItems = React.useMemo(
+    () => [...serviceSelectOptions, { value: 'ne-znayu', label: 'Не знаю, нужна консультация' }],
+    []
+  )
+  const doctorItems = React.useMemo(
+    () => [
+      ...doctors.map((d) => ({ value: d.slug, label: d.name })),
+      { value: 'bez-predpochteniy', label: 'Без предпочтений' },
+    ],
+    []
+  )
+
   React.useEffect(() => {
     if (isOpen) {
       setSelectedService(service)
@@ -171,8 +192,9 @@ export function BookingModal() {
                 <Field>
                   <FieldLabel htmlFor="booking-service">Услуга</FieldLabel>
                   <Select
+                    items={serviceItems}
                     value={selectedService}
-                    onValueChange={setSelectedService}
+                    onValueChange={(value) => setSelectedService(value ?? undefined)}
                     disabled={state === 'loading'}
                   >
                     <SelectTrigger id="booking-service" className="w-full">
@@ -180,12 +202,11 @@ export function BookingModal() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {serviceSelectOptions.map((opt) => (
+                        {serviceItems.map((opt) => (
                           <SelectItem key={opt.value} value={opt.value}>
                             {opt.label}
                           </SelectItem>
                         ))}
-                        <SelectItem value="ne-znayu">Не знаю, нужна консультация</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -194,8 +215,9 @@ export function BookingModal() {
                 <Field>
                   <FieldLabel htmlFor="booking-doctor">Врач</FieldLabel>
                   <Select
+                    items={doctorItems}
                     value={selectedDoctor}
-                    onValueChange={setSelectedDoctor}
+                    onValueChange={(value) => setSelectedDoctor(value ?? undefined)}
                     disabled={state === 'loading'}
                   >
                     <SelectTrigger id="booking-doctor" className="w-full">
@@ -203,12 +225,11 @@ export function BookingModal() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {doctors.map((d) => (
-                          <SelectItem key={d.slug} value={d.slug}>
-                            {d.name}
+                        {doctorItems.map((d) => (
+                          <SelectItem key={d.value} value={d.value}>
+                            {d.label}
                           </SelectItem>
                         ))}
-                        <SelectItem value="bez-predpochteniy">Без предпочтений</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

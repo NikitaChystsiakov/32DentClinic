@@ -252,15 +252,20 @@ export function SiteHeader() {
                 <Phone className="size-5 shrink-0" />
                 <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
               </a>
-              {/* Viber, Telegram и тема — один класс .icon-action на всех трёх,
-                  чтобы наведение вело себя одинаково (см. globals.css). */}
-              <a href={viberHref} aria-label="Viber" className="icon-action">
-                <ViberIcon className="size-5" />
-              </a>
-              <a href={telegramHref} aria-label="Telegram" className="icon-action">
-                <Send className="size-5" />
-              </a>
-              <ThemeToggle />
+              {/* Viber, Telegram и тема — своя группа с почти нулевым зазором:
+                  у .icon-action бокс 40px при иконке 20px, и на общем gap-3
+                  между самими знаками получалось больше 30px — они читались
+                  как три отдельных элемента, а не как один блок. Класс на всех
+                  трёх один, поэтому и наведение у них одинаковое. */}
+              <div className="flex items-center gap-0.5">
+                <a href={viberHref} aria-label="Viber" className="icon-action">
+                  <ViberIcon className="size-5" />
+                </a>
+                <a href={telegramHref} aria-label="Telegram" className="icon-action">
+                  <Send className="size-5" />
+                </a>
+                <ThemeToggle />
+              </div>
               <Button
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90"

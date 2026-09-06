@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { ArrowRight, Check, Flame } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { useBookingModal } from '@/components/booking-modal-provider'
 import type { HeroBadge, HeroOffer } from '@/content/types'
 
@@ -87,7 +87,15 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
   return (
     // Светлая карточка на фоне синей левой: вся секция перестаёт быть одним
     // сплошным цветным блоком, а «чистый» белый работает на ощущение клиники.
-    <div className="relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--card),var(--panel-sky))] p-6 text-card-foreground ring-1 ring-primary/12">
+    // Кликабельна вся карточка, а не только «Подробнее»: ссылка одна на весь
+    // блок, а сама кнопка — оформленный span. Так не появляется вложенных
+    // ссылок и не нужен перекрывающий оверлей, который отбирал бы выделение
+    // текста; кнопка при этом реагирует на наведение по всей карточке через
+    // group-hover.
+    <Link
+      href={offer.href}
+      className="group relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--card),var(--panel-sky))] p-6 text-card-foreground ring-1 ring-primary/12 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+    >
       {/* Слот под стикер: без рамки, ринга и обрезки — просто область
           200×200px под PNG-стикер без фона (схема имплантации, зубная дуга).
           Крупный и прижат к самому краю карточки — стикер здесь такой же
@@ -100,7 +108,7 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
           alt=""
           fill
           sizes="200px"
-          className="object-contain drop-shadow-xl"
+          className="object-contain drop-shadow-xl transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
 
@@ -122,17 +130,17 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
               <span className="text-sm text-muted-foreground line-through">{offer.oldPrice}</span>
             )}
           </span>
-          <Button
-            variant="secondary"
-            size="sm"
-            render={<Link href={offer.href} />}
-            nativeButton={false}
+          <span
+            className={cn(
+              buttonVariants({ variant: 'secondary', size: 'sm' }),
+              'group-hover:-translate-y-px'
+            )}
           >
             Подробнее
-          </Button>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
