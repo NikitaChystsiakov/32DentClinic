@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { cn } from '@/lib/utils'
@@ -147,7 +147,6 @@ function TextWithPhoto({
 
 export function AboutContent() {
   const { city, content } = useCity()
-  const { openBookingModal } = useBookingModal()
   const about = content.about
   // Только реальные врачи: у Минска и Жлобина в конфиге пока карточки-заглушки
   // с выдуманными именами и чужими фото (см. isPlaceholder в config/doctors.ts).
@@ -199,14 +198,10 @@ export function AboutContent() {
               </div>
 
               <div className="mt-1 flex flex-wrap items-center gap-3">
-                <Button
-                  size="lg"
-                  variant="inverse"
-                  onClick={() => openBookingModal()}
-                >
+                <BookingButton size="lg" variant="inverse">
                   Записаться на приём
                   <ArrowRight data-icon="inline-end" />
-                </Button>
+                </BookingButton>
                 <Button
                   variant="outline"
                   size="lg"

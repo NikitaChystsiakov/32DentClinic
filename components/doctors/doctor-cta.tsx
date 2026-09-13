@@ -3,35 +3,33 @@
 import Link from 'next/link'
 import { Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 
 export function DoctorHeroCta({ slug, name }: { slug: string; name: string }) {
-  const { openBookingModal } = useBookingModal()
 
   return (
-    <Button
+    <BookingButton
       size="lg"
-      onClick={() => openBookingModal({ doctor: slug })}
+      options={{ doctor: slug }}
       className="w-fit bg-accent text-accent-foreground hover:bg-accent/90"
     >
       <Calendar data-icon="inline-start" />
       Записаться к врачу {name}
-    </Button>
+    </BookingButton>
   )
 }
 
 export function DoctorFinalCta({ slug }: { slug: string }) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <div className="flex flex-col items-center gap-4 rounded-2xl bg-silver-muted p-8 text-center ring-1 ring-silver/25 sm:p-12">
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button
+        <BookingButton
           className="bg-accent text-accent-foreground hover:bg-accent/90"
-          onClick={() => openBookingModal({ doctor: slug })}
+          options={{ doctor: slug }}
         >
           Записаться к этому врачу
-        </Button>
+        </BookingButton>
         <Button variant="outline" render={<Link href="/vrachi/" />} nativeButton={false}>
           Посмотреть всех врачей
         </Button>

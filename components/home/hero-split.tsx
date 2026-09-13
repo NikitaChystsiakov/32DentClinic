@@ -7,7 +7,7 @@ import { ArrowRight, Check, Flame } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import type { HeroBadge, HeroOffer } from '@/content/types'
 
 interface HeroStat {
@@ -156,7 +156,6 @@ export function HeroSplit({
   countdown,
   stats,
 }: HeroSplitProps) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     // Hero намеренно шире остальных секций и с меньшими полями: на ноутбучных
@@ -277,10 +276,10 @@ export function HeroSplit({
                   показывать вычисленный «ближайший слот» нельзя — это выглядело бы
                   как реальная запись, а по факту никем не подтверждено. */}
               <div className="relative mt-1 flex items-center gap-4">
-                <Button size="lg" variant="inverse" onClick={() => openBookingModal()}>
+                <BookingButton size="lg" variant="inverse">
                   Записаться
                   <ArrowRight data-icon="inline-end" />
-                </Button>
+                </BookingButton>
                 <SpinningBadge badge={badge} className="hidden shrink-0 lg:block" />
               </div>
             </div>

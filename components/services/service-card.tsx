@@ -4,11 +4,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import type { ServiceCategory } from '@/lib/services-data'
 
 export function ServiceCard({ service }: { service: ServiceCategory }) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-xl bg-card ring-1 ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl hover:ring-primary/40">
@@ -39,12 +38,12 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
             Подробнее
             <ArrowRight data-icon="inline-end" />
           </Button>
-          <Button
+          <BookingButton
             className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
-            onClick={() => openBookingModal({ service: service.slug })}
+            options={{ service: service.slug }}
           >
             Записаться
-          </Button>
+          </BookingButton>
         </div>
       </div>
     </div>

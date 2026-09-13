@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { getDoctorsForCity, doctorCategoryLabels, type DoctorCategory, type Doctor } from '@/config/doctors'
 
@@ -19,7 +19,6 @@ const FILTERS: { id: 'all' | DoctorCategory; label: string }[] = [
 ]
 
 function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-xl ring-1 ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl hover:ring-primary/40">
@@ -53,13 +52,13 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
           >
             Подробнее
           </Button>
-          <Button
+          <BookingButton
             size="sm"
             className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
-            onClick={() => openBookingModal({ doctor: doctor.slug })}
+            options={{ doctor: doctor.slug }}
           >
             Записаться
-          </Button>
+          </BookingButton>
         </div>
       </div>
     </div>

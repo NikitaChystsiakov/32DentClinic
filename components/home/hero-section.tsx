@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { Star, ShieldCheck, Calendar, Users2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { getDoctorsForCity } from '@/config/doctors'
 import { aggregatorRatings } from '@/lib/data/aggregators'
@@ -17,7 +17,6 @@ function pluralizeDoctors(n: number): string {
 }
 
 export function HeroSection() {
-  const { openBookingModal } = useBookingModal()
   const { city, content } = useCity()
   const doctorsCount = getDoctorsForCity(city.slug).length
   const mainRating = aggregatorRatings.find((a) => a.id === '103by')
@@ -57,14 +56,10 @@ export function HeroSection() {
             {content.hero.subtitle}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              onClick={() => openBookingModal()}
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
-            >
+            <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
               <Calendar data-icon="inline-start" />
               Записаться на приём
-            </Button>
+            </BookingButton>
             <Button size="lg" variant="outline" render={<a href={`/${city.slug}/ceny/`} />} nativeButton={false}>
               Смотреть цены
             </Button>

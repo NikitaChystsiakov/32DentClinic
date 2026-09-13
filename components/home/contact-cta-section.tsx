@@ -2,12 +2,11 @@
 
 import { MapPin, Clock, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { formatCityHours } from '@/lib/format-hours'
 
 export function ContactCtaSection() {
-  const { openBookingModal } = useBookingModal()
   const { city, content } = useCity()
 
   return (
@@ -35,13 +34,9 @@ export function ContactCtaSection() {
           </div>
         </div>
         <div className="flex flex-col justify-center gap-3">
-          <Button
-            size="lg"
-            onClick={() => openBookingModal()}
-            className="bg-accent text-accent-foreground hover:bg-accent/90"
-          >
+          <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
             Записаться онлайн
-          </Button>
+          </BookingButton>
           <Button size="lg" variant="outline" render={<a href={`/${city.slug}/kontakty/`} />} nativeButton={false}>
             Как нас найти
           </Button>

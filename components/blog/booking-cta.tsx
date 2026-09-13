@@ -2,15 +2,13 @@
 
 import { CalendarCheck } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 
 /**
  * Блок записи в конце статьи. Вынесен в отдельный клиентский компонент,
  * чтобы сама страница статьи осталась серверной и попала в статику.
  */
 export function BookingCta() {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <div className="mt-12 flex flex-col items-start gap-3 rounded-2xl bg-[linear-gradient(140deg,var(--hero-surface),var(--hero-surface-accent))] p-6 text-white sm:p-8">
@@ -19,15 +17,10 @@ export function BookingCta() {
         Статья описывает общий случай. Что подойдёт именно вам, врач скажет после осмотра —
         консультация бесплатна.
       </p>
-      <Button
-        size="lg"
-        variant="inverse"
-        onClick={() => openBookingModal()}
-        className="mt-1"
-      >
+      <BookingButton size="lg" variant="inverse" className="mt-1">
         <CalendarCheck data-icon="inline-start" />
         Записаться на приём
-      </Button>
+      </BookingButton>
     </div>
   )
 }

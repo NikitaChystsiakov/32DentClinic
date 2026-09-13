@@ -1,12 +1,10 @@
 'use client'
 
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import type { Procedure } from '@/lib/services-data'
 
 export function ProcedureTable({ slug, procedures }: { slug: string; procedures: Procedure[] }) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <>
@@ -27,9 +25,9 @@ export function ProcedureTable({ slug, procedures }: { slug: string; procedures:
                 </TableCell>
                 <TableCell>от {procedure.priceFrom} BYN</TableCell>
                 <TableCell>
-                  <Button size="sm" onClick={() => openBookingModal({ service: slug })}>
+                  <BookingButton size="sm" options={{ service: slug }}>
                     Записаться
-                  </Button>
+                  </BookingButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -49,9 +47,9 @@ export function ProcedureTable({ slug, procedures }: { slug: string; procedures:
                 от {procedure.priceFrom} BYN
               </span>
             </div>
-            <Button size="sm" className="w-full" onClick={() => openBookingModal({ service: slug })}>
+            <BookingButton size="sm" className="w-full" options={{ service: slug }}>
               Записаться
-            </Button>
+            </BookingButton>
           </div>
         ))}
       </div>

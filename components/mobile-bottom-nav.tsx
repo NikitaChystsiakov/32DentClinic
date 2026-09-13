@@ -3,10 +3,10 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, Tag, Percent, MapPin, CalendarCheck } from 'lucide-react'
+import { Menu, Tag, Percent, MapPin, CalendarCheck, Phone } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { useBookingAction } from '@/components/booking-button'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { getCityContent } from '@/content'
@@ -38,23 +38,28 @@ function TabLink({
   )
 }
 
-function TabButton({
-  label,
-  icon: Icon,
-  onClick,
-}: {
-  label: string
-  icon: IconType
-  onClick: () => void
-}) {
+/**
+ * Вкладка «Записаться»: открывает форму, а для города без формы
+ * (hasBookingForm: false) становится ссылкой «Позвонить» — см. useBookingAction.
+ */
+function BookingTab() {
+  const { callOnly, phoneHref, open } = useBookingAction()
+  const className =
+    'flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground transition-transform active:scale-95 active:text-foreground'
+
+  if (callOnly) {
+    return (
+      <a href={phoneHref} className={className}>
+        <Phone className="size-5" />
+        Позвонить
+      </a>
+    )
+  }
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground transition-transform active:scale-95 active:text-foreground"
-    >
-      <Icon className="size-5" />
-      {label}
+    <button type="button" onClick={open} className={className}>
+      <CalendarCheck className="size-5" />
+      Записаться
     </button>
   )
 }
@@ -66,7 +71,6 @@ function TabButton({
  */
 export function MobileBottomNav() {
   const pathname = usePathname()
-  const { openBookingModal } = useBookingModal()
   const { openMenu } = useMobileMenu()
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
@@ -89,7 +93,7 @@ export function MobileBottomNav() {
         <TabLink href={pricesHref} label="Цены" icon={Tag} active={isActive(pricesHref)} />
         <TabLink href={promo?.href ?? pricesHref} label="Акции" icon={Percent} />
         <span aria-hidden />
-        <TabButton label="Записаться" icon={CalendarCheck} onClick={() => openBookingModal()} />
+        <BookingTab />
         <TabLink href={contactsHref} label="Контакты" icon={MapPin} active={isActive(contactsHref)} />
 
         <button

@@ -2,12 +2,10 @@
 
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { serviceCategories } from '@/lib/services-data'
 
 export function PriceAccordion() {
-  const { openBookingModal } = useBookingModal()
 
   return (
     <div className="rounded-2xl border border-silver/25 bg-card px-4 sm:px-6">
@@ -48,13 +46,13 @@ export function PriceAccordion() {
                         </TableCell>
                         <TableCell>от {procedure.priceFrom} BYN</TableCell>
                         <TableCell>
-                          <Button
+                          <BookingButton
                             size="sm"
                             className="bg-accent text-accent-foreground hover:bg-accent/90"
-                            onClick={() => openBookingModal({ service: service.slug })}
+                            options={{ service: service.slug }}
                           >
                             Записаться
-                          </Button>
+                          </BookingButton>
                         </TableCell>
                       </TableRow>
                     ))}

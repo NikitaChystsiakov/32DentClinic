@@ -7,10 +7,9 @@ import { usePathname } from 'next/navigation'
 import { Phone, MapPin, Send, ChevronDown, Star, Percent, Menu } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { ViberIcon } from '@/components/icons/viber-icon'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { getCityContent } from '@/content'
 import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
@@ -67,7 +66,6 @@ export function SiteHeader() {
   const cityDropdownRef = React.useRef<HTMLDivElement>(null)
   const headerRef = React.useRef<HTMLElement>(null)
   const pathname = usePathname()
-  const { openBookingModal } = useBookingModal()
   const { openMenu } = useMobileMenu()
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
@@ -266,13 +264,9 @@ export function SiteHeader() {
                 </a>
                 <ThemeToggle />
               </div>
-              <Button
-                size="lg"
-                className="bg-accent text-accent-foreground hover:bg-accent/90"
-                onClick={() => openBookingModal()}
-              >
+              <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
                 Записаться
-              </Button>
+              </BookingButton>
             </div>
 
             {/* Мобильные действия: звонок и бургер. Меню общее с нижней

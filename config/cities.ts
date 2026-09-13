@@ -47,6 +47,13 @@ export interface City {
   coordinates: { lat: number; lng: number }
   image: string
   featureTags: string[]
+  /**
+   * Принимает ли клиника заявки через форму на сайте. Если false — все
+   * кнопки «Записаться» на страницах города превращаются в ссылку
+   * «Позвонить» на phoneHref (см. components/booking-button.tsx), а сам
+   * город не предлагается в форме на страницах сети.
+   */
+  hasBookingForm: boolean
   seoTitle: string
   seoDescription: string
   legal: CityLegal
@@ -62,6 +69,7 @@ export const cities: City[] = [
     address: 'г. Минск, Пр. Победителей, 41', 
     coordinates: { lat: 53.914870, lng: 27.535996 }, 
     image: '/clinic/minskMain.webp',
+    hasBookingForm: true,
     featureTags: ['Хирургический центр', 'All-on-4 / All-on-6', 'Рассрочка 0%', 'Трансфер'],
     seoTitle: 'Стоматология 32Дент Минск — лечение и имплантация',
     // Не «Собственная лаборатория, гарантия 2 года» (как у остальных городов):
@@ -93,6 +101,8 @@ export const cities: City[] = [
     address: 'г. Рогачёв, ул. Ленина, 60',
     coordinates: { lat: 53.0833, lng: 30.05 },
     image: '/clinic/reception.jpg',
+    // Рогачёв принимает записи только по телефону — по просьбе клиники.
+    hasBookingForm: false,
     featureTags: ['Терапия и Ортопедия', 'Рассрочка 0%', 'ул. Ленина, 60'],
     seoTitle: 'Стоматология 32Дент Рогачёв — терапия и имплантация',
     seoDescription: '32Дент Рогачёв: терапия, хирургия, ортодонтия и имплантация зубов. Собственная лаборатория, гарантия 2 года.',
@@ -120,6 +130,7 @@ export const cities: City[] = [
     address: 'г. Жлобин, ул. Петровского, 44', 
     coordinates: { lat: 52.8928, lng: 30.0228 },
     image: '/images/services/terapiya.webp',
+    hasBookingForm: true,
     featureTags: ['Терапия и Эстетика', 'Рассрочка 0%'],
     seoTitle: 'Стоматология 32Дент Жлобин — стоматологическая помощь',
     seoDescription: '32Дент Жлобин: терапия, хирургия и имплантация зубов. Современное оборудование, гарантия 2 года.',

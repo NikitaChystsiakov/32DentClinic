@@ -19,10 +19,9 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { ViberIcon } from '@/components/icons/viber-icon'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { cities } from '@/config/cities'
 import { siteConfig } from '@/lib/site-config'
@@ -60,7 +59,6 @@ const NAV_ICONS = {
 export function MobileMenuProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = React.useState(false)
   const pathname = usePathname()
-  const { openBookingModal } = useBookingModal()
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
@@ -205,17 +203,14 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
           </div>
 
           <div className="border-t border-border p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-            <Button
+            <BookingButton
               size="lg"
               className="w-full cursor-pointer bg-accent text-accent-foreground hover:bg-accent/90"
-              onClick={() => {
-                closeMenu()
-                openBookingModal()
-              }}
+              onBeforeAction={closeMenu}
             >
               <CalendarCheck data-icon="inline-start" />
               Записаться на приём
-            </Button>
+            </BookingButton>
           </div>
         </SheetContent>
       </Sheet>

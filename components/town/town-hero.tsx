@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Calendar, Car, ShieldCheck, Route, Check } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 import type { NearbyTown } from '@/config/nearby-towns'
 import type { TownContent } from '@/content/towns'
 import { formatTravelTime, getTownClinics } from '@/lib/town-clinics'
@@ -16,7 +16,6 @@ import { formatTravelTime, getTownClinics } from '@/lib/town-clinics'
  * человек из другого города первым делом хочет понять, куда и сколько ехать.
  */
 export function TownHero({ town, content }: { town: NearbyTown; content: TownContent }) {
-  const { openBookingModal } = useBookingModal()
   const clinics = getTownClinics(town)
 
   return (
@@ -50,14 +49,10 @@ export function TownHero({ town, content }: { town: NearbyTown; content: TownCon
             ))}
           </ul>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              onClick={() => openBookingModal()}
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
-            >
+            <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
               <Calendar data-icon="inline-start" />
               Записаться на приём
-            </Button>
+            </BookingButton>
             <Button size="lg" variant="outline" render={<a href="#route" />} nativeButton={false}>
               <Car data-icon="inline-start" />
               Как добраться

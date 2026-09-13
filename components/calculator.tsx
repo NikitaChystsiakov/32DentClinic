@@ -14,7 +14,7 @@ import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
 import { getServiceBySlug } from '@/lib/services-data'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 
 const STEP1_OPTIONS = [
   { id: 'bolit', label: 'Болит зуб / есть кариес' },
@@ -77,7 +77,6 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
   const [consent, setConsent] = React.useState(false)
   const [showErrors, setShowErrors] = React.useState(false)
   const [formState, setFormState] = React.useState<FormState>('default')
-  const { openBookingModal } = useBookingModal()
 
   const skipsStep2 = step1 === 'ne-uveren'
   const totalSteps = skipsStep2 ? 2 : 3
@@ -142,12 +141,12 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
               Узнать больше об услуге
             </Button>
           )}
-          <Button
+          <BookingButton
             className="bg-accent text-accent-foreground hover:bg-accent/90"
-            onClick={() => openBookingModal({ service: category })}
+            options={{ service: category }}
           >
             Записаться на консультацию {category ? 'сейчас' : ''}
-          </Button>
+          </BookingButton>
         </div>
       </div>
     )

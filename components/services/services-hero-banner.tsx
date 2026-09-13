@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Calculator, ShieldCheck, Wallet, Stethoscope } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 
 const TRUST_POINTS = [
   { icon: Stethoscope, label: 'Все направления в одной клинике' },
@@ -22,7 +22,6 @@ interface ServicesHeroBannerProps {
 }
 
 export function ServicesHeroBanner({ title, description, calculatorHref }: ServicesHeroBannerProps) {
-  const { openBookingModal } = useBookingModal()
 
   return (
     // Баннер, а не просто заголовок: до перечня услуг у страницы не было
@@ -68,10 +67,10 @@ export function ServicesHeroBanner({ title, description, calculatorHref }: Servi
         </ul>
 
         <div className="flex flex-col gap-3 pt-1 sm:flex-row">
-          <Button size="lg" variant="inverse" onClick={() => openBookingModal()}>
+          <BookingButton size="lg" variant="inverse">
             Записаться на консультацию
             <ArrowRight data-icon="inline-end" />
-          </Button>
+          </BookingButton>
           <Button
             size="lg"
             variant="outline"

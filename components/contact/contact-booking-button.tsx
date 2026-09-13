@@ -1,18 +1,15 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { useBookingModal } from '@/components/booking-modal-provider'
+import { BookingButton } from '@/components/booking-button'
 
 export function ContactBookingButton() {
-  const { openBookingModal } = useBookingModal()
 
   return (
-    <Button
+    <BookingButton
       size="lg"
-      onClick={() => openBookingModal()}
       className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-fit cursor-pointer"
     >
       Записаться на приём
-    </Button>
+    </BookingButton>
   )
 }
