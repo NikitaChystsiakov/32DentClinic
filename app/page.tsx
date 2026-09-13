@@ -10,6 +10,7 @@ import {
   Stethoscope,
   Microscope,
   FolderHeart,
+  FlaskConical,
 } from 'lucide-react'
 import { cities } from '@/config/cities'
 import { FEATURED_SERVICE_SLUG, getServicesForCity } from '@/config/services'
@@ -36,6 +37,12 @@ const NETWORK_PROMISES = [
     title: 'Своя диагностика',
     description:
       'Панорамные, прицельные и 3D-снимки (КЛКТ) делают прямо в клинике: лечение начинается в тот же приём, без направлений.',
+  },
+  {
+    icon: FlaskConical,
+    title: 'Собственная зуботехническая лаборатория',
+    description:
+      'Коронки и протезы изготавливаем сами, а не заказываем на стороне: короче сроки, а качество контролируется на каждом этапе.',
   },
   {
     icon: FolderHeart,
