@@ -9,10 +9,16 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { PlaceholderGallery } from '@/components/about/placeholder-gallery'
+import { getCityBySlug } from '@/config/cities'
 
-export const metadata: Metadata = {
-  title: 'Документы и лицензии — 32Дент',
-  description: 'Документы и лицензии стоматологии 32Дент.',
+export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
+  const { city: citySlug } = await params
+  const city = getCityBySlug(citySlug)
+  if (!city) return {}
+  return {
+    title: 'Документы и лицензии',
+    description: `Документы и лицензии стоматологии ${city.brandName} в ${city.nameIn}.`,
+  }
 }
 
 export default function DocumentsPage() {

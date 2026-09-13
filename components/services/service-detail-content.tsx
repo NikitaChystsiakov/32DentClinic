@@ -51,7 +51,7 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
         <div className="mb-16 grid gap-8 md:grid-cols-2 md:items-center">
           <div className="flex flex-col gap-5">
             <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              {service.title}
+              {service.title} в {city.nameIn}
             </h1>
             <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{service.intro}</p>
             <ServiceHeroCta slug={service.slug} />

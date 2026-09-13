@@ -27,7 +27,9 @@ export interface FaqItem {
 export interface ServiceCategory {
   slug: string
   shortName: string
+  /** Заголовок H1 без города — страница сама добавит «в Минске» и т.п. */
   title: string
+  /** Title для поисковиков без названия клиники — его добавляет layout города. */
   metaTitle: string
   cardDescription: string
   intro: string
@@ -47,8 +49,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'terapevticheskaya-stomatologiya',
     image: '/images/services/terapiya.webp',
     shortName: 'Терапия',
-    title: 'Терапевтическая стоматология в Рогачёве',
-    metaTitle: 'Лечение зубов и дёсен | 32Дент, Рогачёв',
+    title: 'Терапевтическая стоматология',
+    metaTitle: 'Лечение зубов и дёсен',
     cardDescription:
       'Лечение кариеса, пульпита и других заболеваний зубов, включая приём детей, с сохранением естественного вида зуба.',
     intro:
@@ -97,8 +99,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'khirurgiya',
     image: '/images/services/khirurgiya.webp',
     shortName: 'Хирургия',
-    title: 'Хирургическая стоматология в Рогачёве',
-    metaTitle: 'Удаление зубов и хирургия | 32Дент, Рогачёв',
+    title: 'Хирургическая стоматология',
+    metaTitle: 'Удаление зубов и хирургия',
     cardDescription: 'Удаление зубов любой сложности, операции при заболеваниях дёсен и челюсти.',
     intro:
       'Удаление зубов любой сложности, включая зубы мудрости, и операции при заболеваниях дёсен и челюсти — с контролем боли на всех этапах.',
@@ -135,8 +137,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'ortodontiya',
     image: '/images/services/ortodontiya.webp',
     shortName: 'Ортодонтия',
-    title: 'Ортодонтия — исправление прикуса в Рогачёве',
-    metaTitle: 'Брекеты и исправление прикуса | 32Дент, Рогачёв',
+    title: 'Ортодонтия — исправление прикуса',
+    metaTitle: 'Брекеты и исправление прикуса',
     cardDescription: 'Исправление прикуса и выравнивание зубов брекет-системами для детей и взрослых.',
     intro: 'Исправляем прикус и выравниваем зубы с помощью брекет-систем — подходит и детям, и взрослым.',
     priceFrom: 1800,
@@ -165,8 +167,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'protezirovanie',
     image: '/images/services/protezirovanie.webp',
     shortName: 'Протезирование',
-    title: 'Протезирование зубов в Рогачёве',
-    metaTitle: 'Коронки и протезы | 32Дент, Рогачёв',
+    title: 'Протезирование зубов',
+    metaTitle: 'Коронки и протезы',
     cardDescription: 'Коронки, съёмные и несъёмные протезы — восстановим зубной ряд надёжно и красиво.',
     intro:
       'Восстанавливаем зубной ряд надёжно и красиво — от одиночной коронки до полного протезирования. Собственная зуботехническая лаборатория ускоряет изготовление и позволяет контролировать качество на месте.',
@@ -206,8 +208,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'implantaciya',
     image: '/images/services/implantaciya.webp',
     shortName: 'Имплантация',
-    title: 'Имплантация зубов в Рогачёве',
-    metaTitle: 'Имплантация зубов | 32Дент, Рогачёв',
+    title: 'Имплантация зубов',
+    metaTitle: 'Имплантация зубов',
     cardDescription: 'Установка имплантов вместо утраченных зубов на современном оборудовании.',
     intro: 'Устанавливаем импланты вместо утраченных зубов на современном оборудовании — с гарантией на выполненные работы.',
     priceFrom: 700,
@@ -226,8 +228,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'prof-gigiena-i-otbelivanie',
     image: '/images/services/gigiena.webp',
     shortName: 'Проф.гигиена и отбеливание',
-    title: 'Профессиональная чистка и отбеливание зубов в Рогачёве',
-    metaTitle: 'Чистка и отбеливание зубов | 32Дент, Рогачёв',
+    title: 'Профессиональная чистка и отбеливание зубов',
+    metaTitle: 'Чистка и отбеливание зубов',
     cardDescription: 'Профессиональная чистка и безопасное отбеливание для белоснежной улыбки.',
     intro:
       'Профессиональная чистка убирает налёт и зубной камень, которые невозможно снять обычной щёткой, и служит профилактикой кариеса и болезней дёсен.',
@@ -252,8 +254,8 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'diagnostika',
     image: '/images/services/diagnostika.webp',
     shortName: 'Диагностика',
-    title: 'Диагностика и рентген зубов в Рогачёве',
-    metaTitle: 'Рентген и диагностика зубов | 32Дент, Рогачёв',
+    title: 'Диагностика и рентген зубов',
+    metaTitle: 'Рентген и диагностика зубов',
     cardDescription: 'Панорамные и прицельные снимки на современном рентген-оборудовании.',
     intro:
       'Собственное щадящее рентген-оборудование позволяет провести точную диагностику прямо в клинике, без направления в другое место.',

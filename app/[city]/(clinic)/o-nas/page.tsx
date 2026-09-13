@@ -17,7 +17,7 @@ export async function generateMetadata({
   if (!content) return {}
 
   return {
-    title: `О клинике 32Дент — стоматология в ${city.name}`,
+    title: `О клинике ${city.brandName} — стоматология в ${city.nameIn}`,
     description: content.about.description,
   }
 }

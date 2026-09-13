@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getCityBySlug } from '@/config/cities'
 import { getServiceBySlug, serviceCategories } from '@/config/services'
 import { ServiceDetailContent } from '@/components/services/service-detail-content'
 
@@ -17,12 +18,14 @@ export async function generateMetadata({
 }: {
   params: Promise<{ city: string; slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { city: citySlug, slug } = await params
   const service = getServiceBySlug(slug)
-  if (!service) return {}
+  const city = getCityBySlug(citySlug)
+  if (!service || !city) return {}
 
+  // Название клиники и город добавит шаблон title из app/[city]/layout.tsx.
   return {
-    title: service.metaTitle,
+    title: `${service.metaTitle} в ${city.nameIn}`,
     description: service.intro.slice(0, 155),
   }
 }

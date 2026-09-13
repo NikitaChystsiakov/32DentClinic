@@ -59,9 +59,11 @@ export async function generateMetadata({
   if (!city) return {}
 
   return {
+    // absolute — чтобы корневой шаблон «%s | 32Дент» не дописывал сеть к
+    // заголовку города («…32Дент+ Минск | 32Дент»); template — для подстраниц.
     title: {
-      default: city.seoTitle,
-      template: `%s | 32Дент, ${city.name}`,
+      absolute: city.seoTitle,
+      template: `%s | ${city.brandName}, ${city.name}`,
     },
     description: city.seoDescription,
     robots: {

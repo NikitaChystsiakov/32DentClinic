@@ -73,7 +73,7 @@ export default function ContactsPage() {
           <LazyMap
             embedSrc={`https://yandex.ru/map-widget/v1/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
             externalHref={`https://yandex.ru/maps/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
-            title={`Карта проезда к 32Дент в ${city.name}`}
+            title={`Карта проезда к ${city.brandName} в ${city.nameIn}`}
             address={city.address}
           />
         </Reveal>

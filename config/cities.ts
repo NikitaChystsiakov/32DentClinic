@@ -41,6 +41,12 @@ export interface City {
   name: string
   /** Предложный падеж для фраз «стоматология в …»: «Минске». */
   nameIn: string
+  /**
+   * Как называется клиника города в заголовках страниц (title, H1).
+   * Минская клиника — «32Дент+», остальные — «32Дент». Логотип, футер и
+   * хаб используют общее название сети из lib/site-config.ts.
+   */
+  brandName: string
   phone: string
   phoneHref: string
   address: string
@@ -64,6 +70,7 @@ export const cities: City[] = [
     slug: 'minsk',
     name: 'Минск',
     nameIn: 'Минске',
+    brandName: '32Дент+',
     phone: '+375 (29) 323-33-88', 
     phoneHref: 'tel:+375293233388', 
     address: 'г. Минск, Пр. Победителей, 41', 
@@ -71,7 +78,7 @@ export const cities: City[] = [
     image: '/clinic/minskMain.webp',
     hasBookingForm: true,
     featureTags: ['Хирургический центр', 'All-on-4 / All-on-6', 'Трансфер'],
-    seoTitle: 'Стоматология 32Дент Минск — лечение и имплантация',
+    seoTitle: 'Стоматология 32Дент+ Минск — лечение и имплантация',
     // Не «Собственная лаборатория, гарантия 2 года» (как у остальных городов):
     // в Минске лаборатория — сертифицированный партнёр, а гарантия тройная
     // (см. content/minsk.ts).
@@ -96,6 +103,7 @@ export const cities: City[] = [
     slug: 'rogachev',
     name: 'Рогачёв',
     nameIn: 'Рогачёве',
+    brandName: '32Дент',
     phone: '+375 (29) 744-40-33',
     phoneHref: 'tel:+375297444033',
     address: 'г. Рогачёв, ул. Ленина, 60',
@@ -125,6 +133,7 @@ export const cities: City[] = [
     slug: 'zhlobin',
     name: 'Жлобин',
     nameIn: 'Жлобине',
+    brandName: '32Дент',
     phone: '+375 (44) 559-59-01', 
     phoneHref: 'tel:+375445595901', 
     address: 'г. Жлобин, ул. Петровского, 44', 
