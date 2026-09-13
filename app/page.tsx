@@ -9,7 +9,6 @@ import {
   Users,
   Stethoscope,
   Microscope,
-  Wallet,
   FolderHeart,
 } from 'lucide-react'
 import { cities } from '@/config/cities'
@@ -42,11 +41,6 @@ const NETWORK_PROMISES = [
     title: 'Общая история лечения',
     description:
       'Карта пациента одна на всю сеть — переехали в другой город, и врач видит, что и когда вам делали.',
-  },
-  {
-    icon: Wallet,
-    title: 'Рассрочка 0%',
-    description: `Большие планы лечения можно разбить на платежи без переплаты, работает полис «${siteConfig.insurancePartner}».`,
   },
 ]
 

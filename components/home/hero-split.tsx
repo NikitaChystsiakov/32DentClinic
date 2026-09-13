@@ -297,7 +297,7 @@ export function HeroSplit({
         </div>
 
         {stats && stats.length > 0 && (
-          <div className="mt-5 grid gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-3">
             {stats.map((stat) => (
               <div key={stat.label} className="flex items-center gap-3 bg-card px-6 py-5">
                 <span className="font-heading text-2xl font-bold text-primary">{stat.value}</span>

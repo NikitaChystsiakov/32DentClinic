@@ -59,7 +59,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     },
     { value: String(doctorsCount), label: 'врачей принимают пациентов в клинике' },
     content.guaranteeStat,
-    { value: '0%', label: `рассрочка и полис «${siteConfig.insurancePartner}»` },
   ]
 
   // Минск обкатывает новый широкий HeroSplit; Рогачёв и Жлобин пока

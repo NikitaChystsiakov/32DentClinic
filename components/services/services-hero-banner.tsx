@@ -9,7 +9,7 @@ import { BookingButton } from '@/components/booking-button'
 const TRUST_POINTS = [
   { icon: Stethoscope, label: 'Все направления в одной клинике' },
   { icon: ShieldCheck, label: 'Гарантия на выполненные работы' },
-  { icon: Wallet, label: 'Рассрочка 0% и понятные цены' },
+  { icon: Wallet, label: 'Понятные цены' },
 ]
 
 interface ServicesHeroBannerProps {
