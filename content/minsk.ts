@@ -359,7 +359,7 @@ export const minskContent = {
         step: 8,
         duration: '1 визит',
         title: 'Контрольный осмотр',
-        description: 'Проверяем прикус, фиксиацию и даём рекомендации по уходу.',
+        description: 'Проверяем прикус, фиксацию и даём рекомендации по уходу.',
         icon: 'Sparkles',
       },
     ],

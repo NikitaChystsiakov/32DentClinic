@@ -25,9 +25,13 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
   const service = getServiceBySlug(slug)
   if (!service) return null
 
+  // Только врачи, принимающие в этом городе: ссылка ведёт на
+  // /<город>/vrachi/<slug>/, а такая страница есть лишь для городов из
+  // doctor.cities — иначе с минской страницы услуги уходили 404 на врачей Рогачёва.
   const doctors = service.doctorSlugs
     .map((doctorSlug) => getDoctorBySlug(doctorSlug))
     .filter((doctor): doctor is NonNullable<typeof doctor> => Boolean(doctor))
+    .filter((doctor) => doctor.cities.includes(city.slug))
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
