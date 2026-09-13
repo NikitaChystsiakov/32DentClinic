@@ -8,7 +8,8 @@ import { ArrowRight, Check, Flame } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import type { HeroBadge, HeroOffer } from '@/content/types'
+import type { HeroBadge, HeroOffer, HeroPromo } from '@/content/types'
+import { usePromoCountdown } from '@/lib/hero-schedule'
 
 interface HeroStat {
   value: string
@@ -27,14 +28,12 @@ interface HeroSplitProps {
   /** Видеопортрет вместо статичного фото — если передан, рендерится вместо `photo`. */
   video?: string
   /**
-   * Бейдж срочности активной акции, например «Только в сентябре». Передавайте
-   * его вместе с countdown или не передавайте вовсе — оба поля приходят из
-   * одного hero.promo в конфиге города и должны появляться/исчезать вместе
-   * (см. app/[city]/page.tsx).
+   * Активная акция: бейдж срочности («Только в сентябре») и дата окончания.
+   * Отсчёт «Осталось 13д 7ч» считается в браузере (usePromoCountdown) — сайт
+   * статический, на сборке актуального времени нет. Пока акция не началась
+   * или уже прошла, ни бейдж, ни таймер не рендерятся.
    */
-  urgencyBadge?: string
-  /** Подпись обратного отсчёта акции, например «Осталось 13д 7ч». */
-  countdown?: string
+  promo?: HeroPromo
   /** Строка метрик под hero. */
   stats?: HeroStat[]
 }
@@ -152,10 +151,11 @@ export function HeroSplit({
   offers,
   photo,
   video,
-  urgencyBadge,
-  countdown,
+  promo,
   stats,
 }: HeroSplitProps) {
+  const countdown = usePromoCountdown(promo?.endsAt)
+  const urgencyBadge = countdown ? promo?.badge : undefined
 
   return (
     // Hero намеренно шире остальных секций и с меньшими полями: на ноутбучных

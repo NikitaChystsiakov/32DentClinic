@@ -21,11 +21,7 @@ import { getTownContent } from '@/content/towns'
 import { getDoctorsForCity } from '@/config/doctors'
 import { getNearbyTownBySlug } from '@/config/nearby-towns'
 import { aggregatorRatings } from '@/lib/data/aggregators'
-import { formatPromoCountdown } from '@/lib/hero-schedule'
 import { siteConfig } from '@/lib/site-config'
-
-// Обратный отсчёт активной акции пересчитывается раз в час.
-export const revalidate = 3600
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: citySlug } = await params
@@ -44,13 +40,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
   const rating = aggregatorRatings.find((a) => a.id === '103by')
   const doctorsCount = getDoctorsForCity(citySlug).length
-
-  // Бейдж срочности и таймер — только пока акция реально активна: если
-  // hero.promo не задан или дата уже прошла, formatPromoCountdown вернёт
-  // undefined и оба элемента в hero-split.tsx просто не отрендерятся.
-  const promoCountdown = content.hero.promo
-    ? formatPromoCountdown(content.hero.promo.endsAt)
-    : undefined
 
   const stats = [
     {
@@ -77,8 +66,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             offers={content.hero.offers}
             photo={content.hero.photo}
             video={content.hero.video}
-            urgencyBadge={promoCountdown ? content.hero.promo?.badge : undefined}
-            countdown={promoCountdown}
+            promo={content.hero.promo}
             stats={stats}
           />
         ) : (
