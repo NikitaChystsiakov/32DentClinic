@@ -12,10 +12,21 @@ import {
 } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
 import { useCity } from '@/lib/contexts/city-context'
+import { getCityBySlug } from '@/config/cities'
 import { getDoctorsForCity } from '@/config/doctors'
 
-export function DoctorsCarouselSection() {
-  const { city } = useCity()
+interface DoctorsCarouselSectionProps {
+  /**
+   * Показать врачей другой клиники сети, а не текущего города. Нужно на
+   * страницах «соседних» городов (см. components/town): в контексте там
+   * ближайшая клиника, а имплантацию делают врачи из другой.
+   */
+  citySlug?: string
+}
+
+export function DoctorsCarouselSection({ citySlug }: DoctorsCarouselSectionProps = {}) {
+  const { city: currentCity } = useCity()
+  const city = (citySlug && getCityBySlug(citySlug)) || currentCity
   const doctors = getDoctorsForCity(city.slug)
 
   return (

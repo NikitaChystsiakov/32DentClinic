@@ -1,0 +1,91 @@
+// Справочник «соседних» городов — тех, где клиники 32Дент нет, но откуда
+// к нам ездят пациенты. У каждого такого города своя посадочная страница
+// вида /svetlogorsk: она честно говорит, что ближайшие клиники — в Жлобине
+// и Рогачёве, объясняет, как доехать, и ведёт на запись в эти клиники.
+//
+// Это НЕ четвёртый город сети: здесь нет адреса, телефона, реквизитов и
+// подстраниц (/svetlogorsk/uslugi отдаёт 404). Всё, что связано с приёмом,
+// берётся из клиник `clinics` по config/cities.ts.
+//
+// Для не-разработчика: одна запись = один город. Факты (расстояние,
+// координаты, привязка к клиникам) — здесь, тексты страницы — в
+// content/towns/<город>.ts. Добавить новый город: скопируйте блок, создайте
+// файл с текстами и зарегистрируйте его в content/towns/index.ts.
+
+/** Клиника сети, до которой из этого города удобно доехать. */
+export interface NearbyClinic {
+  /** slug из config/cities.ts. */
+  slug: string
+  /** По дороге, на машине, км. */
+  distanceKm: number
+  /** На машине, минут. */
+  travelMinutes: number
+}
+
+export interface NearbyTown {
+  /** Латиницей, без пробелов — становится адресом страницы: /svetlogorsk. */
+  slug: string
+  /** Именительный падеж: «Светлогорск». */
+  name: string
+  /** Предложный падеж для фраз «стоматология в …»: «Светлогорске». */
+  nameIn: string
+  /** Родительный падеж для фраз «пациентам из …»: «Светлогорска». */
+  nameFrom: string
+  /**
+   * Регион — обязательно: в Калининградской области есть свой Светлогорск,
+   * и без региона поисковики путают их между собой.
+   */
+  region: string
+  /** Центр города — от него строится маршрут до клиники. */
+  coordinates: { lat: number; lng: number }
+  /**
+   * Клиники по убыванию приоритета. Первая — «основная»: её телефон стоит в
+   * шапке и футере, она выбрана в форме записи. Услуга на странице ведёт в
+   * первую по списку клинику, где она реально есть (см. availableIn в
+   * config/services.ts): имплантации в Жлобине нет — значит, ссылка уйдёт
+   * в Рогачёв, а не будет обещать то, чего в ближней клинике не делают.
+   */
+  clinics: NearbyClinic[]
+  /**
+   * Трансфер или компенсация дороги — только если клиника это реально
+   * даёт. Пока не подтверждено — не заполняйте: обещание в рекламе
+   * медуслуг, которое не выполняется, нарушает Закон «О рекламе».
+   */
+  transfer?: string
+}
+
+export const nearbyTowns: NearbyTown[] = [
+  {
+    slug: 'svetlogorsk',
+    name: 'Светлогорск',
+    nameIn: 'Светлогорске',
+    nameFrom: 'Светлогорска',
+    region: 'Гомельская область',
+    coordinates: { lat: 52.6329, lng: 29.7389 },
+    clinics: [
+      // [TBD] — расстояния и время сверить по навигатору от центра Светлогорска.
+      { slug: 'zhlobin', distanceKm: 50, travelMinutes: 45 },
+      { slug: 'rogachev', distanceKm: 80, travelMinutes: 70 },
+    ],
+  },
+]
+
+export function getNearbyTownBySlug(slug: string): NearbyTown | undefined {
+  return nearbyTowns.find((t) => t.slug === slug)
+}
+
+export function isNearbyTownSlug(slug: string): boolean {
+  return nearbyTowns.some((t) => t.slug === slug)
+}
+
+/** Основная клиника города: телефон в шапке, клиника в форме записи. */
+export function getPrimaryClinicSlug(town: NearbyTown): string {
+  return town.clinics[0].slug
+}
+
+/** Города, чьих пациентов принимает клиника — для ссылок и areaServed. */
+export function getNearbyTownsForCity(citySlug: string): NearbyTown[] {
+  return nearbyTowns.filter((t) => t.clinics.some((c) => c.slug === citySlug))
+}
+
+export const NEARBY_TOWN_SLUGS = nearbyTowns.map((t) => t.slug)

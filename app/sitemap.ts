@@ -1,9 +1,11 @@
 import type { MetadataRoute } from 'next'
 import { cities } from '@/config/cities'
+import { nearbyTowns } from '@/config/nearby-towns'
 import { getPublishedPosts } from '@/lib/blog'
+import { siteConfig } from '@/lib/site-config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://32dent-beta.vercel.app'
+  const baseUrl = siteConfig.siteUrl
   const pages = [
     {
       url: baseUrl,
@@ -18,6 +20,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+  }))
+
+  // Посадочные страницы «соседних» городов без клиники (/svetlogorsk).
+  const townUrls = nearbyTowns.map((town) => ({
+    url: `${baseUrl}/${town.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
   }))
 
   // Черновики getPublishedPosts не отдаёт, поэтому в карту сайта они не попадут.
@@ -37,5 +47,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  return [...pages, ...cityUrls, ...blogUrls]
+  return [...pages, ...cityUrls, ...townUrls, ...blogUrls]
 }

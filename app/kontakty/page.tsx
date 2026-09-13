@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
-import { MapPin, Navigation, Send } from 'lucide-react'
+import { MapPin, Send } from 'lucide-react'
 import { siteConfig } from '@/lib/site-config'
 import { ViberIcon } from '@/components/icons/viber-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
+import { LazyMap } from '@/components/lazy-map'
 
 export const metadata: Metadata = {
   title: 'Контакты',
@@ -71,26 +72,12 @@ export default function ContactsPage() {
         </Reveal>
 
         <Reveal delay={1}>
-          <div className="flex flex-col gap-4">
-            <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-muted/40 shadow-sm sm:aspect-4/3">
-              <iframe
-                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ac1f650571113f9c8206afea28bfd8a278ae9fe9beb9ef7fa6baf9730d9a63a6e&amp;source=constructor"
-                className="absolute inset-0 size-full border-0"
-                loading="lazy"
-                title="Карта проезда к 32Дент"
-              />
-            </div>
-
-            <a
-              href="https://yandex.ru/maps/?um=constructor%3Ac1f650571113f9c8206afea28bfd8a278ae9fe9beb9ef7fa6baf9730d9a63a6e"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <Navigation className="size-4" />
-              Проложить маршрут
-            </a>
-          </div>
+          <LazyMap
+            embedSrc="https://yandex.ru/map-widget/v1/?um=constructor%3Ac1f650571113f9c8206afea28bfd8a278ae9fe9beb9ef7fa6baf9730d9a63a6e&source=constructor"
+            externalHref="https://yandex.ru/maps/?um=constructor%3Ac1f650571113f9c8206afea28bfd8a278ae9fe9beb9ef7fa6baf9730d9a63a6e"
+            title="Карта проезда к 32Дент"
+            address={siteConfig.address}
+          />
         </Reveal>
       </div>
     </div>

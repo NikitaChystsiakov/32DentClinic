@@ -1,10 +1,11 @@
 'use client'
 
-import { MapPin, Navigation, Send } from 'lucide-react'
+import { MapPin, Send } from 'lucide-react'
 import { useCity } from '@/lib/contexts/city-context'
 import { ViberIcon } from '@/components/icons/viber-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
+import { LazyMap } from '@/components/lazy-map'
 
 export default function ContactsPage() {
   const { city, content } = useCity()
@@ -69,26 +70,12 @@ export default function ContactsPage() {
         </Reveal>
 
         <Reveal delay={1}>
-          <div className="flex flex-col gap-4">
-            <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-muted/40 shadow-sm sm:aspect-4/3">
-              <iframe
-                src={`https://yandex.ru/map-widget/v1/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
-                className="absolute inset-0 size-full border-0"
-                loading="lazy"
-                title={`Карта проезда к 32Дент в ${city.name}`}
-              />
-            </div>
-
-            <a
-              href={`https://yandex.ru/maps/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <Navigation className="size-4" />
-              Проложить маршрут
-            </a>
-          </div>
+          <LazyMap
+            embedSrc={`https://yandex.ru/map-widget/v1/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
+            externalHref={`https://yandex.ru/maps/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
+            title={`Карта проезда к 32Дент в ${city.name}`}
+            address={city.address}
+          />
         </Reveal>
       </div>
     </div>

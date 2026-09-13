@@ -8,31 +8,52 @@ import { Phone, Send, MapPin } from 'lucide-react'
 import { ViberIcon } from '@/components/icons/viber-icon'
 import { siteConfig } from '@/lib/site-config'
 import { getServicesForCity } from '@/config/services'
-import { cities, getCityBySlug } from '@/config/cities'
+import { cities, getCityBySlug, type City } from '@/config/cities'
+import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
+import { legalDocuments, legalDocHref } from '@/config/legal'
 import { getCityContent } from '@/content'
 import { formatCityHours } from '@/lib/format-hours'
-import { usePathname } from 'next/navigation'
+import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
-function useCurrentCitySlug(): string | null {
-  const pathname = usePathname()
-  const match = pathname?.match(/^\/([a-z-]+)(\/|$)/)
-  if (match) {
-    const city = getCityBySlug(match[1])
-    if (city) return city.slug
-  }
-  return null
+/*
+ * Реквизиты юрлица клиники: наименование, УНП, юридический адрес, лицензия.
+ * Закон «О защите прав потребителей» (ст. 8) и ст. 10 Закона «О рекламе»
+ * требуют показывать их на сайте; номер лицензии, кем и когда выдана —
+ * для лицензируемой медицинской деятельности. Данные — в config/cities.ts.
+ */
+function LegalRequisites({ city, className }: { city: City; className?: string }) {
+  const { legal } = city
+  const licenseTerm = legal.license.validUntil ? `, действует до ${legal.license.validUntil}` : ''
+  return (
+    <div className={className}>
+      <p>
+        {legal.entityName} · УНП {legal.unp} · {legal.legalAddress}
+      </p>
+      <p>
+        Лицензия № {legal.license.number} от {legal.license.issuedAt}, выдана {legal.license.issuedBy}
+        {licenseTerm}
+      </p>
+    </div>
+  )
 }
 
 export function SiteFooter() {
-  const citySlug = useCurrentCitySlug()
+  const citySlug = useCurrentCity()?.slug ?? null
   const prefix = citySlug ? `/${citySlug}` : ''
   const city = citySlug ? getCityBySlug(citySlug) : null
   const content = citySlug ? getCityContent(citySlug) : null
   const services = citySlug ? getServicesForCity(citySlug) : []
   const isHub = !citySlug
+  // Соседние города без клиники (config/nearby-towns.ts): ссылки на их
+  // посадочные страницы — единственный способ передать им вес с остальных
+  // страниц сайта, без внутренних ссылок поисковик их почти не увидит.
+  const towns = isHub ? nearbyTowns : getNearbyTownsForCity(citySlug!)
 
   const navLinks = isHub
-    ? cities.map((c) => ({ label: c.name, href: `/${c.slug}` }))
+    ? [
+        ...cities.map((c) => ({ label: c.name, href: `/${c.slug}` })),
+        ...towns.map((t) => ({ label: `Для жителей ${t.nameFrom}`, href: `/${t.slug}` })),
+      ]
     : [
         { label: 'Услуги', href: `${prefix}/uslugi/` },
         { label: 'Врачи', href: `${prefix}/vrachi/` },
@@ -65,7 +86,7 @@ export function SiteFooter() {
                 ? // Условия гарантии различаются по городам (см. content/minsk.ts),
                   // поэтому хаб-страница не называет конкретный срок.
                   'Сеть стоматологий 32Дент в Минске, Рогачёве и Жлобине. Гарантия на все виды работ.'
-                : `Стоматология в ${city!.name}. ${content!.guaranteeSummary}`}
+                : `Стоматология в ${city!.nameIn}. ${content!.guaranteeSummary}`}
             </p>
           </div>
 
@@ -136,17 +157,51 @@ export function SiteFooter() {
                     <Send className="size-4" /> Telegram
                   </a>
                 </div>
+                {towns.length > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Принимаем пациентов из{' '}
+                    {towns.map((t, i) => (
+                      <span key={t.slug}>
+                        {i > 0 && ', '}
+                        <Link href={`/${t.slug}`} className="underline underline-offset-2 hover:text-primary">
+                          {t.nameFrom}
+                        </Link>
+                      </span>
+                    ))}
+                  </p>
+                )}
               </div>
             </>
           )}
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground">
+        <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground">
+          {isHub ? (
+            // На странице сети — реквизиты каждой клиники: у городов могут
+            // быть разные юрлица.
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {cities.map((c) => (
+                <LegalRequisites key={c.slug} city={c} className="flex flex-col gap-1" />
+              ))}
+            </div>
+          ) : (
+            <LegalRequisites city={city!} className="flex flex-col gap-1" />
+          )}
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            {legalDocuments.map((doc) => (
+              <Link
+                key={doc.slug}
+                href={legalDocHref(doc.slug, citySlug)}
+                className="underline underline-offset-2 hover:text-primary"
+              >
+                {doc.shortTitle}
+              </Link>
+            ))}
+          </div>
           <p>
-            УНП {siteConfig.unp} · Лицензия № {siteConfig.license}
+            {siteConfig.adNotice} {siteConfig.disclaimer}
           </p>
-          <p>{siteConfig.disclaimer}</p>
-          <p>© 32Дент, 2026. Все права защищены.</p>
+          <p>© 32Дент, {new Date().getFullYear()}. Все права защищены.</p>
         </div>
       </div>
     </footer>

@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Golos_Text, Unbounded } from 'next/font/google'
 import './globals.css'
@@ -62,6 +61,12 @@ const jsonLd = {
 }
 
 /*
+ * Сторонней аналитики (Vercel Analytics, Метрика, GA) здесь намеренно нет:
+ * любой такой скрипт — это передача данных посетителя третьему лицу, а для
+ * сервисов за пределами РБ/ЕАЭС ещё и трансграничная передача (ст. 9 Закона
+ * «О защите персональных данных»). Подключать только вместе с баннером
+ * согласия на cookie, см. docs/ГДЕ-ЧТО-МЕНЯТЬ.md.
+ *
  * Никаких headers()/cookies() в корневом layout: любое чтение запроса здесь
  * отключает статическую генерацию сразу для всего сайта — раньше из 98
  * страниц статикой оставалась одна, остальные рендерились на сервере при
@@ -98,7 +103,6 @@ export default function RootLayout({
             <BookingModalLoader />
           </BookingModalProvider>
         </ThemeProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

@@ -3,8 +3,20 @@
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { useCity } from '@/lib/contexts/city-context'
 
-export function FaqSection() {
+interface FaqSectionProps {
+  /**
+   * Свой список вопросов вместо content.faq текущего города — для страниц
+   * «соседних» городов (см. components/town), где вопросы про дорогу и
+   * выбор клиники, а не общие про приём.
+   */
+  items?: { question: string; answer: string }[]
+  /** Подпись под заголовком; по умолчанию — общая для городов. */
+  description?: string
+}
+
+export function FaqSection({ items, description }: FaqSectionProps = {}) {
   const { content } = useCity()
+  const faq = items ?? content.faq
 
   return (
     <>
@@ -16,7 +28,7 @@ export function FaqSection() {
             Частые вопросы
           </h2>
           <p className="max-w-2xl text-pretty text-(--panel-body)">
-            Коротко о том, что чаще всего спрашивают пациенты перед визитом.
+            {description ?? 'Коротко о том, что чаще всего спрашивают пациенты перед визитом.'}
           </p>
         </div>
 
@@ -24,7 +36,7 @@ export function FaqSection() {
             текст остаётся белым. Тень под текстом здесь не украшение —
             на такой светлой подложке белый сам по себе читается на грани. */}
         <Accordion className="flex max-w-3xl flex-col gap-3 [text-shadow:0_1px_8px_rgb(20_16_60/0.45)]">
-          {content.faq.map((item, index) => (
+          {faq.map((item, index) => (
             <AccordionItem
               key={item.question}
               value={`faq-${index}`}

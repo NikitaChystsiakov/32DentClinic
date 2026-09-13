@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PriceAccordion } from '@/components/pricing/price-accordion'
 import { Reveal } from '@/components/reveal'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Цены',
@@ -26,9 +27,9 @@ export default function PricesPage() {
       </Reveal>
 
       <Reveal delay={2}>
-        <p className="mt-8 text-sm text-muted-foreground">
-          Точную стоимость лечения врач озвучит после бесплатной консультации.
-        </p>
+        {/* Подпись обязательна: без неё «от 90 BYN» на сайте могут прочитать
+            как публичную оферту (ст. 407 ГК). Текст — в lib/site-config.ts. */}
+        <p className="mt-8 text-sm text-muted-foreground">{siteConfig.priceNotice}</p>
       </Reveal>
     </div>
   )

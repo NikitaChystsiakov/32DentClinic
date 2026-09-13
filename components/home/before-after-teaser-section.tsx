@@ -39,7 +39,8 @@ export function BeforeAfterTeaserSection({ columns = 2 }: BeforeAfterTeaserSecti
             Наши результаты
           </h2>
           <p className="max-w-2xl text-pretty text-(--panel-body)">
-            Передвиньте ползунок, чтобы увидеть, как меняется улыбка после лечения в 32Дент.
+            Передвиньте ползунок, чтобы увидеть, как меняется улыбка после лечения в 32Дент. Результат
+            лечения индивидуален и зависит от исходной ситуации.
           </p>
         </div>
 

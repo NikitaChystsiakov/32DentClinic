@@ -15,7 +15,7 @@ import {
 import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
+import { ConsentField } from '@/components/consent-field'
 import {
   Select,
   SelectContent,
@@ -27,14 +27,23 @@ import {
 import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
 import { serviceSelectOptions } from '@/lib/services-data'
 import { doctors } from '@/config/doctors'
+import { cities } from '@/config/cities'
+import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
 
 type FormState = 'default' | 'loading' | 'success' | 'error'
 
 export function BookingModal() {
   const { isOpen, service, doctor, closeBookingModal } = useBookingModal()
+  // Город берём из адреса страницы: на /minsk/... заявка уходит в Минск.
+  // На страницах сети (главная, блог) города в адресе нет — тогда его
+  // выбирают в форме. Это не только удобство: у каждого города может быть
+  // своё юрлицо, и человек должен видеть, кому именно он отдаёт данные
+  // (ссылки в чекбоксе согласия ведут на документы выбранного города).
+  const currentCity = useCurrentCity()
 
   const [name, setName] = React.useState('')
+  const [selectedCity, setSelectedCity] = React.useState<string | undefined>(undefined)
   const [phone, setPhone] = React.useState('')
   const [selectedService, setSelectedService] = React.useState<string | undefined>(undefined)
   const [selectedDoctor, setSelectedDoctor] = React.useState<string | undefined>(undefined)
@@ -63,24 +72,32 @@ export function BookingModal() {
     ],
     []
   )
+  const cityItems = React.useMemo(() => cities.map((c) => ({ value: c.slug, label: `${c.name}, ${c.address}` })), [])
 
   React.useEffect(() => {
     if (isOpen) {
+      setSelectedCity(currentCity?.slug)
       setSelectedService(service)
       setSelectedDoctor(doctor)
       setState('default')
       setShowErrors(false)
     }
-  }, [isOpen, service, doctor])
+  }, [isOpen, service, doctor, currentCity])
+
+  // Телефон для «позвоните напрямую» в сообщении об ошибке — выбранной
+  // клиники, а не первой попавшейся.
+  const errorPhone = cities.find((c) => c.slug === (selectedCity ?? currentCity?.slug))
 
   const nameError = name.trim().length === 0
+  const cityError = !selectedCity
   const phoneError = phone.trim().length === 0 || !isValidBelarusPhone(phone)
   const phoneEmptyError = phone.trim().length === 0
   const consentError = !consent
-  const isValid = !nameError && !phoneError && !consentError
+  const isValid = !nameError && !phoneError && !cityError && !consentError
 
   function resetFormFields() {
     setName('')
+    setSelectedCity(undefined)
     setPhone('')
     setSelectedService(undefined)
     setSelectedDoctor(undefined)
@@ -147,8 +164,11 @@ export function BookingModal() {
                 <TriangleAlert className="mt-0.5 size-4 shrink-0" />
                 <p>
                   Не удалось отправить заявку, попробуйте ещё раз или позвоните нам напрямую:{' '}
-                  <a href={siteConfig.phoneHref} className="font-medium underline underline-offset-2">
-                    {siteConfig.phoneDisplay}
+                  <a
+                    href={errorPhone?.phoneHref ?? siteConfig.phoneHref}
+                    className="font-medium underline underline-offset-2"
+                  >
+                    {errorPhone?.phone ?? siteConfig.phoneDisplay}
                   </a>
                 </p>
               </div>
@@ -187,6 +207,30 @@ export function BookingModal() {
                   {showErrors && !phoneEmptyError && phoneError && (
                     <FieldError>Проверьте номер телефона</FieldError>
                   )}
+                </Field>
+
+                <Field data-invalid={showErrors && cityError ? true : undefined}>
+                  <FieldLabel htmlFor="booking-city">Клиника</FieldLabel>
+                  <Select
+                    items={cityItems}
+                    value={selectedCity}
+                    onValueChange={(value) => setSelectedCity(value ?? undefined)}
+                    disabled={state === 'loading'}
+                  >
+                    <SelectTrigger id="booking-city" className="w-full" aria-invalid={showErrors && cityError ? true : undefined}>
+                      <SelectValue placeholder="Выберите город" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {cityItems.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {showErrors && cityError && <FieldError>Выберите клинику</FieldError>}
                 </Field>
 
                 <Field>
@@ -242,30 +286,19 @@ export function BookingModal() {
                     value={comment}
                     disabled={state === 'loading'}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder="Опишите, что вас беспокоит (необязательно)"
+                    placeholder="Комментарий к записи (необязательно)"
                     rows={3}
                   />
                 </Field>
 
-                <Field
-                  orientation="horizontal"
-                  data-invalid={showErrors && consentError ? true : undefined}
-                >
-                  <Checkbox
-                    id="booking-consent"
-                    checked={consent}
-                    disabled={state === 'loading'}
-                    aria-invalid={showErrors && consentError ? true : undefined}
-                    onCheckedChange={(checked) => setConsent(checked === true)}
-                  />
-                  <FieldLabel htmlFor="booking-consent" className="font-normal">
-                    Я согласен(-на) на{' '}
-                    <a href={siteConfig.privacyPolicyHref} className="underline underline-offset-2">
-                      обработку персональных данных
-                    </a>
-                  </FieldLabel>
-                </Field>
-                {showErrors && consentError && <FieldError>Нужно согласие на обработку данных</FieldError>}
+                <ConsentField
+                  id="booking-consent"
+                  checked={consent}
+                  disabled={state === 'loading'}
+                  showError={showErrors && consentError}
+                  citySlug={selectedCity ?? currentCity?.slug}
+                  onCheckedChange={setConsent}
+                />
 
                 <div className="flex flex-col gap-2">
                   <Button

@@ -93,6 +93,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             )}
             <Content />
+            {/* Статьи о лечении — медицинская информация: по ст. 15 Закона
+                «О рекламе» нельзя создавать впечатление, что визит к врачу не
+                нужен, поэтому под каждой статьёй — напоминание об этом. */}
+            <p className="mt-10 rounded-xl bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
+              Материал носит информационный характер и не заменяет консультацию врача. Есть противопоказания,
+              необходима консультация специалиста.
+            </p>
             <BookingCta />
           </article>
         </SectionPanel>

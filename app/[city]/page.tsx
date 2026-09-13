@@ -15,8 +15,11 @@ import { ContactCtaSection } from '@/components/home/contact-cta-section'
 import { TreatmentSteps } from '@/components/home/treatment-steps'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
+import { TownLanding } from '@/components/town/town-landing'
 import { getCityContent } from '@/content'
+import { getTownContent } from '@/content/towns'
 import { getDoctorsForCity } from '@/config/doctors'
+import { getNearbyTownBySlug } from '@/config/nearby-towns'
 import { aggregatorRatings } from '@/lib/data/aggregators'
 import { formatPromoCountdown } from '@/lib/hero-schedule'
 import { siteConfig } from '@/lib/site-config'
@@ -26,6 +29,16 @@ export const revalidate = 3600
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: citySlug } = await params
+
+  // «Соседний» город без клиники (config/nearby-towns.ts): вместо главной
+  // клиники — посадочная страница, которая ведёт в ближайшие клиники сети.
+  const town = getNearbyTownBySlug(citySlug)
+  if (town) {
+    const townContent = getTownContent(citySlug)
+    if (!townContent) notFound()
+    return <TownLanding town={town} content={townContent} />
+  }
+
   const content = getCityContent(citySlug)
   if (!content) notFound()
 

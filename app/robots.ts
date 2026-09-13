@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
+import { siteConfig } from '@/lib/site-config'
 
-const baseUrl = 'https://32dent-beta.vercel.app'
+const baseUrl = siteConfig.siteUrl
 
 export default function robots(): MetadataRoute.Robots {
   return {

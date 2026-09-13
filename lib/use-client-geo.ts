@@ -9,6 +9,11 @@ const CITY_MAP: Record<string, { slug: string; name: string }> = {
   rogačoŭ: { slug: 'rogachev', name: 'Рогачёв' },
   жлобин: { slug: 'zhlobin', name: 'Жлобин' },
   zhlobin: { slug: 'zhlobin', name: 'Жлобин' },
+  // Соседний город без клиники — ведём на его посадочную страницу
+  // (config/nearby-towns.ts), а не на ближайшую клинику напрямую.
+  светлогорск: { slug: 'svetlogorsk', name: 'Светлогорск' },
+  svetlogorsk: { slug: 'svetlogorsk', name: 'Светлогорск' },
+  svetlahorsk: { slug: 'svetlogorsk', name: 'Светлогорск' },
 }
 
 const CACHE_KEY = 'client-geo'

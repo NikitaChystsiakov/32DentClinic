@@ -14,7 +14,6 @@ import {
 } from 'lucide-react'
 import { cities } from '@/config/cities'
 import { siteConfig } from '@/lib/site-config'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 
 // Цифры сети целиком, а не одного города: клиники, врачи, рейтинг.
 const NETWORK_STATS = [
@@ -234,7 +233,6 @@ export default function Page() {
           </p>
         </div>
       </section>
-      <SpeedInsights />
     </>
   )
 }

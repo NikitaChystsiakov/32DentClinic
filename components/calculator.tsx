@@ -9,9 +9,10 @@ import { Progress } from '@/components/ui/progress'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Field, FieldGroup, FieldLabel, FieldTitle, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
+import { ConsentField } from '@/components/consent-field'
 import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
 import { getServiceBySlug } from '@/lib/services-data'
+import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
 import { useBookingModal } from '@/components/booking-modal-provider'
 
@@ -65,6 +66,9 @@ const STEP2_CONFIG: Record<
 type FormState = 'default' | 'loading' | 'success' | 'error'
 
 export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
+  // Ссылки в согласии ведут на документы города, на странице которого
+  // открыт калькулятор (у городов могут быть разные юрлица-операторы).
+  const currentCity = useCurrentCity()
   const [step, setStep] = React.useState(1)
   const [step1, setStep1] = React.useState<Step1Id | undefined>(undefined)
   const [step2, setStep2] = React.useState<string | undefined>(undefined)
@@ -123,8 +127,9 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
         {category && service ? (
           <p className="max-w-md text-balance leading-relaxed text-foreground">
             Спасибо! Судя по ответам, вам подойдёт направление:{' '}
-            <span className="font-semibold text-primary">{service.shortName}</span>. Точный план и стоимость
-            определит врач на бесплатной консультации — мы уже получили ваши контакты и скоро свяжемся.
+            <span className="font-semibold text-primary">{service.shortName}</span>. Это предварительная
+            подсказка, а не диагноз: точный план и стоимость определит врач на бесплатной консультации — мы
+            уже получили ваши контакты и скоро свяжемся.
           </p>
         ) : (
           <p className="max-w-md text-balance leading-relaxed text-foreground">
@@ -156,8 +161,8 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
             Узнайте примерный план лечения за 1 минуту
           </h2>
           <p className="text-muted-foreground">
-            Ответьте на пару вопросов — подскажем, что нужно, и предварительно оценим объём работы. Точную цену
-            врач назовёт после бесплатного осмотра.
+            Ответьте на пару вопросов — подскажем, какое направление подойдёт, и предварительно оценим объём
+            работы. Это не диагностика: точный план и цену врач назовёт после бесплатного осмотра.
           </p>
         </div>
       )}
@@ -234,8 +239,11 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
               <TriangleAlert className="mt-0.5 size-4 shrink-0" />
               <p>
                 Не удалось отправить заявку, попробуйте ещё раз или позвоните нам напрямую:{' '}
-                <a href={siteConfig.phoneHref} className="font-medium underline underline-offset-2">
-                  {siteConfig.phoneDisplay}
+                <a
+                  href={currentCity?.phoneHref ?? siteConfig.phoneHref}
+                  className="font-medium underline underline-offset-2"
+                >
+                  {currentCity?.phone ?? siteConfig.phoneDisplay}
                 </a>
               </p>
             </div>
@@ -270,22 +278,14 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
               {showErrors && phoneEmptyError && <FieldError>Укажите номер телефона</FieldError>}
               {showErrors && !phoneEmptyError && phoneError && <FieldError>Проверьте номер телефона</FieldError>}
             </Field>
-            <Field orientation="horizontal" data-invalid={showErrors && consentError ? true : undefined}>
-              <Checkbox
-                id="calc-consent"
-                checked={consent}
-                disabled={formState === 'loading'}
-                aria-invalid={showErrors && consentError ? true : undefined}
-                onCheckedChange={(checked) => setConsent(checked === true)}
-              />
-              <FieldLabel htmlFor="calc-consent" className="font-normal">
-                Я согласен(-на) на{' '}
-                <a href={siteConfig.privacyPolicyHref} className="underline underline-offset-2">
-                  обработку персональных данных
-                </a>
-              </FieldLabel>
-            </Field>
-            {showErrors && consentError && <FieldError>Нужно согласие на обработку данных</FieldError>}
+            <ConsentField
+              id="calc-consent"
+              checked={consent}
+              disabled={formState === 'loading'}
+              showError={showErrors && consentError}
+              citySlug={currentCity?.slug}
+              onCheckedChange={setConsent}
+            />
           </FieldGroup>
 
           <div className="flex gap-3">
