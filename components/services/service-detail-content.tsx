@@ -16,8 +16,9 @@ import { Reveal } from '@/components/reveal'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 
 // У «Имплантации» вместо фото сейчас стоит англоязычная медицинская схема —
-// не подходит для сайта. Показываем заглушку, пока не заменят на реальное фото.
-const SERVICES_NEEDING_REAL_PHOTO = new Set(['implantaciya'])
+// не подходит для сайта; у «Лечения под микроскопом» своего фото пока нет.
+// Показываем заглушку, пока не заменят на реальное фото.
+const SERVICES_NEEDING_REAL_PHOTO = new Set(['implantaciya', 'lechenie-pod-mikroskopom'])
 
 export function ServiceDetailContent({ slug }: { slug: string }) {
   const { city } = useCity()
