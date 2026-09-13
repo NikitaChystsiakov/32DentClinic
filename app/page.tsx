@@ -12,7 +12,7 @@ import {
   FolderHeart,
 } from 'lucide-react'
 import { cities } from '@/config/cities'
-import { getServicesForCity } from '@/config/services'
+import { FEATURED_SERVICE_SLUG, getServicesForCity } from '@/config/services'
 import { siteConfig } from '@/lib/site-config'
 
 // Цифры сети целиком, а не одного города: клиники, врачи, рейтинг.
@@ -152,16 +152,28 @@ export default function Page() {
                       проблемой сразу видит, есть ли нужное направление здесь.
                       Порядок — из config/services.ts, имплантация первая. */}
                   <ul className="flex flex-wrap gap-2 pt-1" aria-label={`Услуги в ${city.nameIn}`}>
-                    {getServicesForCity(city.slug).map((service) => (
-                      <li key={service.slug}>
-                        <Link
-                          href={`/${city.slug}/uslugi/${service.slug}/`}
-                          className="inline-flex items-center rounded-full bg-(--panel-lavender) px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-                        >
-                          {service.shortName}
-                        </Link>
-                      </li>
-                    ))}
+                    {getServicesForCity(city.slug).map((service) => {
+                      const featured = service.slug === FEATURED_SERVICE_SLUG
+                      return (
+                        <li key={service.slug}>
+                          <Link
+                            href={`/${city.slug}/uslugi/${service.slug}/`}
+                            className={
+                              featured
+                                ? 'inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/85'
+                                : 'inline-flex items-center rounded-full bg-(--panel-lavender) px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground'
+                            }
+                          >
+                            {service.shortName}
+                            {featured && (
+                              <span className="rounded-full bg-white/20 px-1.5 py-px text-[10px] font-medium uppercase tracking-wide">
+                                Основное направление
+                              </span>
+                            )}
+                          </Link>
+                        </li>
+                      )
+                    })}
                   </ul>
 
                   {/* Быстрые ссылки внутрь города: часть людей приходит сюда за

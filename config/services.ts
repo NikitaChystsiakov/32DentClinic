@@ -45,6 +45,29 @@ export interface ServiceCategory {
 }
 
 export const serviceCategories: ServiceCategory[] = [
+  // Имплантация стоит первой намеренно: это главное направление клиники,
+  // и порядок массива задаёт порядок во всех списках услуг (главная города,
+  // каталог, прайс, чипы на хабе). Не сортируйте по алфавиту.
+  {
+    slug: 'implantaciya',
+    image: '/images/services/implantaciya.webp',
+    shortName: 'Имплантация',
+    title: 'Имплантация зубов',
+    metaTitle: 'Имплантация зубов',
+    cardDescription: 'Установка имплантов вместо утраченных зубов на современном оборудовании.',
+    intro: 'Устанавливаем импланты вместо утраченных зубов на современном оборудовании — с гарантией на выполненные работы.',
+    priceFrom: 700,
+    icon: 'Zap',
+    procedures: [
+      { name: 'Установка импланта (первый этап)', priceFrom: 700 },
+      { name: 'Протезирование на имплантах', priceFrom: 600 },
+    ],
+    whenToVisit: ['Отсутствует один или несколько зубов, съёмный протез неудобен', 'Хочется несъёмное решение'],
+    steps: ['Диагностика и планирование', 'Установка импланта', 'Период приживления', 'Протезирование'],
+    doctorSlugs: ['makhonko-pavel'],
+    faq: [],
+    availableIn: ['rogachev', 'minsk'],
+  },
   {
     slug: 'terapevticheskaya-stomatologiya',
     image: '/images/services/terapiya.webp',
@@ -205,26 +228,6 @@ export const serviceCategories: ServiceCategory[] = [
     availableIn: ['rogachev', 'minsk'],
   },
   {
-    slug: 'implantaciya',
-    image: '/images/services/implantaciya.webp',
-    shortName: 'Имплантация',
-    title: 'Имплантация зубов',
-    metaTitle: 'Имплантация зубов',
-    cardDescription: 'Установка имплантов вместо утраченных зубов на современном оборудовании.',
-    intro: 'Устанавливаем импланты вместо утраченных зубов на современном оборудовании — с гарантией на выполненные работы.',
-    priceFrom: 700,
-    icon: 'Zap',
-    procedures: [
-      { name: 'Установка импланта (первый этап)', priceFrom: 700 },
-      { name: 'Протезирование на имплантах', priceFrom: 600 },
-    ],
-    whenToVisit: ['Отсутствует один или несколько зубов, съёмный протез неудобен', 'Хочется несъёмное решение'],
-    steps: ['Диагностика и планирование', 'Установка импланта', 'Период приживления', 'Протезирование'],
-    doctorSlugs: ['makhonko-pavel'],
-    faq: [],
-    availableIn: ['rogachev', 'minsk'],
-  },
-  {
     slug: 'prof-gigiena-i-otbelivanie',
     image: '/images/services/gigiena.webp',
     shortName: 'Проф.гигиена и отбеливание',
@@ -272,6 +275,9 @@ export const serviceCategories: ServiceCategory[] = [
     availableIn: ['rogachev', 'minsk', 'zhlobin'],
   },
 ]
+
+/** Главное направление клиники — выделяется бейджем в карточках городов на хабе. */
+export const FEATURED_SERVICE_SLUG = 'implantaciya'
 
 export function getServiceBySlug(slug: string) {
   return serviceCategories.find((s) => s.slug === slug)
