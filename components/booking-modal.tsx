@@ -30,6 +30,7 @@ import { doctors } from '@/config/doctors'
 import { cities } from '@/config/cities'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
+import { bookingSource, submitBooking } from '@/lib/booking-api'
 
 type FormState = 'default' | 'loading' | 'success' | 'error'
 
@@ -49,6 +50,8 @@ export function BookingModal() {
   const [selectedDoctor, setSelectedDoctor] = React.useState<string | undefined>(undefined)
   const [comment, setComment] = React.useState('')
   const [consent, setConsent] = React.useState(false)
+  // Honeypot: поле визуально скрыто, люди его не заполняют.
+  const [website, setWebsite] = React.useState('')
   const [state, setState] = React.useState<FormState>('default')
   const [showErrors, setShowErrors] = React.useState(false)
 
@@ -108,6 +111,7 @@ export function BookingModal() {
     setSelectedDoctor(undefined)
     setComment('')
     setConsent(false)
+    setWebsite('')
     setShowErrors(false)
   }
 
@@ -130,7 +134,17 @@ export function BookingModal() {
 
     setState('loading')
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200))
+      // В Telegram уходят подписи, а не слаги: «Имплантация», а не «implantaciya».
+      await submitBooking({
+        name: name.trim(),
+        phone,
+        city: selectedCity,
+        service: serviceItems.find((s) => s.value === selectedService)?.label,
+        doctor: doctorItems.find((d) => d.value === selectedDoctor)?.label,
+        comment: comment.trim() || undefined,
+        source: bookingSource('форма записи'),
+        website,
+      })
       setState('success')
     } catch {
       setState('error')
@@ -180,6 +194,19 @@ export function BookingModal() {
             )}
 
             <form onSubmit={handleSubmit} noValidate>
+              {/* Honeypot для ботов: вне потока и недоступно для скринридеров и таба. */}
+              <div aria-hidden className="absolute -left-[9999px] top-0 h-px w-px overflow-hidden">
+                <label htmlFor="booking-website">Сайт</label>
+                <input
+                  id="booking-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
               <FieldGroup>
                 <Field data-invalid={showErrors && nameError ? true : undefined}>
                   <FieldLabel htmlFor="booking-name">Имя</FieldLabel>

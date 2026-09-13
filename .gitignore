@@ -15,3 +15,6 @@ node_modules
 .DS_Store
 # Статический экспорт Next (pnpm build)
 out/
+
+# Токен Telegram-бота — только на сервере
+public/api/config.php

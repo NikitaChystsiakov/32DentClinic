@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, Loader2, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Loader2, Phone, TriangleAlert } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -14,6 +14,7 @@ import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
 import { getServiceBySlug } from '@/lib/services-data'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
+import { bookingSource, submitBooking } from '@/lib/booking-api'
 import { BookingButton } from '@/components/booking-button'
 
 const STEP1_OPTIONS = [
@@ -75,6 +76,8 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
   const [name, setName] = React.useState('')
   const [phone, setPhone] = React.useState('')
   const [consent, setConsent] = React.useState(false)
+  // Honeypot: поле визуально скрыто, люди его не заполняют.
+  const [website, setWebsite] = React.useState('')
   const [showErrors, setShowErrors] = React.useState(false)
   const [formState, setFormState] = React.useState<FormState>('default')
 
@@ -109,7 +112,16 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
     if (!isValid) return
     setFormState('loading')
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200))
+      const service = category ? getServiceBySlug(category) : undefined
+      await submitBooking({
+        name: name.trim(),
+        phone,
+        city: currentCity?.slug,
+        service: service?.shortName,
+        comment: step1 ? `Калькулятор: ${STEP1_OPTIONS.find((o) => o.id === step1)?.label ?? step1}` : undefined,
+        source: bookingSource('калькулятор'),
+        website,
+      })
       setFormState('success')
     } catch {
       setFormState('error')
@@ -229,9 +241,55 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
         </div>
       )}
 
-      {step === 3 && (
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+      {/* Город без формы записи (hasBookingForm: false): контакты не собираем,
+          вместо формы — результат теста и телефон клиники. */}
+      {step === 3 && currentCity && !currentCity.hasBookingForm && (
+        <div className="flex flex-col gap-4">
+          <h3 className="font-heading text-lg font-semibold text-foreground">Позвоните нам</h3>
+          <p className="text-pretty leading-relaxed text-muted-foreground">
+            {category && getServiceBySlug(category) ? (
+              <>
+                Судя по ответам, вам подойдёт направление:{' '}
+                <span className="font-semibold text-primary">{getServiceBySlug(category)?.shortName}</span>.{' '}
+              </>
+            ) : null}
+            В клинике в {currentCity.nameIn} запись ведётся по телефону — администратор подберёт удобное время
+            и ответит на вопросы.
+          </p>
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" size="lg" onClick={() => setStep(skipsStep2 ? 1 : 2)}>
+              <ArrowLeft data-icon="inline-start" />
+              Назад
+            </Button>
+            <Button
+              size="lg"
+              className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
+              render={<a href={currentCity.phoneHref} />}
+              nativeButton={false}
+            >
+              <Phone data-icon="inline-start" />
+              Позвонить {currentCity.phone}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 3 && !(currentCity && !currentCity.hasBookingForm) && (
+        <form onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
           <h3 className="font-heading text-lg font-semibold text-foreground">Оставьте контакты</h3>
+          {/* Honeypot для ботов: вне потока и недоступно для скринридеров и таба. */}
+          <div aria-hidden className="absolute -left-[9999px] top-0 h-px w-px overflow-hidden">
+            <label htmlFor="calc-website">Сайт</label>
+            <input
+              id="calc-website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </div>
 
           {formState === 'error' && (
             <div className="flex items-start gap-3 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">

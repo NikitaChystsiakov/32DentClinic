@@ -1,0 +1,8 @@
+# Конфиг с токеном бота не должен отдаваться напрямую даже если PHP на
+# хостинге вдруг отключён — только booking.php читает его через require.
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "config.example.php">
+  Require all denied
+</Files>
