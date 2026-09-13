@@ -52,6 +52,11 @@ export interface City {
   address: string
   coordinates: { lat: number; lng: number }
   image: string
+  /**
+   * Короткие «плюшки» клиники. Сейчас нигде не выводятся: на хабе вместо
+   * них — список услуг города (config/services.ts, availableIn). Оставлены
+   * на будущее, можно использовать в карточках или в SEO-текстах.
+   */
   featureTags: string[]
   /**
    * Принимает ли клиника заявки через форму на сайте. Если false — все

@@ -12,6 +12,7 @@ import {
   FolderHeart,
 } from 'lucide-react'
 import { cities } from '@/config/cities'
+import { getServicesForCity } from '@/config/services'
 import { siteConfig } from '@/lib/site-config'
 
 // Цифры сети целиком, а не одного города: клиники, врачи, рейтинг.
@@ -147,16 +148,21 @@ export default function Page() {
                     </a>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {city.featureTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-(--panel-lavender) px-3 py-1 text-xs font-medium text-primary"
-                      >
-                        {tag}
-                      </span>
+                  {/* Услуги города чипами-ссылками: человек с конкретной
+                      проблемой сразу видит, есть ли нужное направление здесь.
+                      Порядок — из config/services.ts, имплантация первая. */}
+                  <ul className="flex flex-wrap gap-2 pt-1" aria-label={`Услуги в ${city.nameIn}`}>
+                    {getServicesForCity(city.slug).map((service) => (
+                      <li key={service.slug}>
+                        <Link
+                          href={`/${city.slug}/uslugi/${service.slug}/`}
+                          className="inline-flex items-center rounded-full bg-(--panel-lavender) px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                        >
+                          {service.shortName}
+                        </Link>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
 
                   {/* Быстрые ссылки внутрь города: часть людей приходит сюда за
                       конкретным разделом, а не за общей страницей клиники. */}
