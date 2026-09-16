@@ -6,11 +6,20 @@ import { ArrowRight, CalendarDays } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
 import { getPublishedPosts, formatBlogDate } from '@/lib/blog'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Блог о стоматологии — 32Дент',
-  description:
-    'Статьи врачей 32Дент о лечении и профилактике: как проходит приём, что делать при боли, как ухаживать за зубами после лечения.',
+// Без «— 32Дент» в title: шаблон корневого layout сам добавляет « | 32Дент»,
+// раньше бренд шёл дважды. Пока статей нет — noindex: пустой раздел в
+// индексе только портит картину сайта; появится первая статья — снимется.
+export async function generateMetadata(): Promise<Metadata> {
+  const posts = await getPublishedPosts()
+  return buildMetadata({
+    title: 'Блог о стоматологии',
+    description:
+      'Статьи врачей 32Дент о лечении и профилактике: как проходит приём, что делать при боли, как ухаживать за зубами после лечения.',
+    path: '/blog/',
+    noindex: posts.length === 0,
+  })
 }
 
 export default async function BlogIndexPage() {
@@ -47,10 +56,10 @@ export default async function BlogIndexPage() {
                 записаться на консультацию — на приёме ответим на любые вопросы.
               </p>
               <Link
-                href="/uslugi/"
+                href="/#city-cards"
                 className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-primary transition-transform hover:gap-2"
               >
-                Смотреть услуги
+                Выбрать клинику
                 <ArrowRight className="size-4" />
               </Link>
             </div>

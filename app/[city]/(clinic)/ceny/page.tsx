@@ -3,16 +3,35 @@ import { notFound } from 'next/navigation'
 import { PriceAccordion } from '@/components/pricing/price-accordion'
 import { Reveal } from '@/components/reveal'
 import { getCityBySlug } from '@/config/cities'
+import { getServiceBySlug } from '@/config/services'
+import { JsonLd } from '@/components/seo/json-ld'
+import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
 import { siteConfig } from '@/lib/site-config'
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const { city: citySlug } = await params
   const city = getCityBySlug(citySlug)
   if (!city) return {}
-  return {
-    title: 'Цены',
-    description: `Прайс-лист на услуги стоматологии ${city.brandName} в ${city.nameIn} — терапия, хирургия, протезирование и другие направления.`,
-  }
+
+  // Цены в description берём из прайса, чтобы они не разошлись с тем, что
+  // на странице. Когда прайс станет по городам — обновятся сами.
+  const price = (slug: string) => getServiceBySlug(slug)?.priceFrom
+  const parts = [
+    ['лечение кариеса', price('terapevticheskaya-stomatologiya')],
+    ['удаление зуба', price('khirurgiya')],
+    ['коронка', price('protezirovanie')],
+    ['имплант', price('implantaciya')],
+  ]
+    .filter(([, v]) => typeof v === 'number')
+    .map(([name, v]) => `${name} от ${v} р.`)
+    .join(', ')
+
+  return buildMetadata({
+    title: `Цены на лечение зубов в ${city.nameIn}`,
+    description: `Прайс стоматологии ${city.brandName} в ${city.nameIn}: ${parts}. Цены «от», точный расчёт после осмотра.`,
+    path: `/${citySlug}/ceny/`,
+    city,
+  })
 }
 
 export default async function PricesPage({ params }: { params: Promise<{ city: string }> }) {
@@ -22,10 +41,11 @@ export default async function PricesPage({ params }: { params: Promise<{ city: s
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+      <JsonLd data={breadcrumbJsonLd([{ name: 'Главная', path: `/${citySlug}/` }, { name: 'Цены' }])} />
       <Reveal delay={0}>
         <div className="mb-10 flex flex-col gap-4">
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Цены на услуги {city.brandName}
+            Цены на услуги {city.brandName} в {city.nameIn}
           </h1>
           <p className="max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
             Все цены — ориентировочные, точную стоимость врач определит после осмотра.

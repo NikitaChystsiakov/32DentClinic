@@ -1,83 +1,38 @@
-'use client'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { getCityBySlug } from '@/config/cities'
+import { getCityContent } from '@/content'
+import { ContactsPageContent } from '@/components/contact/contacts-page-content'
+import { buildMetadata, truncateDescription } from '@/lib/seo'
 
-import { MapPin, Send } from 'lucide-react'
-import { useCity } from '@/lib/contexts/city-context'
-import { ViberIcon } from '@/components/icons/viber-icon'
-import { ContactBookingButton } from '@/components/contact/contact-booking-button'
-import { Reveal } from '@/components/reveal'
-import { LazyMap } from '@/components/lazy-map'
+// Серверная обёртка ради generateMetadata (см. uslugi/page.tsx). Разметка —
+// в components/contact/contacts-page-content.tsx.
+export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
+  const { city: citySlug } = await params
+  const city = getCityBySlug(citySlug)
+  const content = getCityContent(citySlug)
+  if (!city || !content) return {}
 
-export default function ContactsPage() {
-  const { city, content } = useCity()
+  // Часы — только если заполнены: у Жлобина пока «[TODO: …]», такое в
+  // description выводить нельзя.
+  const hours = content.contacts.hours
+    .filter((h) => !h.time.includes('TODO'))
+    .map((h) => `${h.days} ${h.time}`)
+    .join(', ')
 
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="mb-10 text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-        {content.contacts.title}
-      </h1>
+  return buildMetadata({
+    title: `Контакты и адрес стоматологии в ${city.nameIn}`,
+    description: truncateDescription(
+      `${city.brandName} в ${city.nameIn}: ${city.address}, ${city.phone}${hours ? `. ${hours}` : ''}. Карта проезда, Viber и Telegram, запись на приём онлайн.`,
+      165
+    ),
+    path: `/${citySlug}/kontakty/`,
+    city,
+  })
+}
 
-      <div className="grid gap-10 md:grid-cols-2">
-        <Reveal delay={0}>
-          <div className="flex flex-col gap-8">
-            <div className="flex items-start gap-3">
-              <MapPin className="mt-1 size-5 shrink-0 text-primary" />
-              <div className="flex flex-col gap-1">
-                <span className="font-heading text-base font-semibold text-foreground">Адрес</span>
-                <span className="text-muted-foreground">{city.address}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="font-heading text-base font-semibold text-foreground">Часы работы</span>
-              <table className="w-full max-w-sm text-sm">
-                <tbody>
-                  {content.contacts.hours.map((row) => (
-                    <tr key={row.days} className="border-b border-border last:border-0">
-                      <td className="py-2 text-muted-foreground">{row.days}</td>
-                      <td className="py-2 text-right font-medium text-foreground">{row.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="font-heading text-base font-semibold text-foreground">Телефон</span>
-              <a
-                href={city.phoneHref}
-                className="text-2xl font-bold text-foreground hover:text-primary"
-              >
-                {city.phone}
-              </a>
-              <div className="mt-1 flex items-center gap-4">
-                <a
-                  href={`https://viber.com/${city.phone.replace(/[^0-9]/g, '')}`}
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                >
-                  <ViberIcon className="size-4" /> Viber
-                </a>
-                <a
-                  href="https://telegram.me/32Дентplus"
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                >
-                  <Send className="size-4" /> Telegram
-                </a>
-              </div>
-            </div>
-
-            <ContactBookingButton />
-          </div>
-        </Reveal>
-
-        <Reveal delay={1}>
-          <LazyMap
-            embedSrc={`https://yandex.ru/map-widget/v1/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
-            externalHref={`https://yandex.ru/maps/?ll=${city.coordinates.lng},${city.coordinates.lat}&z=16&pt=${city.coordinates.lng},${city.coordinates.lat},pm2rdm`}
-            title={`Карта проезда к ${city.brandName} в ${city.nameIn}`}
-            address={city.address}
-          />
-        </Reveal>
-      </div>
-    </div>
-  )
+export default async function ContactsPage({ params }: { params: Promise<{ city: string }> }) {
+  const { city: citySlug } = await params
+  if (!getCityBySlug(citySlug)) notFound()
+  return <ContactsPageContent />
 }

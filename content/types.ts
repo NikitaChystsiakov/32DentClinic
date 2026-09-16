@@ -39,6 +39,28 @@ export interface HeroPromo {
 }
 
 /**
+ * Видеообзор клиники для главной и «О нас» (см. clinic-video-section.tsx).
+ * Ролик тяжёлый, поэтому на страницу кладётся только постер: сам файл
+ * подгружается по клику на play. Города без ролика поле не задают — блок
+ * тогда не рендерится вовсе.
+ */
+export interface ClinicVideo {
+  /** Путь к mp4 (H.264 + AAC, faststart) в public/video. */
+  src: string
+  /** Кадр-обложка 16:9, показывается до клика. */
+  poster: string
+  /** Описание для alt постера и aria-label кнопки play. */
+  alt: string
+  /** Длительность подписью на постере, например «1:11». */
+  duration: string
+  /** Заголовок и подводка блока — свои у каждого города. */
+  title: string
+  description: string
+  /** Что человек увидит в ролике, 3 коротких пункта. */
+  highlights: string[]
+}
+
+/**
  * Бриф на реальное фото клиники. Пока фото не сняли, на его месте
  * рендерится PhotoPlaceholder с этим текстом — так съёмочный лист виден
  * прямо на странице, а не теряется в задачах. Появилось фото — добавьте
@@ -124,4 +146,27 @@ export interface TreatmentTimelineGapLabel {
 export interface TreatmentTimeline {
   steps: TreatmentTimelineStep[]
   gapLabels?: TreatmentTimelineGapLabel[]
+}
+
+/** Одна карточка гарантии: крупное значение, на что действует, условие. */
+export interface GuaranteeItem {
+  value: string
+  label: string
+  description: string
+  /** Имя иконки из lucide-react, см. iconMap в guarantee-section.tsx. */
+  icon: string
+}
+
+/**
+ * Блок «Гарантия» на главной. У Минска — тройная (импланты, работа врача,
+ * протезы), у Рогачёва и Жлобина — 2 года на всё плюс гарантия производителя
+ * на сами импланты; поэтому набор карточек задаётся в контенте города.
+ */
+export interface GuaranteeSection {
+  eyebrow: string
+  title: string
+  subtitle: string
+  items: GuaranteeItem[]
+  /** Подпись под карточками: где закреплены условия. */
+  note: string
 }

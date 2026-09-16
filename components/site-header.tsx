@@ -73,6 +73,9 @@ export function SiteHeader() {
   const styles = layoutStyles[HEADER_LAYOUT]
 
   const navLinks = [
+    // Имплантация — главное направление сети, поэтому первой и отдельно от
+    // общего списка услуг: ведёт на хаб раздела с протоколами и ценами.
+    { label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
     { label: 'Услуги', href: `${prefix}/uslugi/` },
     { label: 'Врачи', href: `${prefix}/vrachi/` },
     { label: 'Цены', href: `${prefix}/ceny/` },
@@ -82,6 +85,13 @@ export function SiteHeader() {
     // Блог общий для сети — без префикса города.
     { label: 'Блог', href: '/blog/' },
   ]
+
+  // Активен самый длинный подходящий адрес: на /minsk/uslugi/implantaciya/
+  // подсвечивается «Имплантация», а не «Услуги» вместе с ней.
+  const activeHref = navLinks
+    .map((link) => link.href)
+    .filter((href) => pathname === href || pathname?.startsWith(href))
+    .sort((a, b) => b.length - a.length)[0]
 
   const address = currentCity?.address ?? siteConfig.address
   const shortAddress = formatAddressWithoutCity(address)
@@ -318,7 +328,7 @@ export function SiteHeader() {
         >
           <nav className={cn('hidden shrink-0 items-center gap-6 lg:flex xl:gap-7', styles.navOffset)}>
             {navLinks.map((link) => {
-              const isActive = pathname === link.href || pathname?.startsWith(link.href)
+              const isActive = link.href === activeHref
               return (
                 <Link
                   key={link.href}

@@ -21,12 +21,30 @@ const golosText = Golos_Text({ subsets: ['latin', 'cyrillic'], variable: '--font
 const unbounded = Unbounded({ subsets: ['latin', 'cyrillic'], variable: '--font-unbounded' })
 
 export const metadata: Metadata = {
+  // Базовый адрес для og:image и прочих URL-полей. canonical здесь намеренно
+  // нет: он наследуется всеми страницами без своего, и они стали бы
+  // «копиями» главной — каждая страница задаёт его сама через
+  // buildMetadata() из lib/seo.ts.
+  metadataBase: new URL(siteConfig.siteUrl),
   title: {
     default: `Сеть стоматологий 32Дент — Минск, Рогачёв, Жлобин`,
     template: `%s | 32Дент`,
   },
   description:
     '32Дент — сеть стоматологий в Беларуси. Лечение, имплантация, протезирование в Минске, Рогачёве и Жлобине. Современное оборудование, гарантия 2 года.',
+  // Превью при отправке ссылки в Viber/Telegram/соцсети. Картинка —
+  // app/opengraph-image.png (Next подхватывает файл по имени), заголовок и
+  // описание каждая страница задаёт сама (они не наследуются из title).
+  openGraph: {
+    type: 'website',
+    siteName: siteConfig.name,
+    locale: 'ru_BY',
+    url: siteConfig.siteUrl,
+    title: 'Сеть стоматологий 32Дент — Минск, Рогачёв, Жлобин',
+    description:
+      '32Дент — сеть стоматологий в Беларуси. Лечение, имплантация, протезирование в Минске, Рогачёве и Жлобине.',
+  },
+  twitter: { card: 'summary_large_image' },
   icons: {
     icon: [
       { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
@@ -43,21 +61,6 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#090d16' },
   ],
-}
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Dentist',
-  name: siteConfig.name,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: siteConfig.address,
-    addressLocality: siteConfig.city,
-    addressCountry: 'BY',
-  },
-  telephone: siteConfig.phoneDisplay,
-  openingHours: 'Mo-Sa 08:00-19:00',
-  priceRange: '$$',
 }
 
 /*
@@ -78,15 +81,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Схемы schema.org здесь нет намеренно: раньше тут лежал Dentist с
+  // рогачёвским адресом и телефоном, и он попадал на страницы Минска и
+  // Жлобина рядом с их собственной схемой — два противоречащих адреса одной
+  // организации. Сеть описана на хабе (app/page.tsx), клиника города — в
+  // app/[city]/layout.tsx.
   return (
     <html lang="ru" className="bg-(--page-surface)" suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
       <body className={`${golosText.variable} ${unbounded.variable} font-sans antialiased`}>
         <ThemeProvider>
           <BookingModalProvider>

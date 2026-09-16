@@ -8,6 +8,8 @@ export {
   getServiceBySlug,
   getServicesForCity,
   serviceSelectOptions,
+  formatProcedurePrice,
+  withProcedureGroups,
   type Procedure,
   type FaqItem,
   type ServiceCategory,

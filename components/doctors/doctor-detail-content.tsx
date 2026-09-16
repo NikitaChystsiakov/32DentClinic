@@ -45,9 +45,11 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
               {doctor.name}
             </h1>
             <p className="text-lg text-muted-foreground">{doctor.specialization}</p>
-            <Badge variant="secondary" className="w-fit">
-              Стаж {doctor.experienceYears} лет
-            </Badge>
+            {doctor.experienceYears !== undefined && (
+              <Badge variant="secondary" className="w-fit">
+                Стаж {doctor.experienceYears} лет
+              </Badge>
+            )}
             <DoctorHeroCta slug={doctor.slug} name={doctor.name} />
           </div>
         </div>

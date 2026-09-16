@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function DoctorHeroCta({ slug, name }: { slug: string; name: string }) {
 
@@ -20,6 +21,8 @@ export function DoctorHeroCta({ slug, name }: { slug: string; name: string }) {
 }
 
 export function DoctorFinalCta({ slug }: { slug: string }) {
+  // Список врачей своего города, а не корневой /vrachi/ (рогачёвский).
+  const { city } = useCity()
 
   return (
     <div className="flex flex-col items-center gap-4 rounded-2xl bg-silver-muted p-8 text-center ring-1 ring-silver/25 sm:p-12">
@@ -30,7 +33,7 @@ export function DoctorFinalCta({ slug }: { slug: string }) {
         >
           Записаться к этому врачу
         </BookingButton>
-        <Button variant="outline" render={<Link href="/vrachi/" />} nativeButton={false}>
+        <Button variant="outline" render={<Link href={`/${city.slug}/vrachi/`} />} nativeButton={false}>
           Посмотреть всех врачей
         </Button>
       </div>

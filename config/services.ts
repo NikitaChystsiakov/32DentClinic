@@ -17,6 +17,15 @@
 export interface Procedure {
   name: string
   priceFrom: number
+  /**
+   * Подзаголовок в таблице цен («All-on-4», «Эндодонтия»). Строки с одинаковой
+   * группой идут подряд — таблица ставит заголовок перед первой из них.
+   */
+  group?: string
+  /** Точная цена, а не «от» — для позиций с фиксированным тарифом. */
+  exact?: boolean
+  /** Цена ещё не получена от клиники: выводится «уточняется», priceFrom не показывается. */
+  tbd?: boolean
 }
 
 export interface FaqItem {
@@ -56,17 +65,32 @@ export const serviceCategories: ServiceCategory[] = [
     metaTitle: 'Имплантация зубов',
     cardDescription: 'Установка имплантов вместо утраченных зубов на современном оборудовании.',
     intro: 'Устанавливаем импланты вместо утраченных зубов на современном оборудовании — с гарантией на выполненные работы.',
-    priceFrom: 700,
+    priceFrom: 1260,
     icon: 'Zap',
     procedures: [
-      { name: 'Установка импланта (первый этап)', priceFrom: 700 },
-      { name: 'Протезирование на имплантах', priceFrom: 600 },
+      { name: 'Консультация имплантолога', priceFrom: 35 },
+      { name: 'Имплантат MIS C1 (Израиль)', priceFrom: 1260, group: 'Установка импланта' },
+      { name: 'Имплантат Straumann SLA (Швейцария)', priceFrom: 1680, group: 'Установка импланта' },
+      { name: 'Имплантат MegaGen (Южная Корея)', priceFrom: 0, tbd: true, group: 'Установка импланта' },
+      { name: 'Установка формирователя десны (ФДМ) на имплантате', priceFrom: 80, group: 'Установка импланта' },
+      { name: 'Синус-лифтинг (без материалов)', priceFrom: 900, group: 'Установка импланта' },
+      { name: 'All-on-4 на имплантах Neodent (Straumann Group), с временным протезом', priceFrom: 12000, group: 'Комплексная имплантация всей челюсти' },
+      { name: 'All-on-4 на имплантах MIS, с временным протезом', priceFrom: 13000, group: 'Комплексная имплантация всей челюсти' },
+      { name: 'All-on-6 на имплантах Neodent, с временным протезом', priceFrom: 15000, group: 'Комплексная имплантация всей челюсти' },
+      { name: 'All-on-6 на имплантах MIS, с временным протезом', priceFrom: 16000, group: 'Комплексная имплантация всей челюсти' },
+      { name: 'All-on-4 — металлокерамика', priceFrom: 8500, group: 'Постоянный протез на All-on-X' },
+      { name: 'All-on-4 — диоксид циркония', priceFrom: 9500, group: 'Постоянный протез на All-on-X' },
+      { name: 'All-on-6 — металлокерамика', priceFrom: 10000, group: 'Постоянный протез на All-on-X' },
+      { name: 'All-on-6 — диоксид циркония', priceFrom: 11500, group: 'Постоянный протез на All-on-X' },
     ],
     whenToVisit: ['Отсутствует один или несколько зубов, съёмный протез неудобен', 'Хочется несъёмное решение'],
     steps: ['Диагностика и планирование', 'Установка импланта', 'Период приживления', 'Протезирование'],
-    doctorSlugs: ['makhonko-pavel'],
+    doctorSlugs: ['zhilevich-vladimir', 'makhonko-pavel', 'molchan-aleksandr', 'belousova-tatyana'],
+    // Страница услуги — не общий шаблон, а хаб раздела (config/implantation.ts):
+    // протоколы, цены по городам и FAQ лежат там, поэтому здесь faq пустой.
     faq: [],
-    availableIn: ['rogachev', 'minsk'],
+    // Импланты ставят во всех трёх клиниках — подтверждено клиникой.
+    availableIn: ['rogachev', 'minsk', 'zhlobin'],
   },
   {
     slug: 'terapevticheskaya-stomatologiya',
@@ -78,19 +102,21 @@ export const serviceCategories: ServiceCategory[] = [
       'Лечение кариеса, пульпита и других заболеваний зубов, включая приём детей, с сохранением естественного вида зуба.',
     intro:
       'Лечим кариес, пульпит и заболевания дёсен с сохранением естественного вида зуба. Принимаем как взрослых, так и детей — подход к маленьким пациентам у наших врачей отработан отдельно.',
-    priceFrom: 90,
+    priceFrom: 100,
     icon: 'Stethoscope',
     procedures: [
-      { name: 'Консультация терапевта', priceFrom: 20 },
-      { name: 'Лечение кариеса', priceFrom: 90 },
-      { name: 'Пульпит 1 канал', priceFrom: 140 },
-      { name: 'Пульпит 2 канала', priceFrom: 220 },
-      { name: 'Пульпит 3 канала', priceFrom: 300 },
-      { name: 'Пульпит 4 канала', priceFrom: 400 },
-      { name: 'Лечение пародонтоза/пародонтита', priceFrom: 100 },
-      { name: 'Реставрация зуба', priceFrom: 150 },
-      { name: 'Шинирование', priceFrom: 120 },
-      { name: 'Приём детей', priceFrom: 70 },
+      { name: 'Консультация врача', priceFrom: 35 },
+      { name: 'Фотопломба при минимальном поражении', priceFrom: 100, group: 'Лечение кариеса' },
+      { name: 'Фотопломба до 1/3 зуба', priceFrom: 135, group: 'Лечение кариеса' },
+      { name: 'Фотопломба до 1/2 зуба', priceFrom: 160, group: 'Лечение кариеса' },
+      { name: 'Фотопломба более 1/2 зуба', priceFrom: 180, group: 'Лечение кариеса' },
+      { name: 'Лечение пульпита, 1 канал', priceFrom: 145, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Лечение пульпита, 2 канала', priceFrom: 245, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Лечение пульпита, 3 канала', priceFrom: 320, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Лечение пульпита, 4 канала', priceFrom: 420, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Перепломбировка каналов, 1 канал', priceFrom: 200, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Перепломбировка каналов, 2 канала', priceFrom: 350, group: 'Лечение каналов (эндодонтия)' },
+      { name: 'Перепломбировка каналов, 3–4 канала', priceFrom: 450, group: 'Лечение каналов (эндодонтия)' },
     ],
     whenToVisit: [
       'Боль при накусывании или от горячего/холодного',
@@ -105,6 +131,11 @@ export const serviceCategories: ServiceCategory[] = [
       'pavlovich-sergey',
       'saykovskaya-tatyana',
       'bychkov-ivan',
+      'gutyrchik-mariya',
+      'ukhvatova-ekaterina',
+      'volosova-natalya',
+      'mikhalenko-olga',
+      'kuznetsova-marina',
     ],
     faq: [
       {
@@ -120,10 +151,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     slug: 'lechenie-pod-mikroskopom',
-    // TODO: нужно реальное фото приёма под микроскопом — пока стоит фото
-    // терапии, а на странице услуги показывается заглушка (см.
-    // SERVICES_NEEDING_REAL_PHOTO в service-detail-content.tsx).
-    image: '/images/services/terapiya.webp',
+    image: '/images/services/lechenie-pod-mikroskopom.webp',
     shortName: 'Лечение под микроскопом',
     title: 'Лечение зубов под микроскопом',
     metaTitle: 'Лечение зубов и каналов под микроскопом',
@@ -131,8 +159,8 @@ export const serviceCategories: ServiceCategory[] = [
       'Лечение кариеса и корневых каналов под дентальным микроскопом: врач видит то, что не разглядеть невооружённым глазом.',
     intro:
       'Дентальный микроскоп увеличивает рабочее поле в десятки раз: врач видит все устья каналов, трещины и остатки старого пломбировочного материала. Это позволяет лечить сложные каналы, перелечивать зубы после неудачного лечения и сохранять ткани зуба, которые иначе пришлось бы удалить.',
-    // TODO: уточнить у клиента — все цены ниже поставлены по образцу терапии
-    // (чуть выше обычного лечения) и не подтверждены клиникой.
+    // Цены ниже клиника не подтвердила: в прайсе микроскопа нет, заказчик
+    // получит их позже. См. docs/ЗАГЛУШКИ-И-УТОЧНЕНИЯ.md.
     priceFrom: 120,
     icon: 'Microscope',
     procedures: [
@@ -189,18 +217,14 @@ export const serviceCategories: ServiceCategory[] = [
     cardDescription: 'Удаление зубов любой сложности, операции при заболеваниях дёсен и челюсти.',
     intro:
       'Удаление зубов любой сложности, включая зубы мудрости, и операции при заболеваниях дёсен и челюсти — с контролем боли на всех этапах.',
-    priceFrom: 80,
+    priceFrom: 75,
     icon: 'Scissors',
     procedures: [
-      { name: 'Удаление зуба', priceFrom: 80 },
-      { name: 'Удаление зуба мудрости', priceFrom: 150 },
-      { name: 'Гемисекция корня', priceFrom: 200 },
-      { name: 'Иссечение уздечки', priceFrom: 150 },
-      { name: 'Лечение ВНЧС (консультация)', priceFrom: 100 },
-      { name: 'Наращивание костной ткани', priceFrom: 400 },
-      { name: 'Резекция верхушки корня', priceFrom: 250 },
-      { name: 'Удаление доброкачественных образований', priceFrom: 200 },
-      { name: 'Эндодонтическая хирургия', priceFrom: 250 },
+      { name: 'Консультация врача', priceFrom: 35 },
+      { name: 'Простое удаление зуба', priceFrom: 75 },
+      { name: 'Сложное удаление зуба', priceFrom: 190 },
+      { name: 'Удаление ретинированного / дистопированного зуба', priceFrom: 300 },
+      { name: 'Удаление молочного зуба', priceFrom: 50 },
     ],
     whenToVisit: [
       'Сильная боль, которую нельзя вылечить терапевтически',
@@ -209,14 +233,67 @@ export const serviceCategories: ServiceCategory[] = [
       'Направление от терапевта клиники',
     ],
     steps: ['Консультация и снимок', 'Анестезия', 'Операция', 'Рекомендации по восстановлению'],
-    doctorSlugs: ['makhonko-pavel'],
+    doctorSlugs: ['zhilevich-vladimir', 'molchan-aleksandr', 'makhonko-pavel', 'fedorova-natalya'],
     faq: [
       {
         question: 'Сколько заживает лунка после удаления?',
         answer: 'Зависит от сложности, врач даст точный прогноз на приёме.',
       },
     ],
-    availableIn: ['rogachev', 'minsk'],
+    // [TBD] Жлобин добавлен вместе с имплантацией: удаление и костная
+    // пластика — её этапы. Клиника ещё не подтвердила полный список
+    // хирургических процедур в Жлобине.
+    availableIn: ['rogachev', 'minsk', 'zhlobin'],
+  },
+  {
+    slug: 'lechenie-pod-sedaciej',
+    // TODO: нужно реальное фото — пока стоит фото хирургии, а на странице
+    // услуги показывается заглушка (SERVICES_NEEDING_REAL_PHOTO).
+    image: '/images/services/khirurgiya.webp',
+    shortName: 'Лечение под седацией',
+    title: 'Лечение зубов под седацией',
+    metaTitle: 'Лечение зубов под седацией и в медикаментозном сне',
+    cardDescription:
+      'Лечение и имплантация в медикаментозном сне под контролем анестезиолога — для тех, кому страшно, и для большого объёма работы за один визит.',
+    intro:
+      'Седация — медикаментозный сон под наблюдением врача-анестезиолога: пациент не чувствует тревоги и не помнит приём, а врач за один визит выполняет объём работы, на который иначе ушло бы несколько посещений. Применяется при сильном страхе перед лечением, рвотном рефлексе и при больших объёмах — например, установке нескольких имплантов.',
+    // Стоимость складывается из подготовки и минут седации — поэтому «от»
+    // по фиксированной части, а не по минуте.
+    priceFrom: 135,
+    icon: 'Moon',
+    procedures: [
+      { name: 'Подготовка к анестезии и постнаркозное наблюдение', priceFrom: 135, exact: true },
+      { name: 'Седация со спонтанным дыханием, 1 минута', priceFrom: 3.5, exact: true },
+      { name: 'Седация с ИВЛ, 1 минута', priceFrom: 4.5, exact: true },
+    ],
+    whenToVisit: [
+      'Страх перед лечением, панические реакции на приёме',
+      'Выраженный рвотный рефлекс',
+      'Большой объём работы за один визит: несколько имплантов, удаление нескольких зубов',
+      'Лечение детей, которым трудно высидеть приём',
+    ],
+    steps: [
+      'Консультация анестезиолога и анализы',
+      'Подготовка и введение в седацию',
+      'Лечение',
+      'Постнаркозное наблюдение и выписка в тот же день',
+    ],
+    // Анестезиолога клиника пришлёт отдельно — пока список пустой.
+    doctorSlugs: [],
+    faq: [
+      {
+        question: 'Чем седация отличается от наркоза?',
+        answer:
+          'При седации пациент дышит сам и находится в поверхностном медикаментозном сне; это легче переносится и не требует длительного восстановления. Вид седации подбирает анестезиолог на консультации.',
+      },
+      {
+        question: 'Как подготовиться?',
+        answer:
+          'Понадобятся анализы и консультация анестезиолога; в день приёма — не есть и не пить установленное врачом время, приехать с сопровождающим. Полный список даст врач.',
+      },
+    ],
+    // Заказчик: пока показываем во всех городах.
+    availableIn: ['minsk', 'rogachev', 'zhlobin'],
   },
   {
     slug: 'ortodontiya',
@@ -229,9 +306,18 @@ export const serviceCategories: ServiceCategory[] = [
     priceFrom: 1800,
     icon: 'Smile',
     procedures: [
-      { name: 'Консультация ортодонта', priceFrom: 30 },
-      { name: 'Установка брекет-системы', priceFrom: 1800 },
-      { name: 'Исправление прикуса (полный курс)', priceFrom: 2500 },
+      { name: 'Ортодонтическая диагностика', priceFrom: 150 },
+      { name: 'Лигатурные металлические брекеты, 1 челюсть', priceFrom: 1800, group: 'Брекет-системы', exact: true },
+      { name: 'Самолигирующие брекеты H4 / Pitts21, 1 челюсть', priceFrom: 2200, group: 'Брекет-системы', exact: true },
+      { name: 'Самолигирующие брекеты Damon Q, 1 челюсть', priceFrom: 2400, group: 'Брекет-системы', exact: true },
+      { name: 'Коррекция дуги, 1 челюсть', priceFrom: 180, group: 'Брекет-системы' },
+      { name: 'Снятие брекет-системы, 1 челюсть', priceFrom: 300, group: 'Брекет-системы' },
+      { name: 'Ортодонтический минивинт', priceFrom: 300, group: 'Брекет-системы' },
+      { name: 'Диагностика и set-up для элайнеров', priceFrom: 900, group: 'Элайнеры' },
+      { name: 'Установка элайнера, 1 челюсть', priceFrom: 200, group: 'Элайнеры' },
+      { name: 'Ретенционная капа', priceFrom: 250, group: 'Ретенция после лечения', exact: true },
+      { name: 'Ретенционная пластинка', priceFrom: 300, group: 'Ретенция после лечения', exact: true },
+      { name: 'Несъёмный ретейнер, 1 зуб', priceFrom: 60, group: 'Ретенция после лечения', exact: true },
     ],
     whenToVisit: [
       'Видимая кривизна зубов',
@@ -246,7 +332,8 @@ export const serviceCategories: ServiceCategory[] = [
     ],
     doctorSlugs: [],
     faq: [],
-    availableIn: ['rogachev'],
+    // Заказчик: пока показываем во всех городах.
+    availableIn: ['minsk', 'rogachev', 'zhlobin'],
   },
   {
     slug: 'protezirovanie',
@@ -257,16 +344,20 @@ export const serviceCategories: ServiceCategory[] = [
     cardDescription: 'Коронки, съёмные и несъёмные протезы — восстановим зубной ряд надёжно и красиво.',
     intro:
       'Восстанавливаем зубной ряд надёжно и красиво — от одиночной коронки до полного протезирования. Коронки и протезы изготавливает собственная зуботехническая лаборатория: не ждём заказ со стороны, а примерки, правки и контроль качества проходят на месте.',
-    priceFrom: 180,
+    priceFrom: 370,
     icon: 'Crown',
     procedures: [
-      { name: 'Консультация ортопеда', priceFrom: 20 },
-      { name: 'Металлокерамическая коронка', priceFrom: 180 },
-      { name: 'Коронка из прессованной керамики', priceFrom: 450 },
-      { name: 'Цельнолитая коронка', priceFrom: 120 },
-      { name: 'Съёмный протез', priceFrom: 500 },
-      { name: 'Протезирование на имплантах', priceFrom: 600 },
-      { name: 'Виниры/люминиры', priceFrom: 500 },
+      { name: 'Консультация врача', priceFrom: 35 },
+      { name: 'Временная коронка на зубе', priceFrom: 90, group: 'Коронки на зубах' },
+      { name: 'Металлокерамическая коронка на зубе', priceFrom: 370, group: 'Коронки на зубах' },
+      { name: 'Коронка из диоксида циркония на зубе', priceFrom: 790, group: 'Коронки на зубах' },
+      { name: 'Коронка e.max на зубе', priceFrom: 920, group: 'Коронки на зубах' },
+      { name: 'Временная коронка на импланте', priceFrom: 650, group: 'Коронки на имплантах' },
+      { name: 'Металлокерамическая коронка на импланте', priceFrom: 1380, group: 'Коронки на имплантах' },
+      { name: 'Безметалловая коронка на импланте', priceFrom: 1400, group: 'Коронки на имплантах' },
+      { name: 'Полный съёмный протез', priceFrom: 760, group: 'Съёмные протезы' },
+      { name: 'Два полных съёмных протеза', priceFrom: 1000, group: 'Съёмные протезы' },
+      { name: 'Бюгельный протез', priceFrom: 970, group: 'Съёмные протезы' },
     ],
     whenToVisit: [
       'Отсутствует один или несколько зубов',
@@ -288,23 +379,26 @@ export const serviceCategories: ServiceCategory[] = [
       'makhonko-pavel',
     ],
     faq: [],
-    availableIn: ['rogachev', 'minsk'],
+    // Заказчик: пока показываем во всех городах (коронки на имплантах нужны
+    // везде, где есть имплантация).
+    availableIn: ['rogachev', 'minsk', 'zhlobin'],
   },
   {
     slug: 'prof-gigiena-i-otbelivanie',
     image: '/images/services/gigiena.webp',
+    // Отбеливание клиника делает, цена ещё не получена — позиция с tbd.
     shortName: 'Проф.гигиена и отбеливание',
     title: 'Профессиональная чистка и отбеливание зубов',
     metaTitle: 'Чистка и отбеливание зубов',
     cardDescription: 'Профессиональная чистка и безопасное отбеливание для белоснежной улыбки.',
     intro:
       'Профессиональная чистка убирает налёт и зубной камень, которые невозможно снять обычной щёткой, и служит профилактикой кариеса и болезней дёсен.',
-    priceFrom: 70,
+    priceFrom: 8,
     icon: 'Sparkles',
     procedures: [
-      { name: 'Профессиональная чистка зубов', priceFrom: 70 },
-      { name: 'Удаление зубного камня', priceFrom: 60 },
-      { name: 'Отбеливание', priceFrom: 200 },
+      { name: 'Удаление отложений: ультразвук + Air Flow + фторлак, 1 зуб', priceFrom: 11 },
+      { name: 'Удаление отложений: ультразвук + фторлак, 1 зуб', priceFrom: 8 },
+      { name: 'Отбеливание зубов', priceFrom: 0, tbd: true },
     ],
     whenToVisit: [
       'Профилактика раз в полгода',
@@ -325,14 +419,12 @@ export const serviceCategories: ServiceCategory[] = [
     cardDescription: 'Панорамные, прицельные и 3D-снимки (КЛКТ) на современном рентген-оборудовании.',
     intro:
       'Собственное щадящее рентген-оборудование позволяет провести точную диагностику прямо в клинике, без направления в другое место. 3D-снимок (КЛКТ) показывает кость и корни в объёме — по нему планируют имплантацию и сложное лечение каналов.',
-    priceFrom: 20,
+    priceFrom: 15,
     icon: 'ScanLine',
     procedures: [
-      { name: 'Панорамный снимок зубов', priceFrom: 35 },
-      { name: 'Прицельный рентгеновский снимок зуба', priceFrom: 20 },
-      // TODO: уточнить цену у клиента — пока поставлена как у самой дорогой
-      // позиции диагностики (панорамный снимок).
-      { name: '3D-снимок (КЛКТ)', priceFrom: 35 },
+      { name: 'Панорамный снимок (ОПТГ, 2D), обе челюсти', priceFrom: 15, exact: true },
+      { name: 'КТ (3D КЛКТ), сегмент челюсти', priceFrom: 24, exact: true },
+      { name: 'КТ (3D КЛКТ), обе челюсти', priceFrom: 46.6, exact: true },
     ],
     whenToVisit: [
       'Перед началом любого сложного лечения',
@@ -358,3 +450,27 @@ export function getServicesForCity(citySlug: string) {
 }
 
 export const serviceSelectOptions = serviceCategories.map((s) => ({ value: s.slug, label: s.shortName }))
+
+/** «от 1 260 BYN», «135 BYN» для точных тарифов, «46,6 BYN» для дробных. */
+export function formatProcedurePrice(procedure: Procedure) {
+  if (procedure.tbd) return 'уточняется'
+  const value = procedure.priceFrom.toLocaleString('ru-RU', { maximumFractionDigits: 1 })
+  return procedure.exact ? `${value} BYN` : `от ${value} BYN`
+}
+
+/**
+ * Строки прайса с разделителями групп: перед первой позицией каждой новой
+ * группы вставляется { group } — таблица рендерит её как подзаголовок.
+ */
+export function withProcedureGroups(procedures: Procedure[]) {
+  const rows: Array<{ type: 'group'; group: string } | { type: 'procedure'; procedure: Procedure }> = []
+  let current: string | undefined
+  for (const procedure of procedures) {
+    if (procedure.group && procedure.group !== current) {
+      rows.push({ type: 'group', group: procedure.group })
+    }
+    current = procedure.group
+    rows.push({ type: 'procedure', procedure })
+  }
+  return rows
+}

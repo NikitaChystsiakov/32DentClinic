@@ -12,7 +12,10 @@ import { getServicesForCity } from '@/config/services'
 
 export function ServicesOverview() {
   const { city } = useCity()
-  const services = getServicesForCity(city.slug)
+  // Имплантация — главное направление, у неё на главной свой блок «Виды
+  // имплантации» сразу после hero (implant-types-section.tsx); здесь —
+  // остальные направления, поэтому заголовок «Также лечим».
+  const services = getServicesForCity(city.slug).filter((service) => service.slug !== 'implantaciya')
 
   /*
    * Одна карусель на все ширины, без второй разметки под десктоп и без
@@ -48,11 +51,11 @@ export function ServicesOverview() {
   return (
     <>
       <div className="mb-8 flex flex-col gap-2">
-        <span className="text-sm font-medium text-(--panel-eyebrow)">Направления</span>
-        <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading)">Что мы лечим</h2>
+        <span className="text-sm font-medium text-(--panel-eyebrow)">Остальные направления</span>
+        <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading)">Также лечим</h2>
         <p className="max-w-2xl text-pretty text-(--panel-body)">
-          От планового осмотра до сложного протезирования — семь направлений на одной базе, с общей
-          историей лечения у каждого пациента.
+          От планового осмотра до протезирования — {services.length} направлений на одной базе, с общей
+          историей лечения у каждого пациента. Всё, что нужно до и после имплантации, — здесь же.
         </p>
       </div>
 
@@ -88,6 +91,7 @@ export function ServicesOverview() {
                   )}
                   data-active={isActive}
                 >
+                  {/* Обложки услуг — горизонтальные 4:3 (docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md). */}
                   <div className="relative aspect-4/3 w-full overflow-hidden">
                     <Image
                       src={service.image}
@@ -114,7 +118,7 @@ export function ServicesOverview() {
                         {service.shortName}
                       </h3>
                       <span className="shrink-0 text-sm font-semibold text-primary">
-                        от {service.priceFrom} р.
+                        от {service.priceFrom.toLocaleString('ru-RU')} р.
                       </span>
                     </div>
 

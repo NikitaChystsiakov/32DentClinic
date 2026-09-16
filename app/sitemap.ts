@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { cities } from '@/config/cities'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { nearbyTowns } from '@/config/nearby-towns'
+import { getProtocolsForCity } from '@/config/implantation'
 import { getServicesForCity } from '@/config/services'
 import { getPublishedPosts } from '@/lib/blog'
 import { siteConfig } from '@/lib/site-config'
@@ -10,21 +11,22 @@ import { siteConfig } from '@/lib/site-config'
 // иначе сборка падает — файл генерируется один раз в out/.
 export const dynamic = 'force-static'
 
+// lastModified у страниц намеренно нет: раньше стояло `new Date()`, и каждая
+// сборка «обновляла» все 77 адресов разом — поисковик перестаёт верить такой
+// дате. Реальная дата есть только у статей блога (post.date).
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Адреса со слешем на конце — как их отдаёт хостинг (trailingSlash в next.config).
   const baseUrl = siteConfig.siteUrl
   const pages = [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'weekly' as const,
       priority: 1,
     },
   ]
 
   const cityUrls = cities.map((city) => ({
     url: `${baseUrl}/${city.slug}/`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))
@@ -37,19 +39,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const citySectionUrls = cities.flatMap((city) => [
     ...CITY_SECTIONS.map((section) => ({
       url: `${baseUrl}/${city.slug}/${section}/`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),
     ...getServicesForCity(city.slug).map((service) => ({
       url: `${baseUrl}/${city.slug}/uslugi/${service.slug}/`,
-      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+    // Подстраницы протоколов имплантации — хаб /uslugi/implantaciya/ уже
+    // попал выше вместе с остальными услугами.
+    ...getProtocolsForCity(city.slug).map((protocol) => ({
+      url: `${baseUrl}/${city.slug}/uslugi/implantaciya/${protocol.slug}/`,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     ...getRealDoctorsForCity(city.slug).map((doctor) => ({
       url: `${baseUrl}/${city.slug}/vrachi/${doctor.slug}/`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     })),
@@ -58,20 +64,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Посадочные страницы «соседних» городов без клиники (/svetlogorsk).
   const townUrls = nearbyTowns.map((town) => ({
     url: `${baseUrl}/${town.slug}/`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
 
   // Черновики getPublishedPosts не отдаёт, поэтому в карту сайта они не попадут.
+  // Индекс блога — только когда есть хотя бы одна статья: пустой раздел в
+  // карте сайта поисковику не нужен (сама страница /blog/ при этом noindex,
+  // см. app/blog/page.tsx).
   const posts = await getPublishedPosts()
   const blogUrls = [
-    {
-      url: `${baseUrl}/blog/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    },
+    ...(posts.length > 0
+      ? [
+          {
+            url: `${baseUrl}/blog/`,
+            changeFrequency: 'weekly' as const,
+            priority: 0.7,
+          },
+        ]
+      : []),
     ...posts.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}/`,
       lastModified: new Date(post.date),

@@ -3,11 +3,15 @@ import { notFound } from 'next/navigation'
 import { HeroSplit } from '@/components/home/hero-split'
 import { HeroSection } from '@/components/home/hero-section'
 import { ServicesOverview } from '@/components/home/services-overview'
+import { ImplantTypesSection } from '@/components/home/implant-types-section'
+import { ImplantologistsSection } from '@/components/home/implantologists-section'
+import { GuaranteeSection } from '@/components/home/guarantee-section'
 import { CalculatorTeaserSection } from '@/components/home/calculator-teaser-section'
 import { DoctorsCarouselSection } from '@/components/home/doctors-carousel-section'
 import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-section'
 import { WhyUsSection } from '@/components/home/why-us-section'
 import { ClinicGallerySection } from '@/components/home/clinic-gallery-section'
+import { ClinicVideoSection } from '@/components/home/clinic-video-section'
 import { ReviewsSection } from '@/components/home/reviews-section'
 import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
@@ -18,7 +22,7 @@ import { SectionPanel } from '@/components/section-panel'
 import { TownLanding } from '@/components/town/town-landing'
 import { getCityContent } from '@/content'
 import { getTownContent } from '@/content/towns'
-import { getDoctorsForCity } from '@/config/doctors'
+import { getDoctorsForCity, getImplantologistsForCity } from '@/config/doctors'
 import { getNearbyTownBySlug } from '@/config/nearby-towns'
 import { aggregatorRatings } from '@/lib/data/aggregators'
 import { siteConfig } from '@/lib/site-config'
@@ -40,6 +44,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
   const rating = aggregatorRatings.find((a) => a.id === '103by')
   const doctorsCount = getDoctorsForCity(citySlug).length
+  const hasImplantologists = getImplantologistsForCity(citySlug).length > 0
 
   const stats = [
     {
@@ -73,6 +78,51 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <HeroSection />
         )}
       </Reveal>
+      {/* Видеообзор клиники — вторым экраном, сразу под hero: заказчик
+          прислал ролики для главной, и выше их ставить некуда (hero занят
+          предложением месяца). На страницу попадает только постер, сам
+          ролик грузится по клику — первый экран от него не тяжелеет.
+          Городам без ролика (Рогачёв) панель не рендерим вовсе. */}
+      {content.clinicVideo && (
+        <Reveal delay={1}>
+          <SectionPanel variant="ice">
+            <ClinicVideoSection />
+          </SectionPanel>
+        </Reveal>
+      )}
+      {/* Порядок блоков — под имплантацию как главное направление: сразу
+          после hero (и видео) человек видит виды имплантации и цены, затем
+          врача, который её делает, этапы, кейсы и гарантию. Остальные
+          услуги — ниже, компактным блоком «Также лечим». */}
+      <Reveal delay={1}>
+        <SectionPanel variant="lavender">
+          <ImplantTypesSection />
+        </SectionPanel>
+      </Reveal>
+      {/* Блок сам не рендерится, если в городе нет реального имплантолога —
+          тогда пустая панель тоже не нужна. */}
+      {hasImplantologists && (
+        <Reveal delay={1}>
+          <SectionPanel variant="sky">
+            <ImplantologistsSection limit={2} />
+          </SectionPanel>
+        </Reveal>
+      )}
+      <Reveal delay={1}>
+        <SectionPanel variant="indigo-light" className="overflow-hidden">
+          <TreatmentSteps />
+        </SectionPanel>
+      </Reveal>
+      <Reveal delay={1}>
+        <SectionPanel variant="mint">
+          <BeforeAfterTeaserSection />
+        </SectionPanel>
+      </Reveal>
+      <Reveal delay={1}>
+        <SectionPanel variant="dark">
+          <GuaranteeSection />
+        </SectionPanel>
+      </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="lavender">
           <ServicesOverview />
@@ -88,30 +138,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <DoctorsCarouselSection />
         </SectionPanel>
       </Reveal>
-      <Reveal delay={1}>
-        <SectionPanel variant="indigo-light" className="overflow-hidden">
-          <TreatmentSteps />
-        </SectionPanel>
-      </Reveal>
-      <Reveal delay={1}>
-        <SectionPanel variant="mint">
-          <BeforeAfterTeaserSection />
-        </SectionPanel>
-      </Reveal>
-      {/* A/B-сравнение (только Минск, временно): второй экземпляр «Примеров
-          работ» — тот же блок, но по три карточки в ряд. Оба варианта висят
-          на странице намеренно: их показывают людям, впервые видящим сайт,
-          чтобы выбрать вариант по живой реакции. Это не забытый мусор — не
-          удалять до решения. Когда вариант выберут, снести проигравший, а
-          если победят две карточки — заодно убрать проп columns в
-          before-after-teaser-section.tsx. */}
-      {citySlug === 'minsk' && (
-        <Reveal delay={1}>
-          <SectionPanel variant="mint">
-            <BeforeAfterTeaserSection columns={3} />
-          </SectionPanel>
-        </Reveal>
-      )}
       <Reveal delay={1}>
         <SectionPanel variant="aqua">
           <WhyUsSection />

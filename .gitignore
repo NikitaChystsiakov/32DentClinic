@@ -18,3 +18,8 @@ out/
 
 # Токен Telegram-бота — только на сервере
 public/api/config.php
+assets/sheets/
+assets/doctors/
+
+# Кеш инкрементальной проверки типов (tsc)
+tsconfig.tsbuildinfo

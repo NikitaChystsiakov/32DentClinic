@@ -17,4 +17,28 @@ AddDefaultCharset UTF-8
   <If "%{REQUEST_URI} =~ m#^/_next/static/#">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </If>
+  # Видеообзоры клиник (public/video) — десятки мегабайт, меняются редко.
+  # Неделя кеша, чтобы повторный визит не качал ролик заново. Новый ролик
+  # кладите под новым именем файла.
+  <If "%{REQUEST_URI} =~ m#^/video/#">
+    Header set Cache-Control "public, max-age=604800"
+  </If>
+</IfModule>
+
+# Правильный MIME для mp4 — иначе <video> в Safari может отказаться играть.
+AddType video/mp4 .mp4
+
+# 301 со старых адресов односайтовой (рогачёвской) версии на страницы
+# города. Корневые /uslugi/, /vrachi/, /ceny/ … удалены из проекта: они
+# дублировали /rogachev/… и без canonical индексировались как отдельные
+# страницы. Врачи-заглушки Минска и Жлобина по старым адресам получат
+# рогачёвский 404 — так и задумано, их и не должно было быть в индексе.
+<IfModule mod_alias.c>
+  RedirectMatch 301 ^/uslugi/(.*)$ /rogachev/uslugi/$1
+  RedirectMatch 301 ^/vrachi/(.*)$ /rogachev/vrachi/$1
+  RedirectMatch 301 ^/ceny/?$ /rogachev/ceny/
+  RedirectMatch 301 ^/o-nas/(.*)$ /rogachev/o-nas/$1
+  RedirectMatch 301 ^/kontakty/?$ /rogachev/kontakty/
+  RedirectMatch 301 ^/kalkulyator/?$ /rogachev/kalkulyator/
+  RedirectMatch 301 ^/primery-rabot/?$ /rogachev/primery-rabot/
 </IfModule>

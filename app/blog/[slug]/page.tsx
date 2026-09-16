@@ -8,6 +8,8 @@ import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
 import { BookingCta } from '@/components/blog/booking-cta'
 import { getBlogPost, getBlogSlugs, getPublishedPosts, formatBlogDate } from '@/lib/blog'
+import { absoluteUrl, OG_IMAGE } from '@/lib/seo'
+import { siteConfig } from '@/lib/site-config'
 
 // Все статьи известны на этапе сборки — страницы получаются статическими.
 export function generateStaticParams() {
@@ -24,14 +26,18 @@ export async function generateMetadata({
   if (!post) return {}
 
   return {
-    title: `${post.meta.title} — блог 32Дент`,
+    title: `${post.meta.title} — блог`,
     description: post.meta.description,
+    alternates: { canonical: absoluteUrl(`/blog/${slug}/`) },
     openGraph: {
       title: post.meta.title,
       description: post.meta.description,
+      url: absoluteUrl(`/blog/${slug}/`),
+      siteName: siteConfig.name,
+      locale: 'ru_BY',
       type: 'article',
       publishedTime: post.meta.date,
-      images: post.meta.cover ? [post.meta.cover] : undefined,
+      images: post.meta.cover ? [post.meta.cover] : [OG_IMAGE],
     },
   }
 }

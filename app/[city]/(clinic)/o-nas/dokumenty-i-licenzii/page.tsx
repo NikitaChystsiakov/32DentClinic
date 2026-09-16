@@ -10,28 +10,32 @@ import {
 } from '@/components/ui/breadcrumb'
 import { PlaceholderGallery } from '@/components/about/placeholder-gallery'
 import { getCityBySlug } from '@/config/cities'
+import { buildMetadata } from '@/lib/seo'
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const { city: citySlug } = await params
   const city = getCityBySlug(citySlug)
   if (!city) return {}
-  return {
+  return buildMetadata({
     title: 'Документы и лицензии',
-    description: `Документы и лицензии стоматологии ${city.brandName} в ${city.nameIn}.`,
-  }
+    description: `Лицензия на медицинскую деятельность, реквизиты и документы стоматологии ${city.brandName} в ${city.nameIn}.`,
+    path: `/${citySlug}/o-nas/dokumenty-i-licenzii/`,
+    city,
+  })
 }
 
-export default function DocumentsPage() {
+export default async function DocumentsPage({ params }: { params: Promise<{ city: string }> }) {
+  const { city: citySlug } = await params
   return (
     <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <Breadcrumb className="mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink render={<Link href={`/`}>Главная</Link>} />
+            <BreadcrumbLink render={<Link href={`/${citySlug}/`}>Главная</Link>} />
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink render={<Link href={`/o-nas/`}>О нас</Link>} />
+            <BreadcrumbLink render={<Link href={`/${citySlug}/o-nas/`}>О нас</Link>} />
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

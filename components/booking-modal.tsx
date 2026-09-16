@@ -78,7 +78,7 @@ export function BookingModal() {
   // Города без формы (hasBookingForm: false) в выборе не предлагаем: их
   // заявки принимают только по телефону, см. components/booking-button.tsx.
   const cityItems = React.useMemo(
-    () => cities.filter((c) => c.hasBookingForm).map((c) => ({ value: c.slug, label: `${c.name}, ${c.address}` })),
+    () => cities.filter((c) => c.hasBookingForm).map((c) => ({ value: c.slug, label: `${c.name}, ${c.address.replace(/^г\.\s*[^,]+,\s*/, '')}` })),
     []
   )
 

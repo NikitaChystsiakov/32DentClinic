@@ -24,6 +24,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
+import { ClinicVideoSection } from '@/components/home/clinic-video-section'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
@@ -232,6 +233,16 @@ export function AboutContent() {
         </SectionPanel>
       </Reveal>
 
+      {/* Тот же видеообзор, что на главной: на странице «О нас» ему самое
+          место по смыслу, а стоит он одну панель. Без ролика панели нет. */}
+      {content.clinicVideo && (
+        <Reveal delay={1}>
+          <SectionPanel variant="ice">
+            <ClinicVideoSection />
+          </SectionPanel>
+        </Reveal>
+      )}
+
       <Reveal delay={1}>
         <SectionPanel variant="lavender">
           <TextWithPhoto block={about.history} icon={HeartHandshake} side="right" />
@@ -334,9 +345,11 @@ export function AboutContent() {
                         <p className="text-xs leading-tight font-semibold text-white drop-shadow-sm">
                           {doctor.name}
                         </p>
-                        <p className="mt-0.5 text-[11px] leading-tight text-white/75">
-                          {doctor.experienceYears} лет практики
-                        </p>
+                        {doctor.experienceYears !== undefined && (
+                          <p className="mt-0.5 text-[11px] leading-tight text-white/75">
+                            {doctor.experienceYears} лет практики
+                          </p>
+                        )}
                       </div>
                     </Link>
                   ))}

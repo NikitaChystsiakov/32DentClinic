@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getCityBySlug } from '@/config/cities'
 import { getCityContent } from '@/content'
 import { AboutContent } from '@/components/about/about-content'
+import { JsonLd } from '@/components/seo/json-ld'
+import { breadcrumbJsonLd, buildMetadata, truncateDescription } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -16,10 +18,12 @@ export async function generateMetadata({
   const content = getCityContent(citySlug)
   if (!content) return {}
 
-  return {
+  return buildMetadata({
     title: `О клинике ${city.brandName} — стоматология в ${city.nameIn}`,
-    description: content.about.description,
-  }
+    description: truncateDescription(content.about.description),
+    path: `/${citySlug}/o-nas/`,
+    city,
+  })
 }
 
 export default async function AboutPage({
@@ -34,5 +38,10 @@ export default async function AboutPage({
   const content = getCityContent(citySlug)
   if (!content) notFound()
 
-  return <AboutContent />
+  return (
+    <>
+      <JsonLd data={breadcrumbJsonLd([{ name: 'Главная', path: `/${citySlug}/` }, { name: 'О клинике' }])} />
+      <AboutContent />
+    </>
+  )
 }

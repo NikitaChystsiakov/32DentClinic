@@ -16,6 +16,7 @@ import {
   Building2,
   Info,
   BookOpen,
+  Zap,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -47,6 +48,7 @@ export function useMobileMenu() {
 }
 
 const NAV_ICONS = {
+  implantaciya: Zap,
   uslugi: Stethoscope,
   vrachi: Users,
   ceny: Tag,
@@ -74,6 +76,8 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
   }, [pathname])
 
   const navLinks = [
+    // Имплантация — главное направление сети, поэтому первой (см. site-header.tsx).
+    { key: 'implantaciya', label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
     { key: 'uslugi', label: 'Услуги', href: `${prefix}/uslugi/` },
     { key: 'vrachi', label: 'Врачи', href: `${prefix}/vrachi/` },
     { key: 'ceny', label: 'Цены', href: `${prefix}/ceny/` },

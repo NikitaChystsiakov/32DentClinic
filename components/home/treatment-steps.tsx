@@ -21,7 +21,7 @@ import { useCity } from '@/lib/contexts/city-context'
 import { cn } from '@/lib/utils'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { getDoctorsForCity, type Doctor, type DoctorCategory } from '@/config/doctors'
-import type { TreatmentTimelineStep, TreatmentTimelineGapLabel } from '@/content/types'
+import type { TreatmentTimeline, TreatmentTimelineStep, TreatmentTimelineGapLabel } from '@/content/types'
 
 const iconMap: Record<string, LucideIcon> = {
   Stethoscope,
@@ -531,9 +531,25 @@ function GapLabelCard({ gap }: { gap: TreatmentTimelineGapLabel }) {
   )
 }
 
-export function TreatmentSteps() {
+interface TreatmentStepsProps {
+  /**
+   * Своя лента этапов вместо content.treatmentTimeline города — например,
+   * этапы имплантации на хабе раздела (config/implantation.ts).
+   */
+  timeline?: TreatmentTimeline
+  eyebrow?: string
+  title?: string
+  description?: string
+}
+
+export function TreatmentSteps({
+  timeline: timelineProp,
+  eyebrow = 'Путь пациента',
+  title = 'Этапы лечения',
+  description = 'От первого визита до улыбки мечты — каждый этап под контролем наших врачей.',
+}: TreatmentStepsProps = {}) {
   const { city, content } = useCity()
-  const timeline = content.treatmentTimeline
+  const timeline = timelineProp ?? content.treatmentTimeline
 
   if (!timeline?.steps?.length) return null
 
@@ -561,16 +577,14 @@ export function TreatmentSteps() {
       <div className="relative">
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-(--panel-eyebrow)">Путь пациента</span>
+            <span className="text-sm font-medium text-(--panel-eyebrow)">{eyebrow}</span>
             {/* Только этот h2 — белый, а не --panel-heading: у крупного bold-заголовка
                 контраст с indigo-фоном достаточный, в отличие от мелких заголовков
                 карточек ниже, которым нужен тёмный текст. */}
             <h2 className="font-heading text-3xl font-bold tracking-tight text-white [text-shadow:0_1px_10px_rgb(20_16_60/0.3)]">
-              Этапы лечения
+              {title}
             </h2>
-            <p className="max-w-xl text-pretty text-(--panel-body)">
-              От первого визита до улыбки мечты — каждый этап под контролем наших врачей.
-            </p>
+            <p className="max-w-xl text-pretty text-(--panel-body)">{description}</p>
           </div>
           <div className="sm:mt-8">
             <DoctorCluster doctors={clusterDoctors} />

@@ -1,39 +1,36 @@
-'use client'
-
-import { useCity } from '@/lib/contexts/city-context'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { getCityBySlug } from '@/config/cities'
 import { getServicesForCity } from '@/config/services'
-import { ServiceCard } from '@/components/services/service-card'
-import { ServicesHeroBanner } from '@/components/services/services-hero-banner'
-import { ServicesBottomCta } from '@/components/services/services-bottom-cta'
-import { Reveal } from '@/components/reveal'
+import { ServicesPageContent } from '@/components/services/services-page-content'
+import { buildMetadata, truncateDescription } from '@/lib/seo'
 
-export default function ServicesPage() {
-  const { city, content } = useCity()
-  const services = getServicesForCity(city.slug)
+// Страница серверная ради generateMetadata: раньше она была 'use client'
+// без метаданных и наследовала title главной города — в выдаче четыре
+// страницы города назывались одинаково. Разметка — в
+// components/services/services-page-content.tsx.
+export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
+  const { city: citySlug } = await params
+  const city = getCityBySlug(citySlug)
+  if (!city) return {}
 
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-      <Reveal delay={0}>
-        <div className="mb-10">
-          <ServicesHeroBanner
-            title={content.services.title}
-            description={content.services.description}
-            calculatorHref={`/${city.slug}/kalkulyator/`}
-          />
-        </div>
-      </Reveal>
+  const names = getServicesForCity(citySlug)
+    .map((s) => s.shortName.toLowerCase())
+    .join(', ')
 
-      <Reveal delay={1}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <ServiceCard key={service.slug} service={service} />
-          ))}
-        </div>
-      </Reveal>
+  return buildMetadata({
+    title: `Услуги стоматологии и цены в ${city.nameIn}`,
+    description: truncateDescription(
+      `Направления стоматологии ${city.brandName} в ${city.nameIn} с ценами «от»: ${names}. Точную стоимость врач называет после осмотра.`,
+      165
+    ),
+    path: `/${citySlug}/uslugi/`,
+    city,
+  })
+}
 
-      <Reveal delay={2}>
-        <ServicesBottomCta />
-      </Reveal>
-    </div>
-  )
+export default async function ServicesPage({ params }: { params: Promise<{ city: string }> }) {
+  const { city: citySlug } = await params
+  if (!getCityBySlug(citySlug)) notFound()
+  return <ServicesPageContent />
 }

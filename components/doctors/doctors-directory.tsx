@@ -39,9 +39,11 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
           </h3>
         </Link>
         <p className="text-sm text-muted-foreground">{doctor.specialization}</p>
-        <Badge variant="secondary" className="w-fit">
-          Стаж {doctor.experienceYears} лет
-        </Badge>
+        {doctor.experienceYears !== undefined && (
+          <Badge variant="secondary" className="w-fit">
+            Стаж {doctor.experienceYears} лет
+          </Badge>
+        )}
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"

@@ -3,8 +3,12 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function ServiceFinalCta({ slug }: { slug: string }) {
+  // Ссылка с префиксом города: раньше вела на корневой /uslugi/ — страницу
+  // Рогачёва, куда попадали и минчане.
+  const { city } = useCity()
 
   return (
     <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/40 p-8 text-center ring-1 ring-foreground/10 sm:p-12">
@@ -16,7 +20,7 @@ export function ServiceFinalCta({ slug }: { slug: string }) {
         >
           Записаться на консультацию
         </BookingButton>
-        <Button variant="outline" render={<Link href="/uslugi/" />} nativeButton={false}>
+        <Button variant="outline" render={<Link href={`/${city.slug}/uslugi/`} />} nativeButton={false}>
           Смотреть все услуги
         </Button>
       </div>

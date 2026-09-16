@@ -67,7 +67,9 @@ export function DoctorsCarouselSection({ citySlug }: DoctorsCarouselSectionProps
                 <div className="flex flex-1 flex-col gap-1 bg-card p-4">
                   <h3 className="font-heading text-base font-semibold text-foreground">{doctor.name}</h3>
                   <p className="text-sm text-muted-foreground">{doctor.specialization}</p>
-                  <p className="mt-1 text-sm font-medium text-primary">Стаж {doctor.experienceYears} лет</p>
+                  {doctor.experienceYears !== undefined && (
+                    <p className="mt-1 text-sm font-medium text-primary">Стаж {doctor.experienceYears} лет</p>
+                  )}
                 </div>
               </Link>
             </CarouselItem>

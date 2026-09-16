@@ -45,7 +45,7 @@ export function ConsentField({
           aria-invalid={showError ? true : undefined}
           onCheckedChange={(next) => onCheckedChange(next === true)}
         />
-        <FieldLabel htmlFor={id} className="font-normal leading-snug">
+        <FieldLabel htmlFor={id} className="block text-sm font-normal leading-snug">
           Даю согласие на обработку персональных данных, в том числе сведений о здоровье из заявки, на{' '}
           <a href={legalDocHref('soglasie', citySlug)} target="_blank" rel="noopener noreferrer" className={linkClass}>
             условиях согласия

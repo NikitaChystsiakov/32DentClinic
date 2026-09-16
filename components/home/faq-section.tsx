@@ -2,6 +2,8 @@
 
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { useCity } from '@/lib/contexts/city-context'
+import { JsonLd } from '@/components/seo/json-ld'
+import { faqJsonLd } from '@/lib/seo'
 
 interface FaqSectionProps {
   /**
@@ -20,6 +22,10 @@ export function FaqSection({ items, description }: FaqSectionProps = {}) {
 
   return (
     <>
+      {/* FAQPage для поисковика — те же вопросы, что видит человек ниже.
+          Блок клиентский, но рендерится в статику, так что схема попадает в
+          HTML. */}
+      {faq.length > 0 && <JsonLd data={faqJsonLd(faq)} />}
       {/* Периwinkle-фон достаточно светлый, поэтому у крупного заголовка есть
           мягкая тень — без неё белый текст на голом фоне читается хуже. */}
       <div className="mb-10 flex flex-col gap-2 [text-shadow:0_1px_10px_rgb(20_16_60/0.35)]">

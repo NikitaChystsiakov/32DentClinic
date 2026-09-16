@@ -15,10 +15,9 @@ import { ServiceFinalCta } from '@/components/services/service-final-cta'
 import { Reveal } from '@/components/reveal'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 
-// У «Имплантации» вместо фото сейчас стоит англоязычная медицинская схема —
-// не подходит для сайта; у «Лечения под микроскопом» своего фото пока нет.
-// Показываем заглушку, пока не заменят на реальное фото.
-const SERVICES_NEEDING_REAL_PHOTO = new Set(['implantaciya', 'lechenie-pod-mikroskopom'])
+// У «Лечения под седацией» своей обложки пока нет (стоит фото хирургии) —
+// показываем заглушку, пока не сгенерируют.
+const SERVICES_NEEDING_REAL_PHOTO = new Set(['lechenie-pod-sedaciej'])
 
 export function ServiceDetailContent({ slug }: { slug: string }) {
   const { city } = useCity()
@@ -53,7 +52,9 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
 
       {/* Hero */}
       <Reveal delay={0}>
-        <div className="mb-16 grid gap-8 md:grid-cols-2 md:items-center">
+        {/* Обложка — горизонтальная 4:3, в колонке справа и прижата к
+            верху: во всю высоту текстового блока она была слишком крупной. */}
+        <div className="mb-16 grid gap-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-start">
           <div className="flex flex-col gap-5">
             <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               {service.title} в {city.nameIn}
@@ -61,12 +62,12 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
             <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{service.intro}</p>
             <ServiceHeroCta slug={service.slug} />
           </div>
-          <div className="relative aspect-4/3 overflow-hidden rounded-2xl ring-1 ring-foreground/10">
+          <div className="relative mx-auto aspect-4/3 w-full max-w-md overflow-hidden rounded-2xl ring-1 ring-foreground/10 md:mx-0 md:ml-auto">
             {SERVICES_NEEDING_REAL_PHOTO.has(service.slug) ? (
               <PhotoPlaceholder
                 label={`Фото приёма или оборудования для услуги «${service.shortName}»`}
-                width={1200}
-                height={900}
+                width={1600}
+                height={1200}
                 className="h-full rounded-none border-0"
               />
             ) : (

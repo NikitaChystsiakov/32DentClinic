@@ -11,6 +11,7 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-xl bg-card ring-1 ring-silver/25 transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-xl hover:ring-primary/40">
+      {/* Обложки услуг — горизонтальные 4:3, 1600×1200 (docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md). */}
       <div className="relative aspect-4/3 w-full overflow-hidden">
         <Image
           src={service.image}
@@ -27,7 +28,7 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="line-clamp-2 text-sm text-muted-foreground">{service.cardDescription}</p>
-        <span className="font-medium text-foreground">от {service.priceFrom} BYN</span>
+        <span className="font-medium text-foreground">от {service.priceFrom.toLocaleString('ru-RU')} BYN</span>
         <div className="mt-auto flex flex-col gap-2 pt-1 sm:flex-row">
           <Button
             variant="outline"

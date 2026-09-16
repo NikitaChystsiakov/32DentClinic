@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -13,13 +14,48 @@ import {
   FlaskConical,
 } from 'lucide-react'
 import { cities } from '@/config/cities'
+import { getRealDoctorsCount } from '@/config/doctors'
 import { FEATURED_SERVICE_SLUG, getServicesForCity } from '@/config/services'
 import { siteConfig } from '@/lib/site-config'
+import { absoluteUrl, buildMetadata } from '@/lib/seo'
+import { JsonLd } from '@/components/seo/json-ld'
+
+// Title/description хаба — из корневого layout; здесь только canonical и
+// Open Graph для самой «/» (в layout canonical не задаём, см. app/layout.tsx).
+export const metadata: Metadata = buildMetadata({
+  title: 'Сеть стоматологий 32Дент — Минск, Рогачёв, Жлобин',
+  description:
+    '32Дент — сеть стоматологий в Беларуси. Имплантация, лечение и протезирование зубов в Минске, Рогачёве и Жлобине. Выберите город — увидите врачей и цены своей клиники.',
+  path: '/',
+  absoluteTitle: true,
+})
+
+// Схема сети для хаба: организация и три клиники как подразделения. Схема
+// каждой клиники подробно (адрес, часы, координаты) — в app/[city]/layout.tsx,
+// здесь на них только ссылки по @id.
+const NETWORK_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalOrganization',
+  name: siteConfig.name,
+  url: siteConfig.siteUrl,
+  logo: absoluteUrl('/images/logo.png'),
+  medicalSpecialty: 'Dentistry',
+  subOrganization: cities.map((city) => ({
+    '@type': 'Dentist',
+    '@id': `${absoluteUrl(`/${city.slug}/`)}#clinic`,
+    name: `${city.brandName} ${city.name}`,
+    url: absoluteUrl(`/${city.slug}/`),
+    telephone: city.phoneHref.replace(/^tel:/, ''),
+    address: { '@type': 'PostalAddress', addressLocality: city.name, addressCountry: 'BY' },
+  })),
+}
 
 // Цифры сети целиком, а не одного города: клиники, врачи, рейтинг.
 const NETWORK_STATS = [
   { icon: Building2, value: String(cities.length), label: 'клиники в Беларуси' },
-  { icon: Users, value: `${siteConfig.doctorsCount}+`, label: 'врачей в сети' },
+  // Считаем по конфигу врачей, а не по константе: список меняется, и «10+»
+  // из lib/site-config.ts успел устареть.
+  { icon: Users, value: String(getRealDoctorsCount()), label: 'врачей в сети' },
   { icon: ShieldCheck, value: 'до 15 лет', label: 'гарантия на протезы' },
 ]
 
@@ -38,11 +74,14 @@ const NETWORK_PROMISES = [
     description:
       'Панорамные, прицельные и 3D-снимки (КЛКТ) делают прямо в клинике: лечение начинается в тот же приём, без направлений.',
   },
+  // В Рогачёве лаборатория своя, в Минске — сертифицированный партнёр
+  // («Белая лаборатория», см. content/minsk.ts), поэтому «собственная» на
+  // уровне сети было бы неправдой.
   {
     icon: FlaskConical,
-    title: 'Собственная зуботехническая лаборатория',
+    title: 'Зуботехническая лаборатория рядом с врачом',
     description:
-      'Коронки и протезы изготавливаем сами, а не заказываем на стороне: короче сроки, а качество контролируется на каждом этапе.',
+      'Коронки и протезы делают в своей лаборатории в Рогачёве и у сертифицированного партнёра в Минске: врач и техник согласуют форму и оттенок напрямую.',
   },
   {
     icon: FolderHeart,
@@ -55,6 +94,7 @@ const NETWORK_PROMISES = [
 export default function Page() {
   return (
     <>
+      <JsonLd data={NETWORK_JSON_LD} />
       {/* Hero сети */}
       <section className="px-3 pt-6 pb-4 sm:px-4 lg:px-6">
         <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--hero-surface),var(--hero-surface-accent))] px-6 py-14 sm:px-10 sm:py-20 lg:px-16 lg:py-24">
@@ -75,11 +115,12 @@ export default function Page() {
               Сеть стоматологий в Беларуси
             </span>
             <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-balance text-white sm:text-5xl lg:text-6xl">
-              Одна стоматология — три города
+              Имплантация и лечение зубов в Минске, Рогачёве и Жлобине
             </h1>
             <p className="max-w-2xl text-pretty text-lg leading-relaxed text-white/90">
-              32Дент лечит, протезирует и восстанавливает зубы в Минске, Рогачёве и Жлобине. Выберите
-              город — увидите врачей, цены и свободное время именно вашей клиники.
+              Три клиники одной сети: имплантация — от одного зуба до All-on-4 и All-on-6 — плюс
+              лечение, протезирование и гигиена. Выберите город — увидите врачей и цены именно вашей
+              клиники.
             </p>
             <Link
               href="#city-cards"

@@ -3,14 +3,19 @@
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { BookingButton } from '@/components/booking-button'
-import { serviceCategories } from '@/lib/services-data'
+import { formatProcedurePrice, getServicesForCity, withProcedureGroups } from '@/lib/services-data'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function PriceAccordion() {
+  // Только направления, которые есть в этом городе (availableIn), — иначе
+  // в Рогачёве показывался бы, например, минский раздел седации.
+  const { city } = useCity()
+  const services = getServicesForCity(city.slug)
 
   return (
     <div className="rounded-2xl border border-silver/25 bg-card px-4 sm:px-6">
       <Accordion multiple>
-        {serviceCategories.map((service) => (
+        {services.map((service) => (
           <AccordionItem key={service.slug} value={service.slug}>
             {/* border-b-silver/25, а не border-silver/25: у триггера в базовом
                 стиле уже есть рамка со всех сторон (border-transparent), и общий
@@ -24,7 +29,7 @@ export function PriceAccordion() {
                   {service.shortName}
                 </span>
                 <span className="rounded-full bg-silver-muted px-2 py-0.5 text-xs font-medium text-muted-foreground ring-1 ring-silver/25">
-                  от {service.priceFrom} BYN
+                  от {service.priceFrom.toLocaleString('ru-RU')} BYN
                 </span>
               </span>
             </AccordionTrigger>
@@ -39,23 +44,34 @@ export function PriceAccordion() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {service.procedures.map((procedure) => (
-                      <TableRow key={procedure.name}>
-                        <TableCell className="whitespace-normal font-medium text-foreground">
-                          {procedure.name}
-                        </TableCell>
-                        <TableCell>от {procedure.priceFrom} BYN</TableCell>
-                        <TableCell>
-                          <BookingButton
-                            size="sm"
-                            className="bg-accent text-accent-foreground hover:bg-accent/90"
-                            options={{ service: service.slug }}
+                    {withProcedureGroups(service.procedures).map((row) =>
+                      row.type === 'group' ? (
+                        <TableRow key={`group-${row.group}`} className="hover:bg-transparent">
+                          <TableCell
+                            colSpan={3}
+                            className="pt-4 pb-1 text-xs font-semibold tracking-wide text-primary uppercase"
                           >
-                            Записаться
-                          </BookingButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            {row.group}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        <TableRow key={row.procedure.name}>
+                          <TableCell className="whitespace-normal font-medium text-foreground">
+                            {row.procedure.name}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">{formatProcedurePrice(row.procedure)}</TableCell>
+                          <TableCell>
+                            <BookingButton
+                              size="sm"
+                              className="bg-accent text-accent-foreground hover:bg-accent/90"
+                              options={{ service: service.slug }}
+                            >
+                              Записаться
+                            </BookingButton>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               </div>

@@ -13,8 +13,7 @@ const TRUST_POINTS = [
 ]
 
 interface ServicesHeroBannerProps {
-  /** SEO-заголовок страницы города. Идёт вторым, более мелким блоком h1 —
-   *  крупная строка выше это слоган, но ключевые слова остаются внутри h1. */
+  /** H1 страницы с ключевой фразой и городом: «Услуги и цены … в Минске». */
   title: string
   description: string
   /** Ссылка на калькулятор — с префиксом города или без него. */
@@ -46,12 +45,16 @@ export function ServicesHeroBanner({ title, description, calculatorHref }: Servi
           Услуги и цены
         </span>
 
-        <h1 className="flex flex-col gap-3">
-          <span className="font-heading text-3xl leading-[1.12] font-bold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
-            Здоровые зубы — без страха, боли и сюрпризов в цене
-          </span>
-          <span className="text-base font-medium text-white/80">{title}</span>
-        </h1>
+        {/* Слоган крупно, но не в h1: в заголовке остаётся только ключевая
+            фраза с городом. Раньше слоган был частью h1 и обещал «без боли» —
+            обещание результата, которое ст. 15 Закона «О рекламе» запрещает
+            (см. правила в шапке content/rogachev.ts). */}
+        <div className="flex flex-col gap-3">
+          <p className="font-heading text-3xl leading-[1.12] font-bold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
+            Понятный план, понятная цена, одна клиника на всё
+          </p>
+          <h1 className="text-base font-medium text-white/80">{title}</h1>
+        </div>
 
         <p className="max-w-2xl text-pretty leading-relaxed text-white/90">{description}</p>
 

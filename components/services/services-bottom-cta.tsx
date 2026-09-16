@@ -3,14 +3,17 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
+import { useCity } from '@/lib/contexts/city-context'
 
 export function ServicesBottomCta() {
+  // Калькулятор своего города, а не корневой /kalkulyator/ (рогачёвский).
+  const { city } = useCity()
 
   return (
     <div className="mt-16 flex flex-col items-center gap-4 rounded-2xl bg-muted/40 p-8 text-center ring-1 ring-foreground/10 sm:p-12">
       <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Не уверены, что нужно?</h2>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button variant="outline" render={<Link href="/kalkulyator/" />} nativeButton={false}>
+        <Button variant="outline" render={<Link href={`/${city.slug}/kalkulyator/`} />} nativeButton={false}>
           Пройти короткий тест
         </Button>
         <BookingButton className="bg-accent text-accent-foreground hover:bg-accent/90">
