@@ -25,8 +25,9 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="absolute inset-0">
+        {/* Фон — интерьер клиники города (config/cities.ts → photos.hero). */}
         <Image
-          src="/clinic/reception.jpg"
+          src={city.photos.hero}
           alt=""
           fill
           priority

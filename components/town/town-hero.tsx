@@ -20,11 +20,12 @@ export function TownHero({ town, content }: { town: NearbyTown; content: TownCon
 
   return (
     <section className="relative overflow-hidden border-b border-border">
-      {/* Фон — интерьер ресепшена сети (снят в Рогачёве), декоративный: под
-          градиентом он читается как «клиника 32Дент», а не как конкретный
-          адрес. Появится фото жлобинской клиники — заменить здесь. */}
+      {/* Фон — интерьер основной (первой по приоритету) клиники города,
+          декоративный: под градиентом он читается как «клиника 32Дент», а
+          не как конкретный адрес. Берётся из config/cities.ts → photos.hero,
+          так что фото жлобинской клиники появится здесь само. */}
       <div className="absolute inset-0">
-        <Image src="/clinic/reception.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
+        <Image src={clinics[0].city.photos.hero} alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-linear-to-r from-background via-background/90 to-background/45" />
         <div className="absolute inset-0 bg-background/40" />
       </div>

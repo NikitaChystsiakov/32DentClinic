@@ -6,18 +6,10 @@ import Image from 'next/image'
 import { ArrowRight, ChevronLeft, ChevronRight, X, Expand } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCity } from '@/lib/contexts/city-context'
+import type { ClinicPhoto } from '@/config/cities'
 
-const TILES = [
-  {
-    src: '/clinic/reception.jpg',
-    alt: 'Ресепшн клиники 32Дент',
-    className: 'col-span-2 row-span-2 aspect-square',
-  },
-  { src: '/clinic/office.jpg', alt: 'Лечебный кабинет 32Дент', className: 'aspect-square' },
-  { src: '/clinic/equipment.jpg', alt: 'Оборудование клиники 32Дент', className: 'aspect-square' },
-  { src: '/clinic/office2.jpg', alt: 'Холл клиники 32Дент', className: 'aspect-square' },
-  { src: '/clinic/laboratory.jpg', alt: 'Зуботехническая лаборатория 32Дент', className: 'aspect-square' },
-]
+// Фото берутся из city.photos.gallery (config/cities.ts): у каждого города
+// своя папка public/clinic/<slug>/. Первая плитка — крупная 2×2.
 
 /**
  * Просмотр фотографии во весь экран. Открывается кликом по плитке, закрывается
@@ -25,15 +17,17 @@ const TILES = [
  * тому же порядку, что и в сетке.
  */
 function Lightbox({
+  tiles,
   index,
   onClose,
   onStep,
 }: {
+  tiles: ClinicPhoto[]
   index: number
   onClose: () => void
   onStep: (delta: number) => void
 }) {
-  const tile = TILES[index]
+  const tile = tiles[index]
 
   React.useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -111,7 +105,7 @@ function Lightbox({
         />
       </div>
       <p className="max-w-2xl text-center text-sm text-white/85">
-        {tile.alt} · {index + 1} из {TILES.length}
+        {tile.alt} · {index + 1} из {tiles.length}
       </p>
     </div>
   )
@@ -119,14 +113,18 @@ function Lightbox({
 
 export function ClinicGallerySection() {
   const { city } = useCity()
+  const tiles = city.photos.gallery
   const [openIndex, setOpenIndex] = React.useState<number | null>(null)
 
   const close = React.useCallback(() => setOpenIndex(null), [])
-  const step = React.useCallback((delta: number) => {
-    setOpenIndex((current) =>
-      current === null ? current : (current + delta + TILES.length) % TILES.length
-    )
-  }, [])
+  const step = React.useCallback(
+    (delta: number) => {
+      setOpenIndex((current) =>
+        current === null ? current : (current + delta + tiles.length) % tiles.length
+      )
+    },
+    [tiles.length]
+  )
 
   return (
     <>
@@ -155,13 +153,13 @@ export function ClinicGallerySection() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {TILES.map((tile, index) => (
+        {tiles.map((tile, index) => (
           <button
             key={tile.src}
             type="button"
             aria-label={`Открыть фото: ${tile.alt}`}
             onClick={() => setOpenIndex(index)}
-            className={`group relative overflow-hidden rounded-xl ring-1 ring-primary/15 transition-shadow duration-300 hover:shadow-lg hover:ring-primary/40 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${tile.className}`}
+            className={`group relative overflow-hidden rounded-xl ring-1 ring-primary/15 transition-shadow duration-300 hover:shadow-lg hover:ring-primary/40 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${index === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-square'}`}
           >
             <Image
               src={tile.src}
@@ -179,7 +177,7 @@ export function ClinicGallerySection() {
         ))}
       </div>
 
-      {openIndex !== null && <Lightbox index={openIndex} onClose={close} onStep={step} />}
+      {openIndex !== null && <Lightbox tiles={tiles} index={openIndex} onClose={close} onStep={step} />}
     </>
   )
 }

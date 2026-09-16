@@ -20,6 +20,8 @@ out/
 public/api/config.php
 assets/sheets/
 assets/doctors/
+# Исходники фото клиник (скрины из Инсты и т.п.) — в public попадают только отобранные
+assets/clinic/
 
 # Кеш инкрементальной проверки типов (tsc)
 tsconfig.tsbuildinfo

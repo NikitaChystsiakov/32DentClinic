@@ -36,6 +36,29 @@ export interface CityLegal {
   }
 }
 
+/** Одно фото интерьера: путь в public/ и подпись для alt (с названием клиники). */
+export interface ClinicPhoto {
+  src: string
+  alt: string
+}
+
+/**
+ * Фотографии клиники города. Лежат в public/clinic/<slug>/ — у каждого
+ * города своя папка, чтобы интерьер одной клиники не выдавался за другую.
+ * Пока у города нет своих снимков, подставляется набор Рогачёва
+ * (rogachevPhotos ниже) — это временно, см. docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md.
+ */
+export interface CityPhotos {
+  /** Фон первого экрана главной города. Декоративный, лежит под градиентом. */
+  hero: string
+  /**
+   * Плитки галереи «Территория 32Дент» на главной. Первая — крупная 2×2,
+   * остальные по одной; сетка из 4 колонок, так что ровно заполняют её
+   * 1 + 4 фото.
+   */
+  gallery: ClinicPhoto[]
+}
+
 export interface City {
   slug: string
   name: string
@@ -51,7 +74,9 @@ export interface City {
   phoneHref: string
   address: string
   coordinates: { lat: number; lng: number }
+  /** Обложка карточки города на хабе (главная сети). */
   image: string
+  photos: CityPhotos
   /**
    * Короткие «плюшки» клиники. Сейчас нигде не выводятся: на хабе вместо
    * них — список услуг города (config/services.ts, availableIn). Оставлены
@@ -70,6 +95,23 @@ export interface City {
   legal: CityLegal
 }
 
+/**
+ * Единственные реальные фото интерьера, которые есть у сети, — сняты в
+ * Рогачёве. Минск и Жлобин берут их же, пока клиника не пришлёт свои:
+ * так уже было до раскладки по папкам, менять на этом этапе не стали.
+ * Для Минска подпись «лаборатория» неточна — там лаборатория партнёрская.
+ */
+const rogachevPhotos: CityPhotos = {
+  hero: '/clinic/rogachev/reception.jpg',
+  gallery: [
+    { src: '/clinic/rogachev/reception.jpg', alt: 'Ресепшн клиники 32Дент' },
+    { src: '/clinic/rogachev/office.jpg', alt: 'Лечебный кабинет 32Дент' },
+    { src: '/clinic/rogachev/equipment.jpg', alt: 'Оборудование клиники 32Дент' },
+    { src: '/clinic/rogachev/office2.jpg', alt: 'Холл клиники 32Дент' },
+    { src: '/clinic/rogachev/laboratory.jpg', alt: 'Зуботехническая лаборатория 32Дент' },
+  ],
+}
+
 export const cities: City[] = [
   {
     slug: 'minsk',
@@ -80,7 +122,10 @@ export const cities: City[] = [
     phoneHref: 'tel:+375293233388', 
     address: 'г. Минск, Пр. Победителей, 41', 
     coordinates: { lat: 53.914870, lng: 27.535996 }, 
-    image: '/clinic/minskMain.webp',
+    image: '/clinic/minsk/main.webp',
+    // Своих фото интерьера пока нет (присланные скрины из Instagram в
+    // assets/clinic/minsk-insta для сайта не годятся) — временно Рогачёв.
+    photos: rogachevPhotos,
     hasBookingForm: true,
     featureTags: ['Хирургический центр', 'All-on-4 / All-on-6', 'Трансфер'],
     seoTitle: 'Стоматология 32Дент+ Минск — лечение и имплантация',
@@ -115,7 +160,8 @@ export const cities: City[] = [
     // Координаты клиники (ул. Ленина, 60) — с карточки 32Дент на 103.by,
     // сверено 16.09.2026. Раньше стояло округлённое значение центра города.
     coordinates: { lat: 53.0813, lng: 30.0519 },
-    image: '/clinic/reception.jpg',
+    image: '/clinic/rogachev/reception.jpg',
+    photos: rogachevPhotos,
     // Рогачёв принимает записи только по телефону: администраторы не
     // обрабатывают заявки с сайта, на это жаловались пациенты, и 15.09.2026
     // заказчик попросил закрыть форму. Кнопки «Записаться» на страницах
@@ -155,7 +201,10 @@ export const cities: City[] = [
     // (ул. Урицкого, 27) и в 300 м от автовокзала (ул. Урицкого, 68): на
     // это опирается страница /svetlogorsk.
     coordinates: { lat: 52.8919, lng: 30.0358 },
+    // Фото жлобинской клиники нет — на хабе обложка услуги, в hero и
+    // галерее временно Рогачёв.
     image: '/images/services/terapiya.webp',
+    photos: rogachevPhotos,
     hasBookingForm: true,
     featureTags: ['Терапия и Эстетика'],
     seoTitle: 'Стоматология 32Дент Жлобин — стоматологическая помощь',
