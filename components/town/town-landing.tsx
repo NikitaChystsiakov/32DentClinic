@@ -4,39 +4,46 @@ import { DoctorsCarouselSection } from '@/components/home/doctors-carousel-secti
 import { FaqSection } from '@/components/home/faq-section'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
+import { JsonLd } from '@/components/seo/json-ld'
 import { TownFeaturedServices } from '@/components/town/town-featured-services'
 import { TownHero } from '@/components/town/town-hero'
 import { TownIntro } from '@/components/town/town-intro'
 import { TownReasons } from '@/components/town/town-reasons'
 import { TownRoute } from '@/components/town/town-route'
+import { TownTripPlan } from '@/components/town/town-trip-plan'
 import { getPrimaryClinicSlug, type NearbyTown } from '@/config/nearby-towns'
+import { getCityContent } from '@/content'
 import type { TownContent } from '@/content/towns'
-import { getClinicForService } from '@/lib/town-clinics'
+import { breadcrumbJsonLd, clinicJsonLd } from '@/lib/seo'
+import { getClinicForService, getTownClinics } from '@/lib/town-clinics'
 
 /*
  * Посадочная страница «соседнего» города (см. config/nearby-towns.ts).
- * Своё здесь — hero, «где принимаем», услуги, причины, дорога и FAQ; врачи,
- * примеры работ и контактный блок переиспользуются с главной клиники.
- * В CityProvider на этой странице — основная клиника города, поэтому
- * ContactCtaSection и форма записи показывают её адрес и телефон.
+ * Своё здесь — hero, «где принимаем», услуги, причины, план поездки, дорога
+ * и FAQ; врачи, примеры работ и контактный блок переиспользуются с главной
+ * клиники. В CityProvider на этой странице — основная клиника города,
+ * поэтому ContactCtaSection и форма записи показывают её адрес и телефон.
+ *
+ * Структурированные данные: BreadcrumbList (хаб → город) и Dentist для
+ * каждой клиники, куда ведёт страница. Схему основной клиники уже выводит
+ * app/[city]/layout.tsx, здесь — остальные, чтобы у поисковика были адрес,
+ * телефон и часы всех клиник, названных на странице. FAQPage добавляет сам
+ * FaqSection — второй раз её выводить нельзя, дубль схемы Google считает
+ * ошибкой разметки.
  */
 export function TownLanding({ town, content }: { town: NearbyTown; content: TownContent }) {
   // Врачей показываем из той клиники, где делают главную услугу страницы
-  // (первую в featuredServices): для Светлогорска это имплантация в Рогачёве,
-  // а не два врача ближайшего Жлобина.
+  // (первую в featuredServices) — как правило, это и есть основная клиника.
   const leadService = content.featuredServices.items[0]
-  const doctorsCitySlug =
-    (leadService && getClinicForService(town, leadService.slug)?.slug) ?? getPrimaryClinicSlug(town)
+  const primaryClinicSlug = getPrimaryClinicSlug(town)
+  const doctorsCitySlug = (leadService && getClinicForService(town, leadService.slug)?.slug) ?? primaryClinicSlug
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: content.faq.items.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
-    })),
-  }
+  const secondaryClinicSchemas = getTownClinics(town)
+    .filter((clinic) => clinic.slug !== primaryClinicSlug)
+    .flatMap((clinic) => {
+      const cityContent = getCityContent(clinic.slug)
+      return cityContent ? [clinicJsonLd(clinic.city, cityContent.contacts.hours)] : []
+    })
 
   return (
     <div className="bg-(--page-surface)">
@@ -63,13 +70,23 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
           <DoctorsCarouselSection citySlug={doctorsCitySlug} />
         </SectionPanel>
       </Reveal>
+      {/* План «за один день» — перед маршрутом: сначала человек видит, что
+          поездка реальна без ночёвки, потом — как именно ехать. Секции нет,
+          если в content.tripPlan пусто. */}
+      {content.tripPlan && (
+        <Reveal delay={1}>
+          <SectionPanel variant="mint">
+            <TownTripPlan content={content} />
+          </SectionPanel>
+        </Reveal>
+      )}
       <Reveal delay={1}>
-        <SectionPanel variant="mint">
+        <SectionPanel variant={content.tripPlan ? 'lavender' : 'mint'}>
           <TownRoute town={town} content={content} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="lavender">
+        <SectionPanel variant="sky">
           <BeforeAfterTeaserSection />
         </SectionPanel>
       </Reveal>
@@ -83,11 +100,16 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
           <ContactCtaSection />
         </SectionPanel>
       </Reveal>
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
+
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Сеть стоматологий 32Дент', path: '/' },
+          { name: `Пациентам из ${town.nameFrom}` },
+        ])}
       />
+      {secondaryClinicSchemas.map((schema) => (
+        <JsonLd key={schema['@id']} data={schema} />
+      ))}
     </div>
   )
 }

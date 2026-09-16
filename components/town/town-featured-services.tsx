@@ -56,7 +56,7 @@ export function TownFeaturedServices({ town, content }: { town: NearbyTown; cont
                 <h3 className="min-w-0 font-heading text-lg leading-snug font-bold text-balance text-foreground">
                   {service.shortName}
                 </h3>
-                <span className="shrink-0 text-sm font-semibold text-primary">от {service.priceFrom} р.</span>
+                <span className="shrink-0 text-sm font-semibold text-primary">от {service.priceFrom.toLocaleString('ru-RU')} р.</span>
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground">{note}</p>
               <span className="mt-auto inline-flex w-fit items-center gap-1 pt-2 text-sm font-medium text-primary transition-[gap] duration-300 group-hover:gap-2">

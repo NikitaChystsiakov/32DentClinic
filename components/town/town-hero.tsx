@@ -20,6 +20,9 @@ export function TownHero({ town, content }: { town: NearbyTown; content: TownCon
 
   return (
     <section className="relative overflow-hidden border-b border-border">
+      {/* Фон — интерьер ресепшена сети (снят в Рогачёве), декоративный: под
+          градиентом он читается как «клиника 32Дент», а не как конкретный
+          адрес. Появится фото жлобинской клиники — заменить здесь. */}
       <div className="absolute inset-0">
         <Image src="/clinic/reception.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-linear-to-r from-background via-background/90 to-background/45" />

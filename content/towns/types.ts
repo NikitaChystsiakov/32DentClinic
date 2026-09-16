@@ -34,13 +34,27 @@ export interface TownRoute {
   parking?: string
 }
 
+/** Один шаг плана поездки «за один день»: время, что происходит. */
+export interface TownTripStep {
+  /** «6:20», «~7:05», «после 17:00» — как удобно читать, не парсится. */
+  time: string
+  title: string
+  description: string
+}
+
 export interface TownFaqItem {
   question: string
   answer: string
 }
 
 export interface TownContent {
+  /**
+   * Title страницы целиком, вместе с брендом: шаблон « | 32Дент» к нему
+   * не добавляется (см. generateMetadata в app/[city]/layout.tsx).
+   * Держите в 55–60 знаках, иначе поисковик обрежет.
+   */
   metaTitle: string
+  /** До ~158 знаков: длиннее Google обрезает многоточием. */
   metaDescription: string
 
   hero: {
@@ -68,6 +82,18 @@ export interface TownContent {
     title: string
     subtitle: string
     items: TownFeaturedService[]
+  }
+
+  /**
+   * Поездка за один день по шагам — необязательный блок. Расписания
+   * транспорта меняются, поэтому время пишите «около», а в note давайте
+   * ссылку, где сверить (например, pass.rw.by).
+   */
+  tripPlan?: {
+    title: string
+    subtitle: string
+    steps: TownTripStep[]
+    note?: string
   }
 
   route: {

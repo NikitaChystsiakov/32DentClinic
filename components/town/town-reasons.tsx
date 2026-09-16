@@ -1,10 +1,14 @@
 import {
   BadgePercent,
   CalendarClock,
+  Clock,
   Factory,
   FileCheck,
+  Microscope,
   ShieldCheck,
   Sparkles,
+  TrainFront,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -15,10 +19,14 @@ import type { TownContent } from '@/content/towns'
 const iconMap: Record<string, LucideIcon> = {
   BadgePercent,
   CalendarClock,
+  Clock,
   Factory,
   FileCheck,
+  Microscope,
   ShieldCheck,
   Sparkles,
+  TrainFront,
+  Users,
 }
 
 export function TownReasons({ content }: { content: TownContent }) {

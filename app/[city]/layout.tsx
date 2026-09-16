@@ -2,15 +2,11 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import type { City } from '@/config/cities'
 import { getCityBySlug, VALID_CITY_SLUGS } from '@/config/cities'
-import {
-  getNearbyTownBySlug,
-  getNearbyTownsForCity,
-  getPrimaryClinicSlug,
-  NEARBY_TOWN_SLUGS,
-} from '@/config/nearby-towns'
+import { getNearbyTownBySlug, getPrimaryClinicSlug, NEARBY_TOWN_SLUGS } from '@/config/nearby-towns'
 import { getCityContent } from '@/content'
 import { getTownContent } from '@/content/towns'
 import { CityProvider } from '@/lib/contexts/city-context'
+import { absoluteUrl, clinicJsonLd, OG_IMAGE } from '@/lib/seo'
 import { siteConfig } from '@/lib/site-config'
 
 /*
@@ -45,13 +41,23 @@ export async function generateMetadata({
   const townContent = town ? getTownContent(slug) : undefined
   if (town && townContent) {
     return {
-      title: {
-        default: townContent.metaTitle,
-        template: `%s | 32Дент`,
-      },
+      // absolute — metaTitle посадочной уже содержит бренд («… | 32Дент»);
+      // с `default` корневой шаблон дописывал бренд второй раз, и title
+      // раздувался до 85 знаков. Подстраниц у соседнего города нет, поэтому
+      // template не нужен.
+      title: { absolute: townContent.metaTitle },
       description: townContent.metaDescription,
       robots: { index: true, follow: true },
-      alternates: { canonical: `${siteConfig.siteUrl}/${slug}` },
+      alternates: { canonical: absoluteUrl(`/${slug}/`) },
+      openGraph: {
+        title: townContent.metaTitle,
+        description: townContent.metaDescription,
+        url: absoluteUrl(`/${slug}/`),
+        siteName: siteConfig.name,
+        locale: 'ru_BY',
+        type: 'website',
+        images: [OG_IMAGE],
+      },
     }
   }
 
@@ -70,42 +76,29 @@ export async function generateMetadata({
       index: true,
       follow: true,
     },
+    // canonical здесь — только для главной города (/minsk/): у неё нет
+    // своего generateMetadata. Всё, что задано в layout, Next наследует на
+    // подстраницы, поэтому КАЖДАЯ подстраница обязана переопределять его
+    // через buildMetadata() из lib/seo.ts — иначе /minsk/uslugi/… снова
+    // станет для поисковика «копией» /minsk/. Адрес со слешем на конце,
+    // как отдаёт хостинг (trailingSlash).
     alternates: {
-      canonical: `${siteConfig.siteUrl}/${slug}`,
+      canonical: absoluteUrl(`/${slug}/`),
+    },
+    openGraph: {
+      title: city.seoTitle,
+      description: city.seoDescription,
+      url: absoluteUrl(`/${slug}/`),
+      siteName: siteConfig.name,
+      locale: 'ru_BY',
+      type: 'website',
+      images: [OG_IMAGE],
     },
   }
 }
 
-// areaServed — соседние города, откуда клиника принимает пациентов. Так
-// поисковик понимает, что жлобинская клиника относится и к запросам из
-// Светлогорска, без выдуманного адреса в самом Светлогорске.
-const generateJsonLd = (city: City) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Dentist',
-  name: city.name,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: city.address,
-    addressLocality: city.name,
-    addressCountry: 'BY',
-  },
-  telephone: city.phone,
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: city.coordinates.lat,
-    longitude: city.coordinates.lng,
-  },
-  openingHours: 'Mo-Sa 08:00-19:00',
-  areaServed: [
-    { '@type': 'City', name: city.name },
-    ...getNearbyTownsForCity(city.slug).map((t) => ({
-      '@type': 'City',
-      name: t.name,
-      containedInPlace: { '@type': 'AdministrativeArea', name: t.region },
-    })),
-  ],
-})
-
+// Схема клиники (schema.org/Dentist) — общая с посадочными соседних
+// городов, см. clinicJsonLd в lib/seo.ts. Часы — из content.contacts.hours.
 export default async function CityLayout({
   children,
   params,
@@ -126,7 +119,7 @@ export default async function CityLayout({
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(generateJsonLd(city)).replace(/</g, '\\u003c') }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(clinicJsonLd(city, content.contacts.hours)).replace(/</g, '\\u003c') }}
       />
     </CityProvider>
   )
