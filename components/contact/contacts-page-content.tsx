@@ -6,7 +6,7 @@ import { ViberIcon } from '@/components/icons/viber-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
 import { LazyMap } from '@/components/lazy-map'
-import { siteConfig } from '@/lib/site-config'
+import { telegramHref, viberChatHref } from '@/lib/messengers'
 
 // Разметка страницы /<город>/kontakty/; метаданные задаёт серверная
 // app/[city]/(clinic)/kontakty/page.tsx.
@@ -54,13 +54,13 @@ export function ContactsPageContent() {
               </a>
               <div className="mt-1 flex items-center gap-4">
                 <a
-                  href={`https://viber.com/${city.phone.replace(/[^0-9]/g, '')}`}
+                  href={viberChatHref(city)}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                 >
                   <ViberIcon className="size-4" /> Viber
                 </a>
                 <a
-                  href={siteConfig.telegramHref}
+                  href={telegramHref()}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                 >
                   <Send className="size-4" /> Telegram

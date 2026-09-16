@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Calculator, ArrowRight, Percent } from 'lucide-react'
+import { Calculator, ArrowRight, ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCity } from '@/lib/contexts/city-context'
 
@@ -18,12 +18,15 @@ export function CalculatorTeaserSection() {
             Узнайте предварительную стоимость лечения
           </h2>
           <p className="max-w-lg text-pretty text-(--panel-body)">
-            Ответьте на несколько вопросов о ваших зубах — получите план и ориентировочную цену, а заодно
-            промокод на скидку при записи.
+            Ответьте на несколько вопросов о ваших зубах — подскажем направление лечения и ориентировочную
+            стоимость. Точный план и цену врач назовёт после осмотра.
           </p>
+          {/* Промокода и «скидки при записи» здесь больше нет: код никогда не
+              выдавался, а обещание скидки, которой нет, — недостоверная
+              информация об услуге. */}
           <div className="flex items-center gap-2 text-sm text-(--panel-body)">
-            <Percent className="size-4" />
-            <span>Промокод действует 7 дней после расчёта</span>
+            <ClipboardList className="size-4" />
+            <span>Три-четыре вопроса, около минуты</span>
           </div>
         </div>
         <Button

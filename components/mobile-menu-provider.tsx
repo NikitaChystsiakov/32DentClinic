@@ -25,7 +25,7 @@ import { ViberIcon } from '@/components/icons/viber-icon'
 import { BookingButton } from '@/components/booking-button'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { cities } from '@/config/cities'
-import { siteConfig } from '@/lib/site-config'
+import { telegramHref, viberChatHref } from '@/lib/messengers'
 
 interface MobileMenuContextValue {
   openMenu: () => void
@@ -75,7 +75,11 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
     setIsOpen(false)
   }, [pathname])
 
-  const navLinks = [
+  // Городские разделы — только когда город известен. На страницах сети
+  // (/blog, /dokumenty, 404) раньше ссылки шли без города на /uslugi/ и т. п.,
+  // а .htaccess уводил их в Рогачёв; теперь там только блог, а город человек
+  // выбирает плитками выше.
+  const cityLinks = [
     // Имплантация — главное направление сети, поэтому первой (см. site-header.tsx).
     { key: 'implantaciya', label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
     { key: 'uslugi', label: 'Услуги', href: `${prefix}/uslugi/` },
@@ -84,16 +88,20 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
     { key: 'primery-rabot', label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
     { key: 'o-nas', label: 'О нас', href: `${prefix}/o-nas/` },
     { key: 'kontakty', label: 'Контакты', href: `${prefix}/kontakty/` },
-    // Блог общий для сети, поэтому без префикса города.
-    { key: 'blog', label: 'Блог', href: '/blog/' },
   ] as const
+  // Блог общий для сети, поэтому без префикса города.
+  const blogLink = { key: 'blog', label: 'Блог', href: '/blog/' } as const
+  const navLinks: readonly (typeof cityLinks[number] | typeof blogLink)[] = citySlug
+    ? [...cityLinks, blogLink]
+    : [blogLink]
 
-  const phone = currentCity?.phone ?? siteConfig.phoneDisplay
-  const phoneHref = currentCity?.phoneHref ?? siteConfig.phoneHref
-  const address = currentCity?.address ?? siteConfig.address
-  const viberHref = currentCity
-    ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}`
-    : siteConfig.viberHref
+  // Контакты — только выбранной клиники: подставлять сюда рогачёвский номер
+  // на страницах сети было бы обманом для минчан.
+  const phone = currentCity?.phone
+  const phoneHref = currentCity?.phoneHref
+  const address = currentCity?.address
+  const viberHref = currentCity ? viberChatHref(currentCity) : null
+  const telegram = telegramHref()
 
   return (
     <MobileMenuContext.Provider value={value}>
@@ -171,37 +179,43 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
                 Связаться
               </p>
               <div className="flex flex-col gap-2">
-                <a
-                  href={phoneHref}
-                  className="flex min-h-13 items-center gap-3 rounded-2xl bg-card px-4 ring-1 ring-silver/25 active:bg-muted"
-                >
-                  <Phone className="size-5 shrink-0 text-primary" />
-                  {/* whitespace-nowrap: длинный номер переносился на две строки
-                      и «+375 (29) 323-33-» / «88» читалось как ошибка вёрстки. */}
-                  <span className="font-heading text-base font-bold whitespace-nowrap text-foreground">
-                    {phone}
-                  </span>
-                </a>
-                <div className="grid grid-cols-2 gap-2">
+                {phoneHref && (
                   <a
-                    href={viberHref}
-                    className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-card text-sm font-medium text-foreground ring-1 ring-silver/25 active:bg-muted"
+                    href={phoneHref}
+                    className="flex min-h-13 items-center gap-3 rounded-2xl bg-card px-4 ring-1 ring-silver/25 active:bg-muted"
                   >
-                    <ViberIcon className="size-4 text-primary" />
-                    Viber
+                    <Phone className="size-5 shrink-0 text-primary" />
+                    {/* whitespace-nowrap: длинный номер переносился на две строки
+                        и «+375 (29) 323-33-» / «88» читалось как ошибка вёрстки. */}
+                    <span className="font-heading text-base font-bold whitespace-nowrap text-foreground">
+                      {phone}
+                    </span>
                   </a>
+                )}
+                <div className={cn('grid gap-2', viberHref ? 'grid-cols-2' : 'grid-cols-1')}>
+                  {viberHref && (
+                    <a
+                      href={viberHref}
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-card text-sm font-medium text-foreground ring-1 ring-silver/25 active:bg-muted"
+                    >
+                      <ViberIcon className="size-4 text-primary" />
+                      Viber
+                    </a>
+                  )}
                   <a
-                    href={siteConfig.telegramHref}
+                    href={telegram}
                     className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-card text-sm font-medium text-foreground ring-1 ring-silver/25 active:bg-muted"
                   >
                     <Send className="size-4 text-primary" />
                     Telegram
                   </a>
                 </div>
-                <p className="flex items-start gap-2 px-1 text-sm text-muted-foreground">
-                  <MapPin className="mt-0.5 size-4 shrink-0" />
-                  {address}
-                </p>
+                {address && (
+                  <p className="flex items-start gap-2 px-1 text-sm text-muted-foreground">
+                    <MapPin className="mt-0.5 size-4 shrink-0" />
+                    {address}
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -3,13 +3,12 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, Tag, Percent, MapPin, CalendarCheck, Phone } from 'lucide-react'
+import { Menu, Tag, Stethoscope, MapPin, CalendarCheck, Phone, Building2, BookOpen } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useBookingAction } from '@/components/booking-button'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
-import { getCityContent } from '@/content'
 
 type IconType = React.ComponentType<{ className?: string }>
 
@@ -76,8 +75,10 @@ export function MobileBottomNav() {
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
 
-  const promo = citySlug ? getCityContent(citySlug)?.promo : undefined
+  // Вкладки «Акции» больше нет: акций у клиник нет, а слово «акция» —
+  // рекламное (см. lib/site-config.ts). Вместо неё — «Услуги».
   const pricesHref = `${prefix}/ceny/`
+  const servicesHref = `${prefix}/uslugi/`
   const contactsHref = `${prefix}/kontakty/`
 
   function isActive(href: string) {
@@ -90,11 +91,26 @@ export function MobileBottomNav() {
       aria-label="Мобильная навигация"
     >
       <div className="relative mx-auto grid h-16 max-w-md grid-cols-[1fr_1fr_4.5rem_1fr_1fr] items-center px-2">
-        <TabLink href={pricesHref} label="Цены" icon={Tag} active={isActive(pricesHref)} />
-        <TabLink href={promo?.href ?? pricesHref} label="Акции" icon={Percent} />
+        {/* На страницах сети (/, /blog, документы) городских разделов нет —
+            раньше «Цены» и «Контакты» без города редиректились в Рогачёв. */}
+        {citySlug ? (
+          <>
+            <TabLink href={pricesHref} label="Цены" icon={Tag} active={isActive(pricesHref)} />
+            <TabLink href={servicesHref} label="Услуги" icon={Stethoscope} active={isActive(servicesHref)} />
+          </>
+        ) : (
+          <>
+            <TabLink href="/#city-cards" label="Города" icon={Building2} />
+            <TabLink href="/blog/" label="Блог" icon={BookOpen} active={isActive('/blog/')} />
+          </>
+        )}
         <span aria-hidden />
         <BookingTab />
-        <TabLink href={contactsHref} label="Контакты" icon={MapPin} active={isActive(contactsHref)} />
+        {citySlug ? (
+          <TabLink href={contactsHref} label="Контакты" icon={MapPin} active={isActive(contactsHref)} />
+        ) : (
+          <TabLink href="/" label="Главная" icon={MapPin} active={pathname === '/'} />
+        )}
 
         <button
           type="button"

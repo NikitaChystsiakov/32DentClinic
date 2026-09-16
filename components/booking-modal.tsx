@@ -68,12 +68,17 @@ export function BookingModal() {
     () => [...serviceSelectOptions, { value: 'ne-znayu', label: 'Не знаю, нужна консультация' }],
     []
   )
+  // Врачи — только выбранной клиники: раньше список был общий на сеть, и
+  // минчанин мог записаться к жлобинскому хирургу. Пока город не выбран
+  // (форма на страницах сети) — только «Без предпочтений».
   const doctorItems = React.useMemo(
     () => [
-      ...doctors.map((d) => ({ value: d.slug, label: d.name })),
+      ...doctors
+        .filter((d) => !d.isPlaceholder && selectedCity !== undefined && d.cities.includes(selectedCity))
+        .map((d) => ({ value: d.slug, label: d.name })),
       { value: 'bez-predpochteniy', label: 'Без предпочтений' },
     ],
-    []
+    [selectedCity]
   )
   // Города без формы (hasBookingForm: false) в выборе не предлагаем: их
   // заявки принимают только по телефону, см. components/booking-button.tsx.
@@ -94,6 +99,13 @@ export function BookingModal() {
 
   // Телефон для «позвоните напрямую» в сообщении об ошибке — выбранной
   // клиники, а не первой попавшейся.
+  // Смена города сбрасывает врача, если он там не принимает.
+  React.useEffect(() => {
+    if (selectedDoctor && !doctorItems.some((d) => d.value === selectedDoctor)) {
+      setSelectedDoctor(undefined)
+    }
+  }, [doctorItems, selectedDoctor])
+
   const errorPhone = cities.find((c) => c.slug === (selectedCity ?? currentCity?.slug))
 
   const nameError = name.trim().length === 0

@@ -33,8 +33,16 @@ export async function generateMetadata({
   return buildMetadata({
     title: `${doctor.name} — ${shortRole(doctor.specialization)} в ${city.nameIn} | ${city.brandName}`,
     absoluteTitle: true,
+    // Стаж — только если он известен: у пяти врачей без experienceYears в
+    // выдаче было «Стаж undefined лет».
     description: truncateDescription(
-      `${doctor.bio} Стаж ${doctor.experienceYears} лет. Стоматология ${city.brandName} в ${city.nameIn}, запись к врачу онлайн.`
+      [
+        doctor.bio,
+        doctor.experienceYears !== undefined ? `Стаж ${doctor.experienceYears} лет.` : '',
+        `Стоматология ${city.brandName} в ${city.nameIn}, запись к врачу онлайн.`,
+      ]
+        .filter(Boolean)
+        .join(' ')
     ),
     path: `/${citySlug}/vrachi/${slug}/`,
     city,

@@ -12,7 +12,6 @@ import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-
 import { WhyUsSection } from '@/components/home/why-us-section'
 import { ClinicGallerySection } from '@/components/home/clinic-gallery-section'
 import { ClinicVideoSection } from '@/components/home/clinic-video-section'
-import { ReviewsSection } from '@/components/home/reviews-section'
 import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
@@ -23,9 +22,9 @@ import { TownLanding } from '@/components/town/town-landing'
 import { getCityContent } from '@/content'
 import { getTownContent } from '@/content/towns'
 import { getDoctorsForCity, getImplantologistsForCity } from '@/config/doctors'
+import { getServicesForCity } from '@/config/services'
 import { getNearbyTownBySlug } from '@/config/nearby-towns'
-import { aggregatorRatings } from '@/lib/data/aggregators'
-import { siteConfig } from '@/lib/site-config'
+import { getAggregatorsForCity, getMainRatingForCity } from '@/lib/data/aggregators'
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: citySlug } = await params
@@ -42,15 +41,22 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const content = getCityContent(citySlug)
   if (!content) notFound()
 
-  const rating = aggregatorRatings.find((a) => a.id === '103by')
+  // Рейтинг — только своего города (lib/data/aggregators.ts). Раньше во всех
+  // городах стояла рогачёвская оценка 103.by; у города без подтверждённого
+  // профиля вместо неё — число направлений, а не чужая цифра.
+  const rating = getMainRatingForCity(citySlug)
   const doctorsCount = getDoctorsForCity(citySlug).length
+  const servicesCount = getServicesForCity(citySlug).length
   const hasImplantologists = getImplantologistsForCity(citySlug).length > 0
+  const hasRatings = getAggregatorsForCity(citySlug).length > 0
 
   const stats = [
-    {
-      value: String(rating?.rating ?? siteConfig.rating),
-      label: `рейтинг · ${rating?.reviewsCount ?? siteConfig.reviewsCount} отзывов на ${rating?.name ?? siteConfig.reviewsSource}`,
-    },
+    rating
+      ? {
+          value: String(rating.rating),
+          label: `рейтинг · ${rating.reviewsCount} отзывов на ${rating.name}`,
+        }
+      : { value: String(servicesCount), label: 'направлений лечения в одной клинике' },
     { value: String(doctorsCount), label: 'врачей принимают пациентов в клинике' },
     content.guaranteeStat,
   ]
@@ -148,16 +154,18 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <ClinicGallerySection />
         </SectionPanel>
       </Reveal>
-      <Reveal delay={1}>
-        <SectionPanel variant="lavender">
-          <ReviewsSection />
-        </SectionPanel>
-      </Reveal>
-      <Reveal delay={1}>
-        <SectionPanel variant="sky">
-          <RatingsSection />
-        </SectionPanel>
-      </Reveal>
+      {/* Блока отзывов-цитат на сайте нет намеренно: выдуманные отзывы —
+          недостоверная информация, а реальные с благодарностями за лечение
+          запрещены ст. 15 Закона «О рекламе» и требуют согласия пациента.
+          Вместо них — оценки на площадках, и только для города, у которого
+          есть подтверждённые профили (lib/data/aggregators.ts). */}
+      {hasRatings && (
+        <Reveal delay={1}>
+          <SectionPanel variant="sky">
+            <RatingsSection />
+          </SectionPanel>
+        </Reveal>
+      )}
       <Reveal delay={1}>
         <SectionPanel variant="periwinkle">
           <FaqSection />

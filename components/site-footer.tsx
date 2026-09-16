@@ -7,6 +7,7 @@ import { Phone, Send, MapPin } from 'lucide-react'
 
 import { ViberIcon } from '@/components/icons/viber-icon'
 import { siteConfig } from '@/lib/site-config'
+import { telegramHref, viberChatHref } from '@/lib/messengers'
 import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
@@ -145,13 +146,13 @@ export function SiteFooter() {
                 <p className="text-sm text-muted-foreground">{formatCityHours(content!.contacts.hours)}</p>
                 <div className="flex items-center gap-3">
                   <a
-                    href={`https://viber.com/${city!.phone.replace(/[^0-9]/g, '')}`}
+                    href={viberChatHref(city!)}
                     className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                   >
                     <ViberIcon className="size-4" /> Viber
                   </a>
                   <a
-                    href={siteConfig.telegramHref}
+                    href={telegramHref()}
                     className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
                   >
                     <Send className="size-4" /> Telegram
@@ -198,9 +199,7 @@ export function SiteFooter() {
               </Link>
             ))}
           </div>
-          <p>
-            {siteConfig.adNotice} {siteConfig.disclaimer}
-          </p>
+          <p>{siteConfig.disclaimer}</p>
           <p>© 32Дент, {new Date().getFullYear()}. Все права защищены.</p>
         </div>
       </div>

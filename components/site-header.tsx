@@ -15,8 +15,8 @@ import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
-import { siteConfig } from '@/lib/site-config'
-import { aggregatorRatings } from '@/lib/data/aggregators'
+import { getMainRatingForCity } from '@/lib/data/aggregators'
+import { telegramHref as networkTelegramHref, viberChatHref } from '@/lib/messengers'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
 // Логотип 258×171 — ширина каждого варианта посчитана от высоты по этим пропорциям,
@@ -72,19 +72,27 @@ export function SiteHeader() {
   const prefix = citySlug ? `/${citySlug}` : ''
   const styles = layoutStyles[HEADER_LAYOUT]
 
-  const navLinks = [
-    // Имплантация — главное направление сети, поэтому первой и отдельно от
-    // общего списка услуг: ведёт на хаб раздела с протоколами и ценами.
-    { label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
-    { label: 'Услуги', href: `${prefix}/uslugi/` },
-    { label: 'Врачи', href: `${prefix}/vrachi/` },
-    { label: 'Цены', href: `${prefix}/ceny/` },
-    { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
-    { label: 'О нас', href: `${prefix}/o-nas/` },
-    { label: 'Контакты', href: `${prefix}/kontakty/` },
-    // Блог общий для сети — без префикса города.
-    { label: 'Блог', href: '/blog/' },
-  ]
+  // На страницах сети (/blog, /dokumenty, 404) городских разделов нет:
+  // раньше пункты вели на /uslugi/, /ceny/ без города, а .htaccess
+  // редиректил их в Рогачёв — человек из Минска попадал в чужую клинику.
+  const navLinks = citySlug
+    ? [
+        // Имплантация — главное направление сети, поэтому первой и отдельно от
+        // общего списка услуг: ведёт на хаб раздела с протоколами и ценами.
+        { label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
+        { label: 'Услуги', href: `${prefix}/uslugi/` },
+        { label: 'Врачи', href: `${prefix}/vrachi/` },
+        { label: 'Цены', href: `${prefix}/ceny/` },
+        { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
+        { label: 'О нас', href: `${prefix}/o-nas/` },
+        { label: 'Контакты', href: `${prefix}/kontakty/` },
+        // Блог общий для сети — без префикса города.
+        { label: 'Блог', href: '/blog/' },
+      ]
+    : [
+        { label: 'Города и клиники', href: '/#city-cards' },
+        { label: 'Блог', href: '/blog/' },
+      ]
 
   // Активен самый длинный подходящий адрес: на /minsk/uslugi/implantaciya/
   // подсвечивается «Имплантация», а не «Услуги» вместе с ней.
@@ -93,15 +101,16 @@ export function SiteHeader() {
     .filter((href) => pathname === href || pathname?.startsWith(href))
     .sort((a, b) => b.length - a.length)[0]
 
-  const address = currentCity?.address ?? siteConfig.address
-  const shortAddress = formatAddressWithoutCity(address)
-  const phone = currentCity?.phone ?? siteConfig.phoneDisplay
-  const phoneHref = currentCity?.phoneHref ?? siteConfig.phoneHref
-  const viberHref = currentCity
-    ? `https://viber.com/${currentCity.phone.replace(/[^0-9]/g, '')}`
-    : siteConfig.viberHref
-  const telegramHref = siteConfig.telegramHref
-  const rating = aggregatorRatings.find((a) => a.id === '103by')
+  // Контакты в шапке — только у страниц города. Раньше на страницах сети
+  // (/blog, /dokumenty, 404) сюда подставлялись рогачёвские телефон и адрес
+  // из siteConfig, как будто сеть — это Рогачёв.
+  const shortAddress = currentCity ? formatAddressWithoutCity(currentCity.address) : null
+  const phone = currentCity?.phone
+  const phoneHref = currentCity?.phoneHref
+  const viberHref = currentCity ? viberChatHref(currentCity) : null
+  const telegramHref = networkTelegramHref()
+  // Рейтинг — площадки своего города; у города без профилей метки нет.
+  const rating = citySlug ? getMainRatingForCity(citySlug) : undefined
   // Шапка живёт вне CityProvider (в корневом layout), поэтому акцию берём
   // по слагу города из URL, а на общих страницах сети не показываем.
   const promo = citySlug ? getCityContent(citySlug)?.promo : undefined
@@ -194,10 +203,12 @@ export function SiteHeader() {
                 дублирующее «г. Минск, » раньше не влезало в строку и адрес
                 обрезался многоточием. Без max-w и truncate — улица с домом
                 короче прежнего лимита, поэтому помещается целиком. */}
-            <span className="hidden items-center gap-2 text-base text-muted-foreground lg:flex">
-              <MapPin className="size-5 shrink-0 text-primary" />
-              <span className="whitespace-nowrap">{shortAddress}</span>
-            </span>
+            {shortAddress && (
+              <span className="hidden items-center gap-2 text-base text-muted-foreground lg:flex">
+                <MapPin className="size-5 shrink-0 text-primary" />
+                <span className="whitespace-nowrap">{shortAddress}</span>
+              </span>
+            )}
           </div>
 
           <div className="ml-auto flex items-center gap-3">
@@ -252,24 +263,28 @@ export function SiteHeader() {
               {/* Телефон чуть плотнее окружения (medium против normal у адреса
                   и рейтинга), но не полужирный: раньше text-lg/semibold делал
                   его самым тяжёлым элементом строки и перебивал кнопку «Записаться». */}
-              <a
-                href={phoneHref}
-                aria-label={phone}
-                className="flex items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary"
-              >
-                <Phone className="size-5 shrink-0" />
-                <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
-              </a>
+              {phoneHref && (
+                <a
+                  href={phoneHref}
+                  aria-label={phone}
+                  className="flex items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary"
+                >
+                  <Phone className="size-5 shrink-0" />
+                  <span className="hidden whitespace-nowrap xl:inline">{phone}</span>
+                </a>
+              )}
               {/* Viber, Telegram и тема — своя группа с почти нулевым зазором:
                   у .icon-action бокс 40px при иконке 20px, и на общем gap-3
                   между самими знаками получалось больше 30px — они читались
                   как три отдельных элемента, а не как один блок. Класс на всех
                   трёх один, поэтому и наведение у них одинаковое. */}
               <div className="flex items-center gap-0.5">
-                <a href={viberHref} aria-label="Viber" className="icon-action">
-                  <ViberIcon className="size-5" />
-                </a>
-                <a href={telegramHref} aria-label="Telegram" className="icon-action">
+                {viberHref && (
+                  <a href={viberHref} aria-label="Написать в Viber" title="Написать в Viber" className="icon-action">
+                    <ViberIcon className="size-5" />
+                  </a>
+                )}
+                <a href={telegramHref} aria-label="Написать в Telegram" title="Написать в Telegram" className="icon-action">
                   <Send className="size-5" />
                 </a>
                 <ThemeToggle />
@@ -286,13 +301,15 @@ export function SiteHeader() {
               {/* Тот же размер и форма, что у соседних кнопок ряда: базовые
                   40px .icon-action для тач-цели в шапке маловато. */}
               <ThemeToggle className="size-11 rounded-full" />
-              <a
-                href={phoneHref}
-                aria-label="Позвонить"
-                className="flex size-11 items-center justify-center rounded-full text-foreground active:bg-muted"
-              >
-                <Phone className="size-5" />
-              </a>
+              {phoneHref && (
+                <a
+                  href={phoneHref}
+                  aria-label="Позвонить"
+                  className="flex size-11 items-center justify-center rounded-full text-foreground active:bg-muted"
+                >
+                  <Phone className="size-5" />
+                </a>
+              )}
               <button
                 type="button"
                 aria-label="Открыть меню"

@@ -10,7 +10,6 @@ import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { MobileMenuProvider } from '@/components/mobile-menu-provider'
-import { GeoBanner } from '@/components/geo-banner'
 import { siteConfig } from '@/lib/site-config'
 
 // Golos Text — основной текст, UI, кнопки, навигация. Unbounded — заголовки
@@ -73,8 +72,13 @@ export const viewport: Viewport = {
  * Никаких headers()/cookies() в корневом layout: любое чтение запроса здесь
  * отключает статическую генерацию сразу для всего сайта — раньше из 98
  * страниц статикой оставалась одна, остальные рендерились на сервере при
- * каждом запросе. Подсказку города определяет сам GeoBanner на клиенте
- * (см. lib/use-client-geo.ts).
+ * каждом запросе.
+ *
+ * Подсказки «Вы из Минска?» (GeoBanner) больше нет: она определяла город
+ * запросом к ipwho.is с каждой страницы — IP посетителя уходил иностранному
+ * сервису без согласия, что противоречит и Закону «О защите персональных
+ * данных», и абзацу выше. Город человек выбирает сам: карточки на хабе и
+ * переключатель в шапке.
  */
 export default function RootLayout({
   children,
@@ -94,7 +98,6 @@ export default function RootLayout({
             <MobileMenuProvider>
             <div className="flex min-h-dvh flex-col">
               <HeaderSwitcher />
-              <GeoBanner />
               <main className="flex-1">{children}</main>
               <FloatingMessengers />
               <SiteFooter />

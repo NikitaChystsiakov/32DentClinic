@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     description: `Лицензия на медицинскую деятельность, реквизиты и документы стоматологии ${city.brandName} в ${city.nameIn}.`,
     path: `/${citySlug}/o-nas/dokumenty-i-licenzii/`,
     city,
+    // Пока на странице только заглушка «документы будут добавлены» — в
+    // индексе ей делать нечего. Снять noindex, когда появятся сканы лицензий.
+    noindex: true,
   })
 }
 

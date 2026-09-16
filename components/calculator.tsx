@@ -139,8 +139,8 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
           <p className="max-w-md text-balance leading-relaxed text-foreground">
             Спасибо! Судя по ответам, вам подойдёт направление:{' '}
             <span className="font-semibold text-primary">{service.shortName}</span>. Это предварительная
-            подсказка, а не диагноз: точный план и стоимость определит врач на бесплатной консультации — мы
-            уже получили ваши контакты и скоро свяжемся.
+            подсказка, а не диагноз: точный план и стоимость определит врач на консультации — мы уже получили
+            ваши контакты и скоро свяжемся.
           </p>
         ) : (
           <p className="max-w-md text-balance leading-relaxed text-foreground">
@@ -149,7 +149,12 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
         )}
         <div className="flex flex-col gap-3 sm:flex-row">
           {category && service && (
-            <Button variant="outline" render={<Link href={`/uslugi/${service.slug}/`} />} nativeButton={false}>
+            <Button
+              variant="outline"
+              // Ссылка с городом: без префикса .htaccess редиректил в Рогачёв.
+              render={<Link href={`/${currentCity?.slug ?? 'minsk'}/uslugi/${service.slug}/`} />}
+              nativeButton={false}
+            >
               Узнать больше об услуге
             </Button>
           )}
@@ -173,7 +178,7 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
           </h2>
           <p className="text-muted-foreground">
             Ответьте на пару вопросов — подскажем, какое направление подойдёт, и предварительно оценим объём
-            работы. Это не диагностика: точный план и цену врач назовёт после бесплатного осмотра.
+            работы. Это не диагностика: точный план и цену врач назовёт после осмотра.
           </p>
         </div>
       )}
@@ -362,7 +367,7 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
               className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
             >
               {formState === 'loading' && <Loader2 className="animate-spin" data-icon="inline-start" />}
-              Получить план и промокод
+              Получить план
             </Button>
           </div>
         </form>

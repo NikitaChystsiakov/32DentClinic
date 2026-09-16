@@ -17,7 +17,7 @@ export function ServicesBottomCta() {
           Пройти короткий тест
         </Button>
         <BookingButton className="bg-accent text-accent-foreground hover:bg-accent/90">
-          Записаться на бесплатную консультацию
+          Записаться на консультацию
         </BookingButton>
       </div>
     </div>

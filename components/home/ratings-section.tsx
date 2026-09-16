@@ -1,6 +1,9 @@
+'use client'
+
 import { Star, ExternalLink } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { aggregatorRatings, type AggregatorRating } from '@/lib/data/aggregators'
+import { getAggregatorsForCity, type AggregatorRating } from '@/lib/data/aggregators'
+import { useCity } from '@/lib/contexts/city-context'
 import { cn } from '@/lib/utils'
 
 function PlatformLogo({ id }: { id: AggregatorRating['id'] }) {
@@ -109,7 +112,13 @@ function RatingCard({ aggregator }: { aggregator: AggregatorRating }) {
   )
 }
 
+// Площадки — только своего города; для города без подтверждённых профилей
+// главная блок не рендерит (см. app/[city]/page.tsx).
 export function RatingsSection() {
+  const { city } = useCity()
+  const aggregators = getAggregatorsForCity(city.slug)
+  if (aggregators.length === 0) return null
+
   return (
     <>
       <div className="mb-10 flex flex-col gap-2">
@@ -118,12 +127,12 @@ export function RatingsSection() {
           Нам доверяют на картах и в каталогах
         </h2>
         <p className="max-w-2xl text-pretty text-muted-foreground">
-          Посмотрите отзывы пациентов о клинике 32Дент на популярных сервисах.
+          Оценки и отзывы о клинике {city.brandName} в {city.nameIn} на независимых площадках — читайте и оставляйте свои там же.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {aggregatorRatings.map((aggregator) => (
+        {aggregators.map((aggregator) => (
           <RatingCard key={aggregator.id} aggregator={aggregator} />
         ))}
       </div>

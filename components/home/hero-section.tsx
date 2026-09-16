@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { getDoctorsForCity } from '@/config/doctors'
-import { aggregatorRatings } from '@/lib/data/aggregators'
+import { getMainRatingForCity } from '@/lib/data/aggregators'
 
 function pluralizeDoctors(n: number): string {
   const mod10 = n % 10
@@ -19,7 +19,8 @@ function pluralizeDoctors(n: number): string {
 export function HeroSection() {
   const { city, content } = useCity()
   const doctorsCount = getDoctorsForCity(city.slug).length
-  const mainRating = aggregatorRatings.find((a) => a.id === '103by')
+  // Оценка только своего города — в Жлобине рогачёвских «89 отзывов» больше нет.
+  const mainRating = getMainRatingForCity(city.slug)
 
   return (
     <section className="relative overflow-hidden border-b border-border">
@@ -82,7 +83,7 @@ export function HeroSection() {
               </span>
             </div>
           )}
-          <div className="h-9 w-px bg-silver/30" />
+          {mainRating && <div className="h-9 w-px bg-silver/30" />}
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 font-heading text-2xl font-bold text-foreground">
               <Users2 className="size-5 text-secondary" />

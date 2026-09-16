@@ -1,114 +1,181 @@
-// Единый источник данных «до/после».
-// Редактировать примеры работ можно здесь, не трогая код компонентов.
-// Для реальных фотографий достаточно заменить пути before/after на файлы в /public.
+// Примеры работ «до/после». Единый источник для страницы /<город>/primery-rabot/
+// и тизера на главной.
 //
-// Юридически перед публикацией каждого случая нужно:
-//   • письменное согласие пациента на публикацию фото (это и его изображение,
-//     и сведения о здоровье — специальные персональные данные);
-//   • не указывать диагноз и фамилию пациента в описании;
-//   • не писать «вылечили навсегда», «гарантированный результат» — ст. 15
-//     Закона «О рекламе» запрещает ссылки на конкретные случаи излечения
-//     как обещание результата. Описание — что сделали и почему выбрали
-//     этот метод, без обещаний.
+// ЮРИДИЧЕСКИЕ ПРАВИЛА (Закон РБ «О рекламе», ст. 15; врачебная тайна —
+// ст. 46 Закона «О здравоохранении»; Закон «О защите персональных данных»):
+//
+//   1. Публикуем только работы, на которые есть ПИСЬМЕННОЕ согласие пациента
+//      на публикацию именно этих фото на сайте. Оригинал хранится в клинике,
+//      здесь — дата и номер (`consent`), чтобы при проверке найти за минуту.
+//      Без заполненного `consent` кейс на сайт не попадает — это проверяет
+//      тип: поле обязательное.
+//   2. Подпись — только техническая: что за работа, какая система/материал,
+//      сколько единиц, кто выполнил. Это описание УСЛУГИ, а не случая.
+//   3. Нельзя: диагноз и жалобы пациента («обратилась со сколом», «болел
+//      зуб»), сроки и ход лечения («за полтора года», «за один визит»),
+//      ощущения («безболезненно», «комфортно»), оценки результата
+//      («идеально», «навсегда», «как свои») и любые обещания — это «ссылка на
+//      конкретный случай излечения / улучшения состояния» и «гарантия
+//      эффекта», запрещённые ст. 15. Для таких полей в структуре просто нет места.
+//   4. Лицо пациента — только если согласие на изображение дано отдельно;
+//      безопаснее кадрировать до зубов.
+//   5. Кейс привязан к клинике (`citySlug`) и врачу (`doctorSlug`): работа
+//      жлобинского врача не показывается в Минске.
+//
+// Пока реальных кейсов с согласиями нет, страницы показывают иллюстрации
+// (`illustrations` ниже) — схематичные примеры видов работ без привязки к
+// врачу и пациенту и без блока о согласии. Как появится хотя бы один
+// реальный кейс города — иллюстрации в этом городе перестают показываться.
+//
+// Для не-разработчика: чтобы добавить работу, скопируйте блок в `cases`,
+// положите два фото в public/cases/ и заполните все поля. `doctorSlug` — из
+// config/doctors.ts, `serviceSlug` — из config/services.ts.
+
+import type { City } from '@/config/cities'
+import { getDoctorBySlug, type Doctor } from '@/config/doctors'
 
 export interface BeforeAfterCase {
   id: string
-  // slug услуги из lib/services-data.ts (используется для фильтра на странице примеров)
+  /** Клиника, где выполнена работа — кейс показывается только на её страницах. */
+  citySlug: City['slug']
+  /** slug услуги из config/services.ts — для фильтра на странице примеров. */
   serviceSlug: string
-  // Название услуги/процедуры, выводится в карточке
+  /** Вид работы, как в прайсе: «Керамические виниры», «Одиночная имплантация». */
   title: string
-  description: string
+  /**
+   * Техническая подпись: система, материал, объём работы.
+   * Пример: «Имплант Straumann SLA, коронка из диоксида циркония, 1 единица».
+   * Без диагноза, сроков, ощущений и оценок результата (см. правила выше).
+   */
+  work: string
   before: string
   after: string
-  // Врач, который вёл случай, и почему было выбрано именно это решение
-  doctorName: string
-  doctorSpecialization: string
-  doctorPhoto: string
-  reasoning: string
+  /** slug врача из config/doctors.ts — имя, специализация и фото подтянутся сами. */
+  doctorSlug: string
+  /** Письменное согласие пациента на публикацию этих фото: дата и номер/имя файла в клинике. */
+  consent: { date: string; ref: string }
 }
 
-export const beforeAfterCases: BeforeAfterCase[] = [
+/** Иллюстрация вида работы — не фото пациента клиники. Без врача и согласия. */
+export interface BeforeAfterIllustration {
+  id: string
+  serviceSlug: string
+  title: string
+  work: string
+  before: string
+  after: string
+}
+
+/**
+ * Реальные работы с согласиями. У клиники они уже есть в Instagram — но
+ * публикация в Instagram не равна согласию на публикацию на сайте: перед
+ * переносом у пациента берётся отдельное письменное согласие (или проверяется,
+ * что в уже подписанном согласии сайт клиники указан как место публикации).
+ *
+ * Шаблон записи — скопировать, заполнить, фото положить в public/cases/:
+ *
+ *   {
+ *     id: 'minsk-viniry-01',                     // латиницей, уникальный
+ *     citySlug: 'minsk',
+ *     serviceSlug: 'protezirovanie',             // из config/services.ts
+ *     title: 'Керамические виниры',
+ *     work: 'Виниры E.max, 8 единиц, верхняя челюсть',
+ *     before: '/cases/minsk-viniry-01-before.webp',
+ *     after: '/cases/minsk-viniry-01-after.webp',
+ *     doctorSlug: 'belousova-tatyana',           // из config/doctors.ts
+ *     consent: { date: '12.09.2026', ref: 'согласие № 14/2026' },
+ *   },
+ *
+ * Фото: 1600×1200 (4:3), webp ≤ 100 КБ — `pnpm optimize-images`; лицо
+ * кадрировать, если на него нет отдельного согласия.
+ */
+export const cases: BeforeAfterCase[] = []
+
+/*
+ * Иллюстрации на время, пока реальные работы не перенесены из Instagram.
+ * Картинки public/cases/*.png — не фотографии пациентов 32Дент, поэтому к
+ * врачам они не привязаны и без блока «опубликовано с согласия». Как только в
+ * `cases` появится хотя бы одна работа города, иллюстрации там пропадают.
+ */
+export const illustrations: BeforeAfterIllustration[] = [
   {
     id: 'restavraciya-zuba',
     serviceSlug: 'terapevticheskaya-stomatologiya',
-    title: 'Реставрация зуба',
-    description: 'Восстановили форму и цвет зуба после скола, сохранив естественный вид.',
+    title: 'Художественная реставрация',
+    work: 'Прямая реставрация композитом светового отверждения, 1 единица',
     before: '/cases/case-1-before.png',
     after: '/cases/case-1-after.png',
-    doctorName: 'Наталья Ильющенко',
-    doctorSpecialization: 'Врач-терапевт-стоматолог',
-    doctorPhoto: '/images/doctors/ilyushchenko-natalya.webp',
-    reasoning:
-      'Скол не задел нерв, поэтому вместо коронки выбрали прямую реставрацию — она сохраняет больше собственной ткани зуба и делается за один визит.',
   },
   {
     id: 'ispravlenie-prikusa',
     serviceSlug: 'ortodontiya',
-    title: 'Исправление прикуса брекетами',
-    description: 'Выровняли зубной ряд и нормализовали прикус за полтора года.',
+    title: 'Ортодонтическое лечение',
+    work: 'Брекет-система на обе челюсти',
     before: '/cases/case-2-before.png',
     after: '/cases/case-2-after.png',
-    doctorName: 'Владислав Киреев',
-    doctorSpecialization: 'Врач-стоматолог-ортопед',
-    doctorPhoto: '/images/doctors/kireev-vladislav.webp',
-    reasoning:
-      'Скученность зубов была выраженной — брекет-система дала более предсказуемый результат за фиксированный срок, чем съёмные элайнеры.',
   },
   {
     id: 'odinochnaya-implantaciya',
     serviceSlug: 'implantaciya',
     title: 'Одиночная имплантация',
-    description: 'Имплант и коронка вместо утраченного зуба — несъёмное решение.',
+    work: 'Имплант с коронкой из диоксида циркония, 1 единица',
     before: '/cases/case-3-before.png',
     after: '/cases/case-3-after.png',
-    doctorName: 'Павел Махонько',
-    doctorSpecialization: 'Врач-стоматолог-хирург-имплантолог',
-    doctorPhoto: '/images/doctors/makhonko-pavel.webp',
-    reasoning:
-      'Соседние зубы были полностью здоровы — имплант позволил восстановить ряд, не обтачивая их под мост.',
   },
   {
     id: 'protezirovanie-na-implantah',
     serviceSlug: 'protezirovanie',
     title: 'Протезирование на имплантах',
-    description: 'Несъёмная конструкция на имплантах восстановила весь зубной ряд.',
+    work: 'Несъёмная конструкция на имплантах, полная челюсть',
     before: '/cases/case-4-before.png',
     after: '/cases/case-4-after.png',
-    doctorName: 'Игорь Ковальчук',
-    doctorSpecialization: 'Врач-стоматолог-ортопед',
-    doctorPhoto: '/images/doctors/kovalchuk-igor.webp',
-    reasoning:
-      'Пациент хотел ощущения собственных зубов без необходимости их снимать — выбрали несъёмный протез на имплантах вместо съёмного.',
   },
   {
     id: 'otbelivanie',
     serviceSlug: 'prof-gigiena-i-otbelivanie',
-    title: 'Отбеливание зубов',
-    description: 'Осветлили эмаль на несколько тонов за один визит.',
+    title: 'Профессиональная гигиена и отбеливание',
+    work: 'Снятие налёта и камня, полировка, кабинетное отбеливание',
     before: '/cases/case-5-before.png',
     after: '/cases/case-5-after.png',
-    doctorName: 'Юлия Алексейчик',
-    doctorSpecialization: 'Врач-терапевт-стоматолог',
-    doctorPhoto: '/images/doctors/alekseychik-yuliya.webp',
-    reasoning:
-      'Перед отбеливанием провели профгигиену — без неё результат вышел бы неравномерным из-за налёта на эмали.',
   },
   {
     id: 'udalenie-zuba',
     serviceSlug: 'khirurgiya',
     title: 'Удаление зуба мудрости',
-    description: 'Атравматичное удаление с быстрым и комфортным восстановлением.',
+    work: 'Удаление ретинированного третьего моляра',
     before: '/cases/case-6-before.png',
     after: '/cases/case-6-after.png',
-    doctorName: 'Павел Махонько',
-    doctorSpecialization: 'Врач-стоматолог-хирург-имплантолог',
-    doctorPhoto: '/images/doctors/makhonko-pavel.webp',
-    reasoning:
-      'Зуб мудрости рос горизонтально и давил на соседний — решили удалить, не дожидаясь осложнений и смещения ряда.',
   },
 ]
 
-// Услуги, для которых есть примеры работ — используются как фильтры на странице /primery-rabot/
-export function getBeforeAfterServiceSlugs(): string[] {
-  return Array.from(new Set(beforeAfterCases.map((c) => c.serviceSlug)))
+/** Карточка для рендера: либо реальный кейс с врачом, либо иллюстрация. */
+export type GalleryItem =
+  | { kind: 'case'; item: BeforeAfterCase; doctor: Doctor }
+  | { kind: 'illustration'; item: BeforeAfterIllustration }
+
+/**
+ * Что показывать в городе: реальные работы этой клиники, у которых есть
+ * согласие и существующий врач; если таких нет — иллюстрации.
+ */
+export function getGalleryItemsForCity(citySlug: string): GalleryItem[] {
+  const real: GalleryItem[] = []
+  for (const item of cases) {
+    if (item.citySlug !== citySlug) continue
+    if (!item.consent?.date || !item.consent?.ref) continue
+    const doctor = getDoctorBySlug(item.doctorSlug)
+    if (!doctor || doctor.isPlaceholder) continue
+    real.push({ kind: 'case', item, doctor })
+  }
+  if (real.length > 0) return real
+  return illustrations.map((item) => ({ kind: 'illustration', item }))
+}
+
+/** Есть ли у города хотя бы одна реальная работа (иначе показываются иллюстрации). */
+export function hasRealCasesForCity(citySlug: string): boolean {
+  return getGalleryItemsForCity(citySlug).some((g) => g.kind === 'case')
+}
+
+/** Услуги, по которым есть карточки в городе — фильтры на странице примеров. */
+export function getGalleryServiceSlugs(citySlug: string): string[] {
+  return Array.from(new Set(getGalleryItemsForCity(citySlug).map((g) => g.item.serviceSlug)))
 }
