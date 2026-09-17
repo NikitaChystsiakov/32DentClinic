@@ -9,7 +9,7 @@ import {
   Images,
   MapPin,
   Phone,
-  Send,
+  Mail,
   Stethoscope,
   Tag,
   Users,
@@ -21,11 +21,11 @@ import {
 
 import { cn } from '@/lib/utils'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { ViberIcon } from '@/components/icons/viber-icon'
+import { MessengerIcon } from '@/components/icons/messenger-icon'
 import { BookingButton } from '@/components/booking-button'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { cities } from '@/config/cities'
-import { telegramHref, viberChatHref } from '@/lib/messengers'
+import { getMessengerLinks } from '@/lib/messengers'
 
 interface MobileMenuContextValue {
   openMenu: () => void
@@ -100,8 +100,10 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
   const phone = currentCity?.phone
   const phoneHref = currentCity?.phoneHref
   const address = currentCity?.address
-  const viberHref = currentCity ? viberChatHref(currentCity) : null
-  const telegram = telegramHref()
+  const email = currentCity?.email
+  // Viber и Telegram всегда; WhatsApp, MAX и Instagram — если заполнены
+  // в config/cities.ts. На страницах сети — только Telegram.
+  const messengers = getMessengerLinks(currentCity)
 
   return (
     <MobileMenuContext.Provider value={value}>
@@ -192,24 +194,25 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
                     </span>
                   </a>
                 )}
-                <div className={cn('grid gap-2', viberHref ? 'grid-cols-2' : 'grid-cols-1')}>
-                  {viberHref && (
+                <div className={cn('grid gap-2', messengers.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
+                  {messengers.map((m) => (
                     <a
-                      href={viberHref}
+                      key={m.id}
+                      href={m.href}
+                      {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-card text-sm font-medium text-foreground ring-1 ring-silver/25 active:bg-muted"
                     >
-                      <ViberIcon className="size-4 text-primary" />
-                      Viber
+                      <MessengerIcon id={m.id} className="size-4 text-primary" />
+                      {m.label}
                     </a>
-                  )}
-                  <a
-                    href={telegram}
-                    className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-card text-sm font-medium text-foreground ring-1 ring-silver/25 active:bg-muted"
-                  >
-                    <Send className="size-4 text-primary" />
-                    Telegram
-                  </a>
+                  ))}
                 </div>
+                {email && (
+                  <a href={`mailto:${email}`} className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
+                    <Mail className="size-4 shrink-0" />
+                    {email}
+                  </a>
+                )}
                 {address && (
                   <p className="flex items-start gap-2 px-1 text-sm text-muted-foreground">
                     <MapPin className="mt-0.5 size-4 shrink-0" />

@@ -1,17 +1,20 @@
 'use client'
 
-import { MapPin, Send } from 'lucide-react'
+import { Mail, MapPin } from 'lucide-react'
 import { useCity } from '@/lib/contexts/city-context'
-import { ViberIcon } from '@/components/icons/viber-icon'
+import { MessengerIcon } from '@/components/icons/messenger-icon'
 import { ContactBookingButton } from '@/components/contact/contact-booking-button'
 import { Reveal } from '@/components/reveal'
 import { LazyMap } from '@/components/lazy-map'
-import { telegramHref, viberChatHref } from '@/lib/messengers'
+import { getMessengerLinks } from '@/lib/messengers'
 
 // Разметка страницы /<город>/kontakty/; метаданные задаёт серверная
 // app/[city]/(clinic)/kontakty/page.tsx.
 export function ContactsPageContent() {
   const { city, content } = useCity()
+  // Viber, Telegram и — если заполнены в config/cities.ts — WhatsApp, MAX,
+  // Instagram.
+  const messengers = getMessengerLinks(city)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
@@ -52,21 +55,31 @@ export function ContactsPageContent() {
               >
                 {city.phone}
               </a>
-              <div className="mt-1 flex items-center gap-4">
-                <a
-                  href={viberChatHref(city)}
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                >
-                  <ViberIcon className="size-4" /> Viber
-                </a>
-                <a
-                  href={telegramHref()}
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                >
-                  <Send className="size-4" /> Telegram
-                </a>
+              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-2">
+                {messengers.map((m) => (
+                  <a
+                    key={m.id}
+                    href={m.href}
+                    {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
+                  >
+                    <MessengerIcon id={m.id} className="size-4" /> {m.label}
+                  </a>
+                ))}
               </div>
             </div>
+
+            {city.email && (
+              <div className="flex items-start gap-3">
+                <Mail className="mt-1 size-5 shrink-0 text-primary" />
+                <div className="flex flex-col gap-1">
+                  <span className="font-heading text-base font-semibold text-foreground">E-mail</span>
+                  <a href={`mailto:${city.email}`} className="text-muted-foreground hover:text-primary">
+                    {city.email}
+                  </a>
+                </div>
+              </div>
+            )}
 
             <ContactBookingButton />
           </div>

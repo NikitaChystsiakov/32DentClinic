@@ -73,6 +73,27 @@ export interface City {
   phone: string
   phoneHref: string
   address: string
+  /**
+   * E-mail клиники для пациентов — на странице контактов, в подвале и в
+   * мобильном меню. Не указан — строка не показывается. (Ящик для обращений
+   * по персональным данным — отдельно, legal.privacyEmail.)
+   */
+  email?: string
+  /**
+   * Instagram клиники — полная ссылка: 'https://www.instagram.com/32_dent_plus/'.
+   * Не указан — иконка не показывается.
+   */
+  instagram?: string
+  /**
+   * Номер WhatsApp в международном формате: '+375291234567'. Ссылка на чат
+   * соберётся сама (lib/messengers.ts). Не указан — кнопки нет.
+   */
+  whatsapp?: string
+  /**
+   * Ссылка на чат клиники в мессенджере MAX: 'https://max.ru/…'.
+   * Не указана — кнопки нет.
+   */
+  max?: string
   coordinates: { lat: number; lng: number }
   /** Обложка карточки города на хабе (главная сети). */
   image: string
@@ -120,7 +141,13 @@ export const cities: City[] = [
     brandName: '32Дент+',
     phone: '+375 (29) 323-33-88', 
     phoneHref: 'tel:+375293233388', 
-    address: 'г. Минск, Пр. Победителей, 41', 
+    address: 'г. Минск, Пр. Победителей, 41',
+    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
+    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
+    email: undefined,
+    instagram: undefined,
+    whatsapp: undefined,
+    max: undefined,
     coordinates: { lat: 53.914870, lng: 27.535996 }, 
     image: '/clinic/minsk/main.webp',
     // Своих фото интерьера пока нет (присланные скрины из Instagram в
@@ -157,6 +184,12 @@ export const cities: City[] = [
     phone: '+375 (29) 744-40-33',
     phoneHref: 'tel:+375297444033',
     address: 'г. Рогачёв, ул. Ленина, 60',
+    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
+    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
+    email: undefined,
+    instagram: undefined,
+    whatsapp: undefined,
+    max: undefined,
     // Координаты клиники (ул. Ленина, 60) — с карточки 32Дент на 103.by,
     // сверено 16.09.2026. Раньше стояло округлённое значение центра города.
     coordinates: { lat: 53.0813, lng: 30.0519 },
@@ -170,7 +203,7 @@ export const cities: City[] = [
     hasBookingForm: false,
     featureTags: ['Терапия и Ортопедия', 'ул. Ленина, 60'],
     seoTitle: 'Стоматология 32Дент Рогачёв — терапия и имплантация',
-    seoDescription: '32Дент Рогачёв: терапия, хирургия, ортодонтия и имплантация зубов. Собственная лаборатория, гарантия 2 года.',
+    seoDescription: '32Дент Рогачёв: терапия, хирургия, протезирование и имплантация зубов. Собственная лаборатория, гарантия 2 года.',
     // Юрлицо и УНП — из данных заказчика; юрадрес, e-mail и лицензия — [TBD], см. docs/ЗАГЛУШКИ-И-УТОЧНЕНИЯ.md
     legal: {
       entityName: 'ООО «32Дент»',
@@ -193,7 +226,13 @@ export const cities: City[] = [
     brandName: '32Дент',
     phone: '+375 (44) 559-59-01', 
     phoneHref: 'tel:+375445595901', 
-    address: 'г. Жлобин, ул. Петровского, 44', 
+    address: 'г. Жлобин, ул. Петровского, 44',
+    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
+    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
+    email: undefined,
+    instagram: undefined,
+    whatsapp: undefined,
+    max: undefined,
     // Координаты дома ул. Петровского, 44 — по OpenStreetMap и карточке
     // 32Дент на 103.by (сверено 16.09.2026). Прежние 52.8928, 30.0228
     // указывали на ул. Красина, 50 — на 900 м мимо клиники, и карта на

@@ -8,7 +8,7 @@ import { useCity } from '@/lib/contexts/city-context'
 
 export function PriceAccordion() {
   // Только направления, которые есть в этом городе (availableIn), — иначе
-  // в Рогачёве показывался бы, например, минский раздел седации.
+  // в Рогачёве показывался бы, например, минский раздел ортодонтии.
   const { city } = useCity()
   const services = getServicesForCity(city.slug)
 

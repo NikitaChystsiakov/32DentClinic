@@ -106,7 +106,7 @@ export const minskContent = {
       {
         value: '∞',
         label: 'на импланты',
-        description: 'Пожизненная гарантия производителя на импланты Straumann, MIS и Neodent.',
+        description: 'Пожизненная гарантия производителя на импланты Straumann, MIS, MegaGen и Neodent.',
         icon: 'Infinity',
       },
       {

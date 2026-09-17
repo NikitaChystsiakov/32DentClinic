@@ -15,9 +15,9 @@ import { ServiceFinalCta } from '@/components/services/service-final-cta'
 import { Reveal } from '@/components/reveal'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 
-// У «Лечения под седацией» своей обложки пока нет (стоит фото хирургии) —
-// показываем заглушку, пока не сгенерируют.
-const SERVICES_NEEDING_REAL_PHOTO = new Set(['lechenie-pod-sedaciej'])
+// Услуги без своей обложки (стоит чужое фото) — вместо него показываем
+// заглушку, пока не сгенерируют. Сейчас таких нет.
+const SERVICES_NEEDING_REAL_PHOTO = new Set<string>([])
 
 export function ServiceDetailContent({ slug }: { slug: string }) {
   const { city } = useCity()

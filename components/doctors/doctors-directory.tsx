@@ -16,6 +16,7 @@ const FILTERS: { id: 'all' | DoctorCategory; label: string }[] = [
   { id: 'terapevt', label: doctorCategoryLabels.terapevt },
   { id: 'ortoped', label: doctorCategoryLabels.ortoped },
   { id: 'hirurg', label: doctorCategoryLabels.hirurg },
+  { id: 'ortodont', label: doctorCategoryLabels.ortodont },
 ]
 
 function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) {
@@ -72,6 +73,13 @@ export function DoctorsDirectory() {
   const [filter, setFilter] = React.useState<'all' | DoctorCategory>('all')
 
   const cityDoctors = getDoctorsForCity(city.slug)
+  // Вкладки — только по профилям, которые есть в городе: ортодонт один и
+  // только в Минске, и в Рогачёве вкладка «Ортодонты» открывала бы пустой
+  // список с подписью «врачи пока не добавлены».
+  const filters = FILTERS.filter((f) => {
+    const id = f.id
+    return id === 'all' || cityDoctors.some((doctor) => doctor.categories.includes(id))
+  })
   const filteredDoctors = cityDoctors.filter(
     (doctor) => filter === 'all' || doctor.categories.includes(filter)
   )
@@ -80,7 +88,7 @@ export function DoctorsDirectory() {
     <Tabs value={filter} onValueChange={(value) => setFilter(value as 'all' | DoctorCategory)}>
       <Reveal delay={0}>
         <TabsList>
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <TabsTrigger key={f.id} value={f.id}>
               {f.label}
             </TabsTrigger>

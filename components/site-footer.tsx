@@ -3,11 +3,11 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, Send, MapPin } from 'lucide-react'
+import { Mail, MapPin, Phone } from 'lucide-react'
 
-import { ViberIcon } from '@/components/icons/viber-icon'
+import { MessengerIcon } from '@/components/icons/messenger-icon'
 import { siteConfig } from '@/lib/site-config'
-import { telegramHref, viberChatHref } from '@/lib/messengers'
+import { getMessengerLinks } from '@/lib/messengers'
 import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
@@ -118,6 +118,11 @@ export function SiteFooter() {
                     <a href={c.phoneHref} className="flex items-center gap-1.5 text-xs font-medium text-foreground hover:text-primary">
                       <Phone className="size-3" /> {c.phone}
                     </a>
+                    {c.email && (
+                      <a href={`mailto:${c.email}`} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary">
+                        <Mail className="size-3" /> {c.email}
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>
@@ -143,20 +148,23 @@ export function SiteFooter() {
                 <a href={city!.phoneHref} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary">
                   <Phone className="size-4" /> {city!.phone}
                 </a>
+                {city!.email && (
+                  <a href={`mailto:${city!.email}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                    <Mail className="size-4" /> {city!.email}
+                  </a>
+                )}
                 <p className="text-sm text-muted-foreground">{formatCityHours(content!.contacts.hours)}</p>
-                <div className="flex items-center gap-3">
-                  <a
-                    href={viberChatHref(city!)}
-                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                  >
-                    <ViberIcon className="size-4" /> Viber
-                  </a>
-                  <a
-                    href={telegramHref()}
-                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
-                  >
-                    <Send className="size-4" /> Telegram
-                  </a>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                  {getMessengerLinks(city).map((m) => (
+                    <a
+                      key={m.id}
+                      href={m.href}
+                      {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
+                    >
+                      <MessengerIcon id={m.id} className="size-4" /> {m.label}
+                    </a>
+                  ))}
                 </div>
                 {towns.length > 0 && (
                   <p className="text-sm text-muted-foreground">

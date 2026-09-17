@@ -18,3 +18,38 @@ export function viberChatHref(city: City): string {
 export function telegramHref(): string {
   return siteConfig.telegramHref
 }
+
+/** Чат WhatsApp по номеру из City.whatsapp; нет номера — нет ссылки. */
+export function whatsappHref(city: City): string | null {
+  if (!city.whatsapp) return null
+  return `https://wa.me/${city.whatsapp.replace(/\D/g, '')}`
+}
+
+export type MessengerId = 'viber' | 'telegram' | 'whatsapp' | 'max' | 'instagram'
+
+export interface MessengerLink {
+  id: MessengerId
+  label: string
+  href: string
+  /** Открывать в новой вкладке (сайты соцсетей); deep link Viber — нет. */
+  external: boolean
+}
+
+/**
+ * Все способы написать клинике города в одном порядке — для страницы
+ * контактов, подвала и мобильного меню. Viber всегда (собирается из
+ * телефона), Telegram — сети, остальные только если заполнены в
+ * config/cities.ts. Без города (страницы сети) — только Telegram.
+ */
+export function getMessengerLinks(city: City | null | undefined): MessengerLink[] {
+  const links: MessengerLink[] = []
+  if (city) links.push({ id: 'viber', label: 'Viber', href: viberChatHref(city), external: false })
+  links.push({ id: 'telegram', label: 'Telegram', href: telegramHref(), external: true })
+  if (city) {
+    const whatsapp = whatsappHref(city)
+    if (whatsapp) links.push({ id: 'whatsapp', label: 'WhatsApp', href: whatsapp, external: true })
+    if (city.max) links.push({ id: 'max', label: 'MAX', href: city.max, external: true })
+    if (city.instagram) links.push({ id: 'instagram', label: 'Instagram', href: city.instagram, external: true })
+  }
+  return links
+}

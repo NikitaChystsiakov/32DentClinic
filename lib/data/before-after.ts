@@ -33,6 +33,7 @@
 
 import type { City } from '@/config/cities'
 import { getDoctorBySlug, type Doctor } from '@/config/doctors'
+import { getServicesForCity } from '@/config/services'
 
 export interface BeforeAfterCase {
   id: string
@@ -167,7 +168,13 @@ export function getGalleryItemsForCity(citySlug: string): GalleryItem[] {
     real.push({ kind: 'case', item, doctor })
   }
   if (real.length > 0) return real
-  return illustrations.map((item) => ({ kind: 'illustration', item }))
+  // Иллюстрации — только по направлениям, которые есть в этом городе:
+  // ортодонтия только в Минске, и в Рогачёве карточка «Ортодонтическое
+  // лечение» вела бы в услугу, которой там нет.
+  const available = new Set(getServicesForCity(citySlug).map((s) => s.slug))
+  return illustrations
+    .filter((item) => available.has(item.serviceSlug))
+    .map((item) => ({ kind: 'illustration', item }))
 }
 
 /** Есть ли у города хотя бы одна реальная работа (иначе показываются иллюстрации). */

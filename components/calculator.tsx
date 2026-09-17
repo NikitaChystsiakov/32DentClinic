@@ -11,7 +11,7 @@ import { Field, FieldGroup, FieldLabel, FieldTitle, FieldError } from '@/compone
 import { Input } from '@/components/ui/input'
 import { ConsentField } from '@/components/consent-field'
 import { formatBelarusPhone, isValidBelarusPhone } from '@/lib/phone'
-import { getServiceBySlug } from '@/lib/services-data'
+import { getServiceBySlug, getServicesForCity } from '@/lib/services-data'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { siteConfig } from '@/lib/site-config'
 import { bookingSource, submitBooking } from '@/lib/booking-api'
@@ -80,6 +80,18 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
   const [website, setWebsite] = React.useState('')
   const [showErrors, setShowErrors] = React.useState(false)
   const [formState, setFormState] = React.useState<FormState>('default')
+
+  // Варианты первого шага — только те, чьё направление есть в этом городе:
+  // «Кривые зубы / прикус» ведёт в ортодонтию, а она только в Минске, и в
+  // Рогачёве результат ссылался бы на несуществующую страницу услуги.
+  // На страницах сети (города нет) показываем всё.
+  const step1Options = React.useMemo(() => {
+    if (!currentCity) return STEP1_OPTIONS
+    const available = new Set(getServicesForCity(currentCity.slug).map((s) => s.slug))
+    return STEP1_OPTIONS.filter(
+      (opt) => opt.id === 'ne-uveren' || STEP2_CONFIG[opt.id].options.some((o) => available.has(o.category))
+    )
+  }, [currentCity])
 
   const skipsStep2 = step1 === 'ne-uveren'
   const totalSteps = skipsStep2 ? 2 : 3
@@ -196,7 +208,7 @@ export function Calculator({ showHeading = true }: { showHeading?: boolean }) {
         <div className="flex flex-col gap-4">
           <h3 className="font-heading text-lg font-semibold text-foreground">Что вас беспокоит?</h3>
           <RadioGroup value={step1} onValueChange={(v) => setStep1(v as Step1Id)} className="gap-3">
-            {STEP1_OPTIONS.map((opt) => (
+            {step1Options.map((opt) => (
               <FieldLabel key={opt.id} htmlFor={`s1-${opt.id}`} className="cursor-pointer">
                 <Field orientation="horizontal" className="rounded-xl border border-border p-4">
                   <RadioGroupItem value={opt.id} id={`s1-${opt.id}`} />

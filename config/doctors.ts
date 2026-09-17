@@ -12,7 +12,7 @@
 //   • `isPlaceholder: true` — карточка-заглушка с выдуманным именем; такие не
 //     показываются как реальные люди. Снимите флаг, когда данные настоящие.
 
-export type DoctorCategory = 'terapevt' | 'ortoped' | 'hirurg'
+export type DoctorCategory = 'terapevt' | 'ortoped' | 'hirurg' | 'ortodont'
 
 export interface Doctor {
   slug: string
@@ -39,6 +39,7 @@ export const doctorCategoryLabels: Record<DoctorCategory, string> = {
   terapevt: 'Терапевты',
   ortoped: 'Ортопеды',
   hirurg: 'Хирурги',
+  ortodont: 'Ортодонты',
 }
 
 export const doctors: Doctor[] = [
@@ -72,9 +73,9 @@ export const doctors: Doctor[] = [
     slug: 'pavlovich-sergey',
     name: 'Павлович Сергей Степанович',
     specialization: 'Врач-терапевт-стоматолог',
-    experienceYears: 15,
+    experienceYears: 20,
     categories: ['terapevt'],
-    bio: 'Сергей Степанович — врач-терапевт с 15-летним стажем.',
+    bio: 'Сергей Степанович — врач-терапевт с 20-летним стажем.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/pavlovich-sergey.webp',
@@ -83,11 +84,11 @@ export const doctors: Doctor[] = [
   },
   {
     slug: 'saykovskaya-tatyana',
-    name: 'Татьяна Сайковская',
+    name: 'Сайковская Татьяна Васильевна',
     specialization: 'Врач-терапевт-стоматолог',
-    experienceYears: 12,
+    experienceYears: 25,
     categories: ['terapevt'],
-    bio: 'Татьяна — врач-терапевт с 12-летним опытом работы.',
+    bio: 'Татьяна Васильевна — врач-терапевт с 25-летним опытом работы.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/saykovskaya-tatyana.webp',
@@ -96,11 +97,11 @@ export const doctors: Doctor[] = [
   },
   {
     slug: 'bychkov-ivan',
-    name: 'Иван Бычков',
+    name: 'Бычков Иван Иванович',
     specialization: 'Врач-терапевт-стоматолог',
-    experienceYears: 11,
+    experienceYears: 16,
     categories: ['terapevt'],
-    bio: 'Иван — врач-терапевт с 11-летним опытом работы.',
+    bio: 'Иван Иванович — врач-терапевт с 16-летним опытом работы.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/bychkov-ivan.webp',
@@ -109,11 +110,11 @@ export const doctors: Doctor[] = [
   },
   {
     slug: 'kireev-vladislav',
-    name: 'Владислав Киреев',
+    name: 'Киреев Владислав Васильевич',
     specialization: 'Врач-стоматолог-ортопед',
-    experienceYears: 12,
+    experienceYears: 20,
     categories: ['ortoped'],
-    bio: 'Владислав — врач-ортопед с 12-летним опытом протезирования зубов.',
+    bio: 'Владислав Васильевич — врач-ортопед с 20-летним опытом протезирования зубов.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
     photo: '/images/doctors/kireev-vladislav.webp',
@@ -122,11 +123,11 @@ export const doctors: Doctor[] = [
   },
   {
     slug: 'kovalchuk-igor',
-    name: 'Игорь Ковальчук',
+    name: 'Ковальчук Игорь Васильевич',
     specialization: 'Врач-стоматолог-ортопед',
-    experienceYears: 7,
+    experienceYears: 15,
     categories: ['ortoped'],
-    bio: 'Игорь — врач-ортопед, специализируется на коронках и протезировании.',
+    bio: 'Игорь Васильевич — врач-ортопед с 15-летним стажем, специализируется на коронках и протезировании.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
     photo: '/images/doctors/kovalchuk-igor.webp',
@@ -137,9 +138,9 @@ export const doctors: Doctor[] = [
     slug: 'alekseychuk-vyacheslav',
     name: 'Вячеслав Алексейчук',
     specialization: 'Врач-стоматолог-ортопед',
-    experienceYears: 6,
+    experienceYears: 25,
     categories: ['ortoped'],
-    bio: 'Вячеслав — врач-ортопед, специализируется на протезировании зубов.',
+    bio: 'Вячеслав — врач-ортопед с 25-летним стажем, специализируется на протезировании зубов.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
     hasCertificates: false,
     photo: '/images/doctors/alekseychuk-vyacheslav.webp',
@@ -164,11 +165,11 @@ export const doctors: Doctor[] = [
   },
   {
     slug: 'makhonko-pavel',
-    name: 'Павел Махонько',
+    name: 'Махонько Павел Александрович',
     specialization: 'Врач-стоматолог-хирург-имплантолог, ортопед',
-    experienceYears: 12,
+    experienceYears: 20,
     categories: ['hirurg', 'ortoped'],
-    bio: 'Павел — хирург-имплантолог и ортопед: ведёт пациента от установки импланта до протезирования, поэтому план лечения не «собирается» из решений разных врачей.',
+    bio: 'Павел Александрович — хирург-имплантолог и ортопед с 20-летним стажем: ведёт пациента от установки импланта до протезирования, поэтому план лечения не «собирается» из решений разных врачей.',
     directions: [
       { label: 'Хирургия', href: '/uslugi/khirurgiya/' },
       { label: 'Имплантация', href: '/uslugi/implantaciya/' },
@@ -202,10 +203,10 @@ export const doctors: Doctor[] = [
   {
     slug: 'molchan-aleksandr',
     name: 'Молчан Александр Александрович',
-    specialization: 'Врач-стоматолог-хирург, первая категория',
+    specialization: 'Врач-стоматолог-хирург-имплантолог, первая категория',
     experienceYears: 21,
     categories: ['hirurg'],
-    bio: 'Александр Александрович — стоматолог-хирург: удаление зубов любой сложности и пластика мягких тканей. Проходил обучение в Швейцарии и Израиле.',
+    bio: 'Александр Александрович — стоматолог-хирург-имплантолог: установка имплантов, удаление зубов любой сложности и пластика мягких тканей. Проходил обучение в Швейцарии и Израиле.',
     directions: [
       { label: 'Хирургия', href: '/uslugi/khirurgiya/' },
       { label: 'Имплантация', href: '/uslugi/implantaciya/' },
@@ -215,10 +216,9 @@ export const doctors: Doctor[] = [
     // Распределение по городам — от заказчика 15.09.2026.
     cities: ['minsk'],
   },
-  // [TBD] Гутырчик и Ухватова: заказчик прислал только имена и фото.
-  // Специализация, стаж и профиль — уточняются; пока «врач-стоматолог»
-  // в группе терапевтов, без стажа. Ухватова — Минск (список 15.09),
-  // Гутырчик — город не назван.
+  // [TBD] Гутырчик: заказчик прислал только имя и фото. Специализация,
+  // стаж и профиль — уточняются; пока «врач-стоматолог» в группе
+  // терапевтов, без стажа, город не назван.
   {
     slug: 'gutyrchik-mariya',
     name: 'Гутырчик Мария',
@@ -234,22 +234,26 @@ export const doctors: Doctor[] = [
   {
     slug: 'ukhvatova-ekaterina',
     name: 'Ухватова Екатерина',
-    specialization: 'Врач-стоматолог',
-    categories: ['terapevt'],
-    bio: 'Екатерина — врач-стоматолог минского центра 32Дент+.',
-    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    // Профиль и стаж — от заказчика 16.09.2026. Единственный ортодонт сети:
+    // ортодонтия в config/services.ts доступна только в Минске.
+    specialization: 'Врач-стоматолог-ортодонт',
+    experienceYears: 20,
+    categories: ['ortodont'],
+    bio: 'Екатерина — врач-ортодонт с 20-летним стажем: исправление прикуса брекет-системами и элайнерами у детей и взрослых.',
+    directions: [{ label: 'Ортодонтия', href: '/uslugi/ortodontiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/ukhvatova-ekaterina.webp',
     // Распределение по городам — от заказчика 15.09.2026.
     cities: ['minsk'],
   },
 
-  // --- Жлобин, дополнение от заказчика 15.09.2026 (ФИО и профиль; стаж
-  // и образование — [TBD]). ---
+  // --- Жлобин, дополнение от заказчика 15.09.2026 (ФИО и профиль),
+  // стаж — от 16.09.2026; образование — [TBD]. ---
   {
     slug: 'fedorova-natalya',
     name: 'Федорова Наталья Васильевна',
     specialization: 'Врач-стоматолог-хирург',
+    experienceYears: 6,
     categories: ['hirurg'],
     bio: 'Наталья Васильевна — стоматолог-хирург жлобинской клиники: удаление зубов, в том числе сложное, и хирургическая подготовка к имплантации.',
     directions: [{ label: 'Хирургия', href: '/uslugi/khirurgiya/' }],
@@ -261,6 +265,7 @@ export const doctors: Doctor[] = [
     slug: 'volosova-natalya',
     name: 'Волосова Наталья Александровна',
     specialization: 'Врач-стоматолог-терапевт',
+    experienceYears: 9,
     categories: ['terapevt'],
     bio: 'Наталья Александровна — врач-терапевт: лечение кариеса, пульпита и заболеваний дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
@@ -272,6 +277,7 @@ export const doctors: Doctor[] = [
     slug: 'mikhalenko-olga',
     name: 'Михаленко Ольга Валерьевна',
     specialization: 'Врач-стоматолог-терапевт',
+    experienceYears: 14,
     categories: ['terapevt'],
     bio: 'Ольга Валерьевна — врач-терапевт: лечение кариеса, пульпита и заболеваний дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
@@ -283,6 +289,7 @@ export const doctors: Doctor[] = [
     slug: 'kuznetsova-marina',
     name: 'Кузнецова Марина Александровна',
     specialization: 'Врач-стоматолог-терапевт',
+    experienceYears: 6,
     categories: ['terapevt'],
     bio: 'Марина Александровна — врач-терапевт: лечение кариеса, пульпита и заболеваний дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],

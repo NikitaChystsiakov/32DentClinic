@@ -4,7 +4,7 @@
 // TODO: заполнить уникальные тексты для Жлобина
 // Тексты должны отличаться от Рогачёва и Минска для SEO-оптимизации
 
-import type { ClinicVideo, GuaranteeSection, HeroPromo } from './types'
+import type { CityPromo, ClinicVideo, GuaranteeSection, HeroPromo } from './types'
 
 export const zhlobinContent = {
   // SEO
@@ -73,10 +73,10 @@ export const zhlobinContent = {
     ],
   } as ClinicVideo | undefined,
 
-  promo: {
-    text: 'Лечение кариеса от 100 р. — приём в день обращения',
-    href: '/zhlobin/ceny/',
-  },
+  // Анонса в нижней полосе шапки нет: строку «Лечение кариеса от 100 р.»
+  // заказчик попросил убрать (16.09.2026). Чтобы вернуть —
+  // promo: { text: 'Текст анонса', href: '/zhlobin/ceny/' }.
+  promo: undefined as CityPromo | undefined,
 
   // Короткий тег гарантии для футера (site-footer.tsx). Как и текст ниже про
   // лабораторию, это непроверенная копия с Рогачёва (см. TODO в шапке файла) —
@@ -95,7 +95,7 @@ export const zhlobinContent = {
       {
         value: '∞',
         label: 'на импланты',
-        description: 'Пожизненная гарантия производителя на импланты Straumann, MIS и Neodent.',
+        description: 'Пожизненная гарантия производителя на импланты Straumann, MIS, MegaGen и Neodent.',
         icon: 'Infinity',
       },
       {
