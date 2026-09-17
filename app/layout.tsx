@@ -8,6 +8,7 @@ import { BookingModalLoader } from '@/components/booking-modal-loader'
 import { HeaderSwitcher } from '@/components/header-switcher'
 import { SiteFooter } from '@/components/site-footer'
 import { FloatingMessengers } from '@/components/floating-messengers'
+import { PriceNoticeBanner } from '@/components/price-notice-banner'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { MobileMenuProvider } from '@/components/mobile-menu-provider'
 import { siteConfig } from '@/lib/site-config'
@@ -100,6 +101,7 @@ export default function RootLayout({
               <HeaderSwitcher />
               <main className="flex-1">{children}</main>
               <FloatingMessengers />
+              <PriceNoticeBanner />
               <SiteFooter />
               <MobileBottomNav />
             </div>
