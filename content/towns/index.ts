@@ -3,12 +3,16 @@
 // образцу svetlogorsk.ts и добавьте строку в объект ниже.
 
 import type { TownContent } from './types'
+import { bobruiskContent } from './bobruisk'
+import { bykhovContent } from './bykhov'
 import { svetlogorskContent } from './svetlogorsk'
 
 export type { TownContent } from './types'
 
 export const townContents: Record<string, TownContent> = {
   svetlogorsk: svetlogorskContent,
+  bobruisk: bobruiskContent,
+  bykhov: bykhovContent,
 }
 
 export function getTownContent(townSlug: string): TownContent | undefined {
