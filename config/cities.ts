@@ -45,8 +45,9 @@ export interface ClinicPhoto {
 /**
  * Фотографии клиники города. Лежат в public/clinic/<slug>/ — у каждого
  * города своя папка, чтобы интерьер одной клиники не выдавался за другую.
- * Пока у города нет своих снимков, подставляется набор Рогачёва
- * (rogachevPhotos ниже) — это временно, см. docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md.
+ * Свои снимки есть у Рогачёва и Жлобина; Минску, пока он не прислал свои,
+ * подставляется набор Рогачёва (rogachevPhotos ниже) — это временно,
+ * см. docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md.
  */
 export interface CityPhotos {
   /** Фон первого экрана главной города. Декоративный, лежит под градиентом. */
@@ -84,14 +85,25 @@ export interface City {
    * Не указан — иконка не показывается.
    */
   instagram?: string
+  /*
+   * Мессенджеры. У каждого города всегда четыре кнопки: Viber, Telegram,
+   * WhatsApp, MAX (lib/messengers.ts). Viber — всегда на телефоне города.
+   * Поля ниже — переопределения; пустое поле = значение по умолчанию.
+   */
   /**
-   * Номер WhatsApp в международном формате: '+375291234567'. Ссылка на чат
-   * соберётся сама (lib/messengers.ts). Не указан — кнопки нет.
+   * Telegram клиники — полная ссылка: 'https://t.me/Dent32plus' или по
+   * номеру 'https://t.me/+375291234567'. Пусто — Telegram сети
+   * (lib/site-config.ts).
+   */
+  telegram?: string
+  /**
+   * Номер WhatsApp в международном формате: '+375291234567'.
+   * Пусто — телефон города.
    */
   whatsapp?: string
   /**
-   * Ссылка на чат клиники в мессенджере MAX: 'https://max.ru/…'.
-   * Не указана — кнопки нет.
+   * Ссылка на чат клиники в MAX: 'https://max.ru/…'. Пусто — сайт
+   * мессенджера (siteConfig.maxHref), пока заказчик не пришлёт ссылки.
    */
   max?: string
   coordinates: { lat: number; lng: number }
@@ -117,8 +129,7 @@ export interface City {
 }
 
 /**
- * Единственные реальные фото интерьера, которые есть у сети, — сняты в
- * Рогачёве. Минск и Жлобин берут их же, пока клиника не пришлёт свои:
+ * Фото интерьера Рогачёва. Минск берёт их же, пока клиника не пришлёт свои:
  * так уже было до раскладки по папкам, менять на этом этапе не стали.
  * Для Минска подпись «лаборатория» неточна — там лаборатория партнёрская.
  */
@@ -133,6 +144,23 @@ const rogachevPhotos: CityPhotos = {
   ],
 }
 
+/**
+ * Фото жлобинской клиники — кадры из слайдера заказчика (17.09.2026),
+ * обрезаны от элементов интерфейса. Исходники — в assets/clinic/zhlobin-src.
+ * Ещё три кадра из того же набора (treatment, office, sign) стоят на
+ * странице «О нас» (content/zhlobin.ts → about) — здесь их не дублируем.
+ */
+const zhlobinPhotos: CityPhotos = {
+  hero: '/clinic/zhlobin/reception.webp',
+  gallery: [
+    { src: '/clinic/zhlobin/reception.webp', alt: 'Ресепшн клиники 32Дент в Жлобине' },
+    { src: '/clinic/zhlobin/sign.webp', alt: 'Вывеска 32Дент в холле клиники' },
+    { src: '/clinic/zhlobin/hall.webp', alt: 'Холл клиники и коридор к кабинетам' },
+    { src: '/clinic/zhlobin/office.webp', alt: 'Лечебный кабинет: врач на приёме' },
+    { src: '/clinic/zhlobin/doctor-at-work.webp', alt: 'Врач 32Дент за работой' },
+  ],
+}
+
 export const cities: City[] = [
   {
     slug: 'minsk',
@@ -142,12 +170,15 @@ export const cities: City[] = [
     phone: '+375 (29) 323-33-88', 
     phoneHref: 'tel:+375293233388', 
     address: 'г. Минск, Пр. Победителей, 41',
-    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
-    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
-    email: undefined,
+    // E-mail — с карточки заказчика от 17.09.2026. Telegram — @Dent32plus
+    // («Стоматология 32 Dent+», проверено 17.09.2026); WhatsApp и Viber —
+    // на телефоне города.
+    email: '32dentplus@gmail.com',
+    // [TBD] Instagram (в аудите — @32_dent_plus, заказчик не подтвердил).
     instagram: undefined,
+    telegram: 'https://t.me/Dent32plus',
     whatsapp: undefined,
-    max: undefined,
+    max: undefined, // [TBD] ссылка чата в MAX
     coordinates: { lat: 53.914870, lng: 27.535996 }, 
     image: '/clinic/minsk/main.webp',
     // Своих фото интерьера пока нет (присланные скрины из Instagram в
@@ -181,15 +212,20 @@ export const cities: City[] = [
     name: 'Рогачёв',
     nameIn: 'Рогачёве',
     brandName: '32Дент',
-    phone: '+375 (29) 744-40-33',
-    phoneHref: 'tel:+375297444033',
+    // Код (44), а не (29): так на карточке контактов заказчика от 17.09.2026
+    // (телефон, Viber и Telegram — один номер). Прежний (29) был с [TBD].
+    phone: '+375 (44) 744-40-33',
+    phoneHref: 'tel:+375447444033',
     address: 'г. Рогачёв, ул. Ленина, 60',
-    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
-    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
-    email: undefined,
+    // E-mail — с карточки заказчика от 17.09.2026. Telegram там — по
+    // номеру клиники ([TBD] заказчик уточнит); Viber и WhatsApp — на
+    // телефоне города.
+    email: '32dent.stoma@gmail.com',
+    // [TBD] Instagram — заказчик не прислал.
     instagram: undefined,
+    telegram: 'https://t.me/+375447444033',
     whatsapp: undefined,
-    max: undefined,
+    max: undefined, // [TBD] ссылка чата в MAX
     // Координаты клиники (ул. Ленина, 60) — с карточки 32Дент на 103.by,
     // сверено 16.09.2026. Раньше стояло округлённое значение центра города.
     coordinates: { lat: 53.0813, lng: 30.0519 },
@@ -227,12 +263,14 @@ export const cities: City[] = [
     phone: '+375 (44) 559-59-01', 
     phoneHref: 'tel:+375445595901', 
     address: 'г. Жлобин, ул. Петровского, 44',
-    // [TBD] e-mail, Instagram, WhatsApp и MAX — заказчик 16.09.2026 попросил
-    // добавить, значения ещё не прислал. Пока не заполнены — не показываются.
-    email: undefined,
+    // E-mail — с карточки заказчика от 17.09.2026. Viber и WhatsApp — на
+    // телефоне города; Telegram — [TBD] заказчик уточнит, пока сети.
+    email: 'expert32dent@gmail.com',
+    // [TBD] Instagram — заказчик не прислал.
     instagram: undefined,
+    telegram: undefined,
     whatsapp: undefined,
-    max: undefined,
+    max: undefined, // [TBD] ссылка чата в MAX
     // Координаты дома ул. Петровского, 44 — по OpenStreetMap и карточке
     // 32Дент на 103.by (сверено 16.09.2026). Прежние 52.8928, 30.0228
     // указывали на ул. Красина, 50 — на 900 м мимо клиники, и карта на
@@ -240,10 +278,8 @@ export const cities: City[] = [
     // (ул. Урицкого, 27) и в 300 м от автовокзала (ул. Урицкого, 68): на
     // это опирается страница /svetlogorsk.
     coordinates: { lat: 52.8919, lng: 30.0358 },
-    // Фото жлобинской клиники нет — на хабе обложка услуги, в hero и
-    // галерее временно Рогачёв.
-    image: '/images/services/terapiya.webp',
-    photos: rogachevPhotos,
+    image: '/clinic/zhlobin/reception.webp',
+    photos: zhlobinPhotos,
     hasBookingForm: true,
     featureTags: ['Терапия и Эстетика'],
     seoTitle: 'Стоматология 32Дент Жлобин — стоматологическая помощь',

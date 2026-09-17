@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -8,9 +9,11 @@ import {
   ClipboardList,
   Clock,
   Cpu,
+  Expand,
   FileText,
   FlaskConical,
   HeartHandshake,
+  Images,
   MapPin,
   Phone,
   ScanLine,
@@ -25,12 +28,13 @@ import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
 import { ClinicVideoSection } from '@/components/home/clinic-video-section'
+import { Lightbox } from '@/components/home/clinic-gallery-section'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { cn } from '@/lib/utils'
-import type { AboutBlock, AboutPhoto } from '@/content/types'
+import type { AboutBlock, AboutGalleryPhoto, AboutPhoto } from '@/content/types'
 
 // Иконки принципов приходят из контента города строкой (см. AboutPrinciple),
 // потому что content/*.ts — данные, а не React: держать в них импорты
@@ -143,6 +147,72 @@ function TextWithPhoto({
 
       <ClinicPhoto photo={block.photo} className={cn(side === 'left' && 'md:order-1')} />
     </div>
+  )
+}
+
+/**
+ * Галерея в конце страницы: кадры клиники, которым не нашлось места в блоках
+ * выше (content/<city>.ts → about.gallery). Сетка в три колонки с просмотром
+ * на весь экран — тот же Lightbox, что у галереи главной.
+ */
+function AboutGallery({ photos }: { photos: AboutGalleryPhoto[] }) {
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null)
+
+  const close = React.useCallback(() => setOpenIndex(null), [])
+  const step = React.useCallback(
+    (delta: number) => {
+      setOpenIndex((current) =>
+        current === null ? current : (current + delta + photos.length) % photos.length
+      )
+    },
+    [photos.length]
+  )
+
+  return (
+    <>
+      <div className="mb-8 flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent/12 text-accent ring-1 ring-accent/20">
+            <Images className="size-5" />
+          </span>
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-(--panel-heading)">
+            Ещё фото клиники
+          </h2>
+        </div>
+        <p className="max-w-2xl text-pretty text-(--panel-body)">
+          Нажмите на фото, чтобы открыть его на весь экран.
+        </p>
+      </div>
+
+      {/* Пропорция 3:2 — под кадры заказчика: они горизонтальные, и в квадрате
+          (как на главной) обрезались бы по бокам сильнее, чем хотелось бы. */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {photos.map((photo, index) => (
+          <button
+            key={photo.src}
+            type="button"
+            aria-label={`Открыть фото: ${photo.alt}`}
+            onClick={() => setOpenIndex(index)}
+            className="group relative aspect-3/2 overflow-hidden rounded-2xl ring-1 ring-silver/25 transition-shadow duration-300 hover:shadow-lg focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, 33vw"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+            <span className="pointer-events-none absolute right-3 bottom-3 flex size-9 items-center justify-center rounded-full bg-white/85 text-brand-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <Expand className="size-4" />
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {openIndex !== null && (
+        <Lightbox tiles={photos} index={openIndex} onClose={close} onStep={step} />
+      )}
+    </>
   )
 }
 
@@ -365,6 +435,14 @@ export function AboutContent() {
             </div>
           </SectionPanel>
       </Reveal>
+
+      {about.gallery && about.gallery.length > 0 && (
+        <Reveal delay={1}>
+          <SectionPanel variant="lavender">
+            <AboutGallery photos={about.gallery} />
+          </SectionPanel>
+        </Reveal>
+      )}
 
       {/* Страховая и документы — юридический «хвост» страницы. */}
       <Reveal delay={1}>

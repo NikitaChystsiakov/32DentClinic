@@ -125,6 +125,18 @@ export interface AboutSection {
     title: string
     description: string
   }
+  /**
+   * Дополнительные фото клиники — кадры, которым не нашлось места в блоках
+   * выше. Рендерятся сеткой с просмотром на весь экран в конце страницы,
+   * перед блоком документов. Поле не задано — секции нет.
+   */
+  gallery?: AboutGalleryPhoto[]
+}
+
+/** Плитка галереи в конце «О нас»: путь и подпись (alt и подпись в просмотре). */
+export interface AboutGalleryPhoto {
+  src: string
+  alt: string
 }
 
 export interface TreatmentTimelineStep {
