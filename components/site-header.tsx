@@ -4,11 +4,11 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Phone, MapPin, Send, ChevronDown, Star, Percent, Menu } from 'lucide-react'
+import { Phone, MapPin, ChevronDown, Star, Percent, Menu } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { ViberIcon } from '@/components/icons/viber-icon'
+import { MessengerIcon } from '@/components/icons/messenger-icon'
 import { BookingButton } from '@/components/booking-button'
 import { getCityContent } from '@/content'
 import { cities } from '@/config/cities'
@@ -16,7 +16,7 @@ import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
 import { getMainRatingForCity } from '@/lib/data/aggregators'
-import { telegramHref as networkTelegramHref, viberChatHref } from '@/lib/messengers'
+import { getMessengerLinks } from '@/lib/messengers'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
 // Логотип 258×171 — ширина каждого варианта посчитана от высоты по этим пропорциям,
@@ -107,8 +107,9 @@ export function SiteHeader() {
   const shortAddress = currentCity ? formatAddressWithoutCity(currentCity.address) : null
   const phone = currentCity?.phone
   const phoneHref = currentCity?.phoneHref
-  const viberHref = currentCity ? viberChatHref(currentCity) : null
-  const telegramHref = networkTelegramHref()
+  // Мессенджеры города (без Instagram — это не «написать»); на страницах
+  // сети — Telegram сети.
+  const messengers = getMessengerLinks(currentCity).filter((m) => m.id !== 'instagram')
   // Рейтинг — площадки своего города; у города без профилей метки нет.
   const rating = citySlug ? getMainRatingForCity(citySlug) : undefined
   // Шапка живёт вне CityProvider (в корневом layout), поэтому акцию берём
@@ -279,14 +280,18 @@ export function SiteHeader() {
                   как три отдельных элемента, а не как один блок. Класс на всех
                   трёх один, поэтому и наведение у них одинаковое. */}
               <div className="flex items-center gap-0.5">
-                {viberHref && (
-                  <a href={viberHref} aria-label="Написать в Viber" title="Написать в Viber" className="icon-action">
-                    <ViberIcon className="size-5" />
+                {messengers.map((m) => (
+                  <a
+                    key={m.id}
+                    href={m.href}
+                    {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    aria-label={`Написать в ${m.label}`}
+                    title={`Написать в ${m.label}`}
+                    className="icon-action"
+                  >
+                    <MessengerIcon id={m.id} className="size-5" />
                   </a>
-                )}
-                <a href={telegramHref} aria-label="Написать в Telegram" title="Написать в Telegram" className="icon-action">
-                  <Send className="size-5" />
-                </a>
+                ))}
                 <ThemeToggle />
               </div>
               <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">

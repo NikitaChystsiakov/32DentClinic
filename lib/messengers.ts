@@ -6,23 +6,35 @@ import { siteConfig } from '@/lib/site-config'
  * `https://viber.com/<номер>` — такого адреса у Viber нет, ссылка открывала
  * сайт viber.com. Рабочий формат — deep link `viber://chat?number=%2B375…`:
  * на телефоне и на компьютере с установленным Viber открывается чат с
- * номером клиники. Номер берётся из телефона города, поэтому в Минске это
- * минский чат, а не рогачёвский.
+ * номером клиники. Номер — телефон города (заказчик, 17.09.2026: Viber
+ * везде на номере клиники).
  */
 export function viberChatHref(city: City): string {
-  const digits = city.phoneHref.replace(/\D/g, '')
-  return `viber://chat?number=%2B${digits}`
+  return `viber://chat?number=%2B${phoneDigits(city)}`
 }
 
-/** Telegram один на сеть (см. lib/site-config.ts); при появлении городских — добавить поле в City. */
-export function telegramHref(): string {
-  return siteConfig.telegramHref
+/**
+ * Telegram: у города — своя ссылка из City.telegram (у Рогачёва — по
+ * номеру, у Минска — @Dent32plus); если у города не задана и на страницах
+ * сети — Telegram сети из lib/site-config.ts.
+ */
+export function telegramHref(city?: City | null): string {
+  return city?.telegram ?? siteConfig.telegramHref
 }
 
-/** Чат WhatsApp по номеру из City.whatsapp; нет номера — нет ссылки. */
-export function whatsappHref(city: City): string | null {
-  if (!city.whatsapp) return null
-  return `https://wa.me/${city.whatsapp.replace(/\D/g, '')}`
+function phoneDigits(city: City): string {
+  return city.phoneHref.replace(/\D/g, '')
+}
+
+/** Чат WhatsApp: номер из City.whatsapp, а если он не задан — телефон города. */
+export function whatsappHref(city: City): string {
+  const digits = city.whatsapp ? city.whatsapp.replace(/\D/g, '') : phoneDigits(city)
+  return `https://wa.me/${digits}`
+}
+
+/** Чат в MAX: ссылка из City.max, а пока её нет — сайт мессенджера. */
+export function maxHref(city: City): string {
+  return city.max ?? siteConfig.maxHref
 }
 
 export type MessengerId = 'viber' | 'telegram' | 'whatsapp' | 'max' | 'instagram'
@@ -37,18 +49,17 @@ export interface MessengerLink {
 
 /**
  * Все способы написать клинике города в одном порядке — для страницы
- * контактов, подвала и мобильного меню. Viber всегда (собирается из
- * телефона), Telegram — сети, остальные только если заполнены в
- * config/cities.ts. Без города (страницы сети) — только Telegram.
+ * контактов, подвала и мобильного меню. У каждого города всегда четыре:
+ * Viber, Telegram, WhatsApp, MAX (заказчик, 17.09.2026); Instagram — только
+ * если заполнен в config/cities.ts. Без города (страницы сети) — Telegram сети.
  */
 export function getMessengerLinks(city: City | null | undefined): MessengerLink[] {
   const links: MessengerLink[] = []
   if (city) links.push({ id: 'viber', label: 'Viber', href: viberChatHref(city), external: false })
-  links.push({ id: 'telegram', label: 'Telegram', href: telegramHref(), external: true })
+  links.push({ id: 'telegram', label: 'Telegram', href: telegramHref(city), external: true })
   if (city) {
-    const whatsapp = whatsappHref(city)
-    if (whatsapp) links.push({ id: 'whatsapp', label: 'WhatsApp', href: whatsapp, external: true })
-    if (city.max) links.push({ id: 'max', label: 'MAX', href: city.max, external: true })
+    links.push({ id: 'whatsapp', label: 'WhatsApp', href: whatsappHref(city), external: true })
+    links.push({ id: 'max', label: 'MAX', href: maxHref(city), external: true })
     if (city.instagram) links.push({ id: 'instagram', label: 'Instagram', href: city.instagram, external: true })
   }
   return links
