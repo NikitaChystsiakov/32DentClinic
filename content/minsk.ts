@@ -345,6 +345,7 @@ export const minskContent = {
         description: 'Осмотр, обсуждение пожеланий и составление предварительного плана лечения.',
         icon: 'Stethoscope',
         isMilestone: true,
+        photo: '/images/steps/konsultaciya-implant.webp',
       },
       {
         step: 2,
@@ -367,6 +368,7 @@ export const minskContent = {
         description: 'Операция проводится под местной анестезией, занимает от 40 минут до 2 часов.',
         icon: 'Syringe',
         isMilestone: true,
+        photo: '/images/steps/implant-kit.webp',
       },
       {
         step: 5,
@@ -391,6 +393,7 @@ export const minskContent = {
         description: 'Изготовление и установка постоянных коронок в лаборатории-партнёре «Белая лаборатория».',
         icon: 'Crown',
         isMilestone: true,
+        photo: '/images/steps/finalnye-koronki.webp',
       },
       {
         step: 8,
