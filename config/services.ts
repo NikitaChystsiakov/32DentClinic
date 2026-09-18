@@ -85,7 +85,7 @@ export const serviceCategories: ServiceCategory[] = [
     ],
     whenToVisit: ['Отсутствует один или несколько зубов, съёмный протез неудобен', 'Хочется несъёмное решение'],
     steps: ['Диагностика и планирование', 'Установка импланта', 'Период приживления', 'Протезирование'],
-    doctorSlugs: ['zhilevich-vladimir', 'makhonko-pavel', 'molchan-aleksandr', 'belousova-tatyana'],
+    doctorSlugs: ['zhilevich-vladimir', 'makhonko-pavel', 'molchan-aleksandr', 'privalov-evgeni', 'belousova-tatyana'],
     // Страница услуги — не общий шаблон, а хаб раздела (config/implantation.ts):
     // протоколы, цены по городам и FAQ лежат там, поэтому здесь faq пустой.
     faq: [],
@@ -127,6 +127,7 @@ export const serviceCategories: ServiceCategory[] = [
     steps: ['Осмотр и диагностика', 'Обезболивание при необходимости', 'Лечение', 'Рекомендации по уходу'],
     doctorSlugs: [
       'ilyushchenko-natalya',
+      'kovalchuk-maria',
       'alekseychik-yuliya',
       'pavlovich-sergey',
       'saykovskaya-tatyana',
@@ -233,7 +234,7 @@ export const serviceCategories: ServiceCategory[] = [
       'Направление от терапевта клиники',
     ],
     steps: ['Консультация и снимок', 'Анестезия', 'Операция', 'Рекомендации по восстановлению'],
-    doctorSlugs: ['zhilevich-vladimir', 'molchan-aleksandr', 'makhonko-pavel', 'fedorova-natalya'],
+    doctorSlugs: ['zhilevich-vladimir', 'molchan-aleksandr', 'makhonko-pavel', 'privalov-evgeni', 'fedorova-natalya'],
     faq: [
       {
         question: 'Сколько заживает лунка после удаления?',

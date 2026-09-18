@@ -22,6 +22,8 @@ assets/sheets/
 assets/doctors/
 # Исходники фото клиник (скрины из Инсты и т.п.) — в public попадают только отобранные
 assets/clinic/
+# Оригиналы лицензий (PDF и фото от клиник) — на сайт идут webp-версии из public/clinic/<город>/license/
+assets/licenses/
 
 # Кеш инкрементальной проверки типов (tsc)
 tsconfig.tsbuildinfo

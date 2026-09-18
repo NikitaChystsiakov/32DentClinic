@@ -134,6 +134,34 @@ export const doctors: Doctor[] = [
     // Распределение по городам — от заказчика 15.09.2026.
     cities: ['rogachev'],
   },
+  // Ковальчук М. А. и Привалов Е. Г. — данные и фото от заказчика 18.09.2026.
+  {
+    slug: 'kovalchuk-maria',
+    name: 'Ковальчук Мария Александровна',
+    specialization: 'Врач-стоматолог-терапевт',
+    experienceYears: 14,
+    categories: ['terapevt'],
+    bio: 'Мария Александровна — врач-терапевт с 14-летним стажем: лечение кариеса, пульпита и заболеваний дёсен.',
+    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/kovalchuk-maria.webp',
+    cities: ['rogachev'],
+  },
+  {
+    slug: 'privalov-evgeni',
+    name: 'Привалов Евгений Григорьевич',
+    specialization: 'Врач-стоматолог-хирург-имплантолог',
+    experienceYears: 14,
+    categories: ['hirurg'],
+    bio: 'Евгений Григорьевич — стоматолог-хирург-имплантолог с 14-летним стажем: установка имплантов, удаление зубов и хирургическая подготовка к протезированию.',
+    directions: [
+      { label: 'Имплантация', href: '/uslugi/implantaciya/' },
+      { label: 'Хирургия', href: '/uslugi/khirurgiya/' },
+    ],
+    hasCertificates: false,
+    photo: '/images/doctors/privalov-evgeni.webp',
+    cities: ['rogachev'],
+  },
   {
     slug: 'alekseychuk-vyacheslav',
     name: 'Вячеслав Алексейчук',
