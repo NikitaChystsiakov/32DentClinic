@@ -7,7 +7,8 @@
 // сравнивайте с другими клиниками — ст. 15 Закона «О рекламе». Отзывов-цитат
 // на сайте нет (см. lib/data/aggregators.ts), примеры работ — lib/data/before-after.ts.
 
-import type { AboutSection, CityPromo, ClinicVideo, GuaranteeSection, HeroPromo, TreatmentTimeline } from './types'
+import type { AboutSection, ClinicVideo, GuaranteeSection, HeroPromo, TreatmentTimeline } from './types'
+import { cityChrome } from './chrome'
 
 export const rogachevContent = {
   // SEO
@@ -82,15 +83,10 @@ export const rogachevContent = {
     ],
   } as ClinicVideo | undefined,
 
-  // Если анонса нет — поставьте undefined, полоса в шапке скроется.
-  promo: {
-    text: 'Профессиональная гигиена с Air Flow — от 11 р. за зуб',
-    href: '/rogachev/ceny/',
-  } as CityPromo | undefined,
-
-  // Короткий тег гарантии для футера (site-footer.tsx). У Рогачёва и Жлобина
-  // это «2 года на всё», у Минска — тройная гарантия (см. minsk.ts).
-  guaranteeSummary: 'Гарантия 2 года на все виды работ.',
+  // Анонс в шапке и тег гарантии в футере редактируются в content/chrome.ts
+  // (шапка и футер — клиентские, им нельзя импортировать этот файл целиком).
+  promo: cityChrome.rogachev.promo,
+  guaranteeSummary: cityChrome.rogachev.guaranteeSummary,
   // То же самое числом+подписью — для плашки статистики под hero
   // (app/[city]/page.tsx). Раньше там было захардкожено '2'/'года' на все
   // города разом, из-за чего для Минска число спорило с бейджем в hero.
@@ -242,10 +238,7 @@ export const rogachevContent = {
     mapDescription: 'Карта проезда к 32Дент',
     // Часы — с карточки заказчика от 17.09.2026 (совпадает со 103.by):
     // будни до 20:00, суббота выходной. Раньше стояло Пн–Сб до 19:00.
-    hours: [
-      { days: 'Понедельник — Пятница', time: '8:00 – 20:00' },
-      { days: 'Суббота — Воскресенье', time: 'выходной' },
-    ],
+    hours: cityChrome.rogachev.hours, // редактировать в content/chrome.ts
   },
 
   // Почему мы

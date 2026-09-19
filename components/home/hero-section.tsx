@@ -1,10 +1,9 @@
-'use client'
-
 import Image from 'next/image'
 import { Star, ShieldCheck, Calendar, Users2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
+import type { CityContent } from '@/content'
 import { getDoctorsForCity } from '@/config/doctors'
 import { getMainRatingForCity } from '@/lib/data/aggregators'
 
@@ -16,8 +15,13 @@ function pluralizeDoctors(n: number): string {
   return 'врачей'
 }
 
-export function HeroSection() {
-  const { city, content } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function HeroSection({ city, content }: { city: City; content: CityContent }) {
   const doctorsCount = getDoctorsForCity(city.slug).length
   // Оценка только своего города — в Жлобине рогачёвских «89 отзывов» больше нет.
   const mainRating = getMainRatingForCity(city.slug)

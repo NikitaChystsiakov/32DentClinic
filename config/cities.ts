@@ -157,9 +157,9 @@ export interface City {
  * Для Минска подпись «лаборатория» неточна — там лаборатория партнёрская.
  */
 const rogachevPhotos: CityPhotos = {
-  hero: '/clinic/rogachev/reception.jpg',
+  hero: '/clinic/rogachev/reception.webp',
   gallery: [
-    { src: '/clinic/rogachev/reception.jpg', alt: 'Ресепшн клиники 32Дент' },
+    { src: '/clinic/rogachev/reception.webp', alt: 'Ресепшн клиники 32Дент' },
     { src: '/clinic/rogachev/office.jpg', alt: 'Лечебный кабинет 32Дент' },
     { src: '/clinic/rogachev/equipment.jpg', alt: 'Оборудование клиники 32Дент' },
     { src: '/clinic/rogachev/office2.jpg', alt: 'Холл клиники 32Дент' },
@@ -289,7 +289,7 @@ export const cities: City[] = [
     // Координаты клиники (ул. Ленина, 60) — с карточки 32Дент на 103.by,
     // сверено 16.09.2026. Раньше стояло округлённое значение центра города.
     coordinates: { lat: 53.0813, lng: 30.0519 },
-    image: '/clinic/rogachev/reception.jpg',
+    image: '/clinic/rogachev/reception.webp',
     photos: rogachevPhotos,
     // Рогачёв принимает записи только по телефону: администраторы не
     // обрабатывают заявки с сайта, на это жаловались пациенты, и 15.09.2026

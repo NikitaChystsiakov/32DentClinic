@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react'
 import Image from 'next/image'
-import { motion, useMotionValue, useSpring, type Variants } from 'motion/react'
 import { ParticleField } from '@/components/particle-field'
 import {
   Stethoscope,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useCity } from '@/lib/contexts/city-context'
 import { cn } from '@/lib/utils'
+import { useReveal } from '@/components/reveal'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { getDoctorsForCity, type Doctor, type DoctorCategory } from '@/config/doctors'
 import type { TreatmentTimeline, TreatmentTimelineStep, TreatmentTimelineGapLabel } from '@/content/types'
@@ -57,19 +57,6 @@ function pickDoctorCluster(doctors: Doctor[]): Doctor[] {
     if (!picked.includes(doctor)) picked.push(doctor)
   }
   return picked.slice(0, 3)
-}
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
 }
 
 // Крупный, заметный кластер фото врачей рядом со вступительной фразой секции —
@@ -125,18 +112,22 @@ function StepCard({
   const isMilestone = step.isMilestone
   const photoHint = isMilestone ? MILESTONE_PHOTO_HINTS[step.title] : undefined
 
-  const rotateX = useMotionValue(0)
-  const rotateY = useMotionValue(0)
-  const springX = useSpring(rotateX, { stiffness: 260, damping: 22 })
-  const springY = useSpring(rotateY, { stiffness: 260, damping: 22 })
+  // Появление карточки при прокрутке — общий CSS-механизм (см. reveal.tsx),
+  // каскад 100 мс на карточку, как раньше у motion. Наклон за курсором —
+  // inline-transform и transition-transform, без spring-физики motion:
+  // ради одного ховера тянуть 45 КБ библиотеки на каждую страницу города
+  // слишком дорого для мобильного.
+  const cardRef = useRef<HTMLDivElement>(null)
+  useReveal(cardRef, index * 0.1)
   const glowRef = useRef<HTMLDivElement>(null)
 
   function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect()
     const px = (e.clientX - rect.left) / rect.width
     const py = (e.clientY - rect.top) / rect.height
-    rotateY.set((px - 0.5) * 6)
-    rotateX.set((0.5 - py) * 6)
+    const rotateY = (px - 0.5) * 6
+    const rotateX = (0.5 - py) * 6
+    e.currentTarget.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
     if (glowRef.current) {
       glowRef.current.style.setProperty('--mx', `${px * 100}%`)
       glowRef.current.style.setProperty('--my', `${py * 100}%`)
@@ -144,24 +135,18 @@ function StepCard({
     }
   }
 
-  function handlePointerLeave() {
-    rotateX.set(0)
-    rotateY.set(0)
+  function handlePointerLeave(e: ReactPointerEvent<HTMLDivElement>) {
+    e.currentTarget.style.transform = ''
     if (glowRef.current) glowRef.current.style.opacity = '0'
   }
 
   return (
-    <motion.div
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
+    <div
+      ref={cardRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      style={{ rotateX: springX, rotateY: springY, transformPerspective: 800 }}
       className={cn(
-        'relative flex flex-col rounded-xl border p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5',
+        'relative flex flex-col rounded-xl border p-4 shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:shadow-md sm:p-5',
         isMilestone
           ? // Заливка непрозрачная: при bg-accent/5 сквозь карточку просвечивала
             // indigo-панель и тёмный текст на ней читался плохо. Оттенок акцента
@@ -271,7 +256,7 @@ function StepCard({
           />
         )
       )}
-    </motion.div>
+    </div>
   )
 }
 

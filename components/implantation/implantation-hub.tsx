@@ -187,7 +187,7 @@ export function ImplantationHub() {
       {hasImplantologists && (
         <Reveal delay={1}>
           <SectionPanel variant="mint">
-            <ImplantologistsSection />
+            <ImplantologistsSection city={city} />
           </SectionPanel>
         </Reveal>
       )}
@@ -221,7 +221,7 @@ export function ImplantationHub() {
 
       <Reveal delay={0}>
         <SectionPanel variant="mint">
-          <ContactCtaSection />
+          <ContactCtaSection city={city} content={content} />
         </SectionPanel>
       </Reveal>
     </div>

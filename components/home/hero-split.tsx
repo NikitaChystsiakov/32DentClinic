@@ -209,14 +209,28 @@ export function HeroSplit({
                   <source src={video} type="video/mp4" />
                 </video>
               ) : (
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  preload
-                  sizes="(min-width: 1024px) 46vw, 52vw"
-                  className="object-contain object-bottom drop-shadow-2xl"
-                />
+                <>
+                  {/* Колонка скрыта ниже sm, но <img> браузер скачал бы всё
+                      равно, а с preload — ещё и раньше H1: на телефоне это
+                      175 КБ впустую до LCP. Поэтому картинка lazy (в
+                      display:none такие не грузятся), а на широких экранах
+                      её заранее тянет preload с media-условием — React
+                      поднимает <link> в <head>. */}
+                  <link
+                    rel="preload"
+                    as="image"
+                    href={photo.src}
+                    media="(min-width: 640px)"
+                    fetchPriority="high"
+                  />
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="(min-width: 1024px) 46vw, 52vw"
+                    className="object-contain object-bottom drop-shadow-2xl"
+                  />
+                </>
               )}
             </div>
 

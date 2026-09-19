@@ -1,9 +1,7 @@
-'use client'
-
 import { Crown, Infinity, ShieldCheck, Stethoscope, type LucideIcon } from 'lucide-react'
 
 import { BookingButton } from '@/components/booking-button'
-import { useCity } from '@/lib/contexts/city-context'
+import type { CityContent } from '@/content'
 
 const iconMap: Record<string, LucideIcon> = {
   Infinity,
@@ -17,8 +15,13 @@ const iconMap: Record<string, LucideIcon> = {
  * это второй по важности вопрос после цены, и раньше он был размазан по
  * hero, whyUs и FAQ. Набор карточек — из content/<город>.ts → guarantee.
  */
-export function GuaranteeSection() {
-  const { content } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function GuaranteeSection({ content }: { content: CityContent }) {
   const { guarantee } = content
 
   return (

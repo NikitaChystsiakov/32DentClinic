@@ -3,8 +3,6 @@
 import * as React from 'react'
 import type { City } from '@/config/cities'
 import type { CityContent } from '@/content'
-import { getCityBySlug } from '@/config/cities'
-import { getCityContent } from '@/content'
 
 interface CityContextValue {
   city: City
@@ -32,9 +30,10 @@ export function CityProvider({
 export function useCity() {
   const context = React.useContext(CityContext)
   if (context) return context
-
-  // Fallback for root pages without CityProvider — default to Rogachev
-  const city = getCityBySlug('rogachev')!
-  const content = getCityContent('rogachev')!
-  return { city, content }
+  // Запасного варианта «по умолчанию Рогачёв» больше нет: ради него сюда
+  // импортировался getCityContent, и контент всех трёх городов (53 КБ)
+  // попадал в клиентский JS каждой страницы, включая хаб, — при том что
+  // нужный город и так приходит из CityProvider в app/[city]/layout.tsx.
+  // Корневые страницы (хаб, блог, документы) useCity() не вызывают.
+  throw new Error('useCity() вызван вне CityProvider — компонент должен рендериться внутри app/[city]/')
 }

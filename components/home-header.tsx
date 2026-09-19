@@ -52,7 +52,7 @@ export function HomeHeader() {
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2 font-heading text-xl font-bold text-foreground">
           <span className="flex size-24 items-center justify-center rounded-lg text-primary-foreground">
-            <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
+            <Image src="/images/logo.webp" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
           </span>
         </Link>
 

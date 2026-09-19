@@ -1,13 +1,17 @@
-'use client'
-
 import { MapPin, Clock, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
+import type { CityContent } from '@/content'
 import { formatCityHours } from '@/lib/format-hours'
 
-export function ContactCtaSection() {
-  const { city, content } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function ContactCtaSection({ city, content }: { city: City; content: CityContent }) {
 
   return (
     <div className="grid gap-8 md:grid-cols-2">

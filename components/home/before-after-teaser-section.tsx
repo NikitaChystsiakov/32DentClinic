@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
@@ -13,12 +11,17 @@ import {
 } from '@/components/ui/carousel'
 import { CaseCard } from '@/components/gallery/case-card'
 import { getGalleryItemsForCity, hasRealCasesForCity } from '@/lib/data/before-after'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
 
 // Две карточки в ряд: вариант с тремя показывали на живых людях в A/B и
 // он проиграл (сентябрь 2026) — карточка становилась слишком узкой.
-export function BeforeAfterTeaserSection() {
-  const { city } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function BeforeAfterTeaserSection({ city }: { city: City }) {
   const items = getGalleryItemsForCity(city.slug)
   const real = hasRealCasesForCity(city.slug)
 

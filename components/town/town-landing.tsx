@@ -11,6 +11,7 @@ import { TownIntro } from '@/components/town/town-intro'
 import { TownReasons } from '@/components/town/town-reasons'
 import { TownRoute } from '@/components/town/town-route'
 import { TownTripPlan } from '@/components/town/town-trip-plan'
+import { notFound } from 'next/navigation'
 import { getPrimaryClinicSlug, type NearbyTown } from '@/config/nearby-towns'
 import { getCityContent } from '@/content'
 import type { TownContent } from '@/content/towns'
@@ -36,9 +37,13 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
   // (первую в featuredServices) — как правило, это и есть основная клиника.
   const leadService = content.featuredServices.items[0]
   const primaryClinicSlug = getPrimaryClinicSlug(town)
-  const doctorsCitySlug = (leadService && getClinicForService(town, leadService.slug)?.slug) ?? primaryClinicSlug
+  const clinics = getTownClinics(town)
+  const primaryClinic = clinics.find((clinic) => clinic.slug === primaryClinicSlug)
+  const primaryContent = getCityContent(primaryClinicSlug)
+  if (!primaryClinic || !primaryContent) notFound()
+  const doctorsClinic = (leadService && getClinicForService(town, leadService.slug)) ?? primaryClinic
 
-  const secondaryClinicSchemas = getTownClinics(town)
+  const secondaryClinicSchemas = clinics
     .filter((clinic) => clinic.slug !== primaryClinicSlug)
     .flatMap((clinic) => {
       const cityContent = getCityContent(clinic.slug)
@@ -67,7 +72,7 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="ice">
-          <DoctorsCarouselSection citySlug={doctorsCitySlug} />
+          <DoctorsCarouselSection city={doctorsClinic.city} />
         </SectionPanel>
       </Reveal>
       {/* План «за один день» — перед маршрутом: сначала человек видит, что
@@ -87,7 +92,7 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="sky">
-          <BeforeAfterTeaserSection />
+          <BeforeAfterTeaserSection city={primaryClinic.city} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
@@ -97,7 +102,7 @@ export function TownLanding({ town, content }: { town: NearbyTown; content: Town
       </Reveal>
       <Reveal delay={0}>
         <SectionPanel variant="mint">
-          <ContactCtaSection />
+          <ContactCtaSection city={primaryClinic.city} content={primaryContent} />
         </SectionPanel>
       </Reveal>
 

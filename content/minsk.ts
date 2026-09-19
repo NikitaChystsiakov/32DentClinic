@@ -5,6 +5,7 @@
 // Тексты должны отличаться от Рогачёва для SEO-оптимизации
 
 import type { ClinicVideo, GuaranteeSection, HeroPromo } from './types'
+import { cityChrome } from './chrome'
 
 export const minskContent = {
   // SEO
@@ -82,15 +83,10 @@ export const minskContent = {
     ],
   } as ClinicVideo | undefined,
 
-  promo: {
-    text: 'Консультация имплантолога — 35 р., КТ сегмента — 24 р.',
-    href: '/minsk/uslugi/implantaciya/',
-  },
-
-  // Короткий тег гарантии для футера (site-footer.tsx) — в отличие от
-  // Рогачёва и Жлобина, у Минска не «2 года на всё», а тройная гарантия,
-  // поэтому это отдельное поле, а не общий хардкод на все города.
-  guaranteeSummary: 'Пожизненная гарантия производителя на импланты и до 15 лет на протезы.',
+  // Анонс в шапке и тег гарантии в футере редактируются в content/chrome.ts
+  // (шапка и футер — клиентские, им нельзя импортировать этот файл целиком).
+  promo: cityChrome.minsk.promo,
+  guaranteeSummary: cityChrome.minsk.guaranteeSummary,
   // Та же цифра, что в hero.badge (15 лет — самая понятная часть тройной
   // гарантии), а не '2', как было захардкожено на все города разом.
   guaranteeStat: { value: '15', label: 'лет гарантии на протезы' },
@@ -243,11 +239,7 @@ export const minskContent = {
   contacts: {
     title: 'Контакты 32Дент+', // TODO: требует уникального текста
     mapDescription: 'Карта проезда к 32Дент+',
-    hours: [
-      { days: 'Понедельник — Пятница', time: '09:00 – 21:00' },
-      { days: 'Суббота', time: '10:00 – 17:00' },
-      { days: 'Воскресенье', time: 'выходной' },
-    ],
+    hours: cityChrome.minsk.hours, // редактировать в content/chrome.ts
   },
 
   // Почему мы

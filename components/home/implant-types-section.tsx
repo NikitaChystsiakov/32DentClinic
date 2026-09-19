@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
@@ -8,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
 import { ProtocolCard, formatProtocolPrice } from '@/components/implantation/protocol-card'
 import { getProtocolsForCity, implantBrands } from '@/config/implantation'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
 
 /**
  * «Виды имплантации» — первый блок после hero на главной города. Именно
@@ -16,8 +14,13 @@ import { useCity } from '@/lib/contexts/city-context'
  * направление сети: человек, пришедший за имплантами, должен за один экран
  * увидеть, что клиника делает и от какой цены.
  */
-export function ImplantTypesSection() {
-  const { city } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function ImplantTypesSection({ city }: { city: City }) {
   const protocols = getProtocolsForCity(city.slug)
   if (protocols.length === 0) return null
 

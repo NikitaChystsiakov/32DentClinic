@@ -1,12 +1,15 @@
-'use client'
-
 import Link from 'next/link'
 import { Calculator, ArrowRight, ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
 
-export function CalculatorTeaserSection() {
-  const { city } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function CalculatorTeaserSection({ city }: { city: City }) {
 
   return (
     <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">

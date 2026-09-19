@@ -4,7 +4,8 @@
 // TODO: заполнить уникальные тексты для Жлобина
 // Тексты должны отличаться от Рогачёва и Минска для SEO-оптимизации
 
-import type { CityPromo, ClinicVideo, GuaranteeSection, HeroPromo } from './types'
+import type { ClinicVideo, GuaranteeSection, HeroPromo } from './types'
+import { cityChrome } from './chrome'
 
 export const zhlobinContent = {
   // SEO
@@ -73,15 +74,10 @@ export const zhlobinContent = {
     ],
   } as ClinicVideo | undefined,
 
-  // Анонса в нижней полосе шапки нет: строку «Лечение кариеса от 100 р.»
-  // заказчик попросил убрать (16.09.2026). Чтобы вернуть —
-  // promo: { text: 'Текст анонса', href: '/zhlobin/ceny/' }.
-  promo: undefined as CityPromo | undefined,
-
-  // Короткий тег гарантии для футера (site-footer.tsx). Как и текст ниже про
-  // лабораторию, это непроверенная копия с Рогачёва (см. TODO в шапке файла) —
-  // сейчас не трогаем, меняли только для Минска.
-  guaranteeSummary: 'Гарантия 2 года на все виды работ.',
+  // Анонс в шапке и тег гарантии в футере редактируются в content/chrome.ts
+  // (шапка и футер — клиентские, им нельзя импортировать этот файл целиком).
+  promo: cityChrome.zhlobin.promo,
+  guaranteeSummary: cityChrome.zhlobin.guaranteeSummary,
   guaranteeStat: { value: '2', label: 'года гарантии на все виды работ' },
 
   // Блок «Гарантия» на главной. [TBD] клиника не подтвердила, действует ли
@@ -241,10 +237,7 @@ export const zhlobinContent = {
     mapDescription: 'Карта проезда к 32Дент',
     // Часы — от заказчика 16.09.2026: будни 8:00–20:00. Про выходные он не
     // сказал — если клиника работает по субботам, добавить строку.
-    hours: [
-      { days: 'Понедельник — Пятница', time: '8:00 – 20:00' },
-      { days: 'Суббота — Воскресенье', time: 'выходной' },
-    ],
+    hours: cityChrome.zhlobin.hours, // редактировать в content/chrome.ts
   },
 
   // Почему мы

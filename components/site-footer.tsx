@@ -12,7 +12,7 @@ import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
 import { legalDocuments, legalDocHref } from '@/config/legal'
-import { getCityContent } from '@/content'
+import { getCityChrome } from '@/content/chrome'
 import { formatCityHours } from '@/lib/format-hours'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
@@ -42,7 +42,9 @@ export function SiteFooter() {
   const citySlug = useCurrentCity()?.slug ?? null
   const prefix = citySlug ? `/${citySlug}` : ''
   const city = citySlug ? getCityBySlug(citySlug) : null
-  const content = citySlug ? getCityContent(citySlug) : null
+  // Часы и тег гарантии — из content/chrome.ts, а не getCityContent: футер
+  // клиентский, и полный контент всех городов ушёл бы в JS каждой страницы.
+  const chrome = citySlug ? getCityChrome(citySlug) : null
   const services = citySlug ? getServicesForCity(citySlug) : []
   const isHub = !citySlug
   // Соседние города без клиники (config/nearby-towns.ts): ссылки на их
@@ -80,14 +82,14 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="flex flex-col gap-4">
             <Link href={prefix || '/'} className="flex items-center gap-2 font-heading text-xl font-bold text-foreground">
-              <Image src="/images/logo.png" alt="Логотип 32Дент" width={168} height={111} loading="eager" />
+              <Image src="/images/logo.webp" alt="Логотип 32Дент" width={168} height={111} />
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {isHub
                 ? // Условия гарантии различаются по городам (см. content/minsk.ts),
                   // поэтому хаб-страница не называет конкретный срок.
                   'Сеть стоматологий 32Дент в Минске, Рогачёве и Жлобине. Гарантия на все виды работ.'
-                : `Стоматология в ${city!.nameIn}. ${content!.guaranteeSummary}`}
+                : `Стоматология в ${city!.nameIn}. ${chrome!.guaranteeSummary}`}
             </p>
           </div>
 
@@ -153,7 +155,7 @@ export function SiteFooter() {
                     <Mail className="size-4" /> {city!.email}
                   </a>
                 )}
-                <p className="text-sm text-muted-foreground">{formatCityHours(content!.contacts.hours)}</p>
+                <p className="text-sm text-muted-foreground">{formatCityHours(chrome!.hours)}</p>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                   {getMessengerLinks(city).map((m) => (
                     <a

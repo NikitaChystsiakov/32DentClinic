@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -11,22 +9,16 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
-import { useCity } from '@/lib/contexts/city-context'
-import { getCityBySlug } from '@/config/cities'
+import type { City } from '@/config/cities'
 import { getDoctorsForCity } from '@/config/doctors'
 
-interface DoctorsCarouselSectionProps {
-  /**
-   * Показать врачей другой клиники сети, а не текущего города. Нужно на
-   * страницах «соседних» городов (см. components/town): в контексте там
-   * ближайшая клиника, а имплантацию делают врачи из другой.
-   */
-  citySlug?: string
-}
-
-export function DoctorsCarouselSection({ citySlug }: DoctorsCarouselSectionProps = {}) {
-  const { city: currentCity } = useCity()
-  const city = (citySlug && getCityBySlug(citySlug)) || currentCity
+/*
+ * Серверный компонент: клиника приходит пропсом. Страницы «соседних»
+ * городов (components/town) передают сюда не ближайшую клинику, а ту, где
+ * делают главную услугу страницы. Сама карусель (components/ui/carousel)
+ * клиентская, карточки врачей внутри неё отрендерены на сервере.
+ */
+export function DoctorsCarouselSection({ city }: { city: City }) {
   const doctors = getDoctorsForCity(city.slug)
 
   return (
@@ -60,7 +52,6 @@ export function DoctorsCarouselSection({ citySlug }: DoctorsCarouselSectionProps
                     alt={doctor.name}
                     fill
                     sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 33vw"
-                    loading="eager"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   />
                 </div>

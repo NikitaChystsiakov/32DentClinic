@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { MessengerIcon } from '@/components/icons/messenger-icon'
 import { BookingButton } from '@/components/booking-button'
-import { getCityContent } from '@/content'
+import { getCityChrome } from '@/content/chrome'
 import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
@@ -113,8 +113,10 @@ export function SiteHeader() {
   // Рейтинг — площадки своего города; у города без профилей метки нет.
   const rating = citySlug ? getMainRatingForCity(citySlug) : undefined
   // Шапка живёт вне CityProvider (в корневом layout), поэтому акцию берём
-  // по слагу города из URL, а на общих страницах сети не показываем.
-  const promo = citySlug ? getCityContent(citySlug)?.promo : undefined
+  // по слагу города из URL, а на общих страницах сети не показываем. Из
+  // content/chrome.ts, а не getCityContent: тот тянул бы в клиентский JS
+  // контент всех городов целиком.
+  const promo = citySlug ? getCityChrome(citySlug)?.promo : undefined
 
   React.useEffect(() => {
     function onScroll() {
@@ -175,7 +177,7 @@ export function SiteHeader() {
         >
           <Link href={prefix || '/'} className="relative z-10 flex shrink-0 items-center">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Логотип 32Дент"
               width={Math.round(styles.logoHeight * LOGO_RATIO)}
               height={styles.logoHeight}

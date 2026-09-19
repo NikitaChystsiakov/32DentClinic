@@ -187,7 +187,7 @@ export function ProtocolContent({ slug }: { slug: string }) {
 
       <Reveal delay={1}>
         <section className="mb-16">
-          <ImplantologistsSection />
+          <ImplantologistsSection city={city} />
         </section>
       </Reveal>
 

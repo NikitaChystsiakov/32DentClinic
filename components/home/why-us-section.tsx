@@ -1,8 +1,7 @@
-'use client'
-
 import Image from 'next/image'
 import { BadgePercent, ShieldCheck, Factory, CalendarClock, Cpu, Sofa, MapPin, Handshake } from 'lucide-react'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
+import type { CityContent } from '@/content'
 import { getDoctorsForCity, type Doctor } from '@/config/doctors'
 import { cn } from '@/lib/utils'
 
@@ -35,8 +34,13 @@ const iconMap = {
   Handshake,
 } as const
 
-export function WhyUsSection() {
-  const { city, content } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function WhyUsSection({ city, content }: { city: City; content: CityContent }) {
   const doctors = getDoctorsForCity(city.slug)
   const doctorsCount = doctors.length
   const showcaseDoctor = pickShowcaseDoctor(doctors)

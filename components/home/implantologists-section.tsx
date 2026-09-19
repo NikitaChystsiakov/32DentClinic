@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
@@ -7,7 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
 import { getImplantologistsForCity } from '@/config/doctors'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
 
 /**
  * «Кто ставит импланты» — персональный блок хирурга-имплантолога на главной.
@@ -16,8 +14,13 @@ import { useCity } from '@/lib/contexts/city-context'
  * городе нет реального имплантолога (Минск и Жлобин до получения данных
  * от клиники), блок не рендерится.
  */
-export function ImplantologistsSection({ limit }: { limit?: number } = {}) {
-  const { city } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function ImplantologistsSection({ city, limit }: { city: City; limit?: number }) {
   // На главной — не больше двух (хирурги-имплантологи), полный список — на
   // хабе имплантации и странице врачей.
   const doctors = getImplantologistsForCity(city.slug).slice(0, limit)

@@ -421,6 +421,28 @@
 }
 
 /*
+ * Появление секций при прокрутке (components/reveal.tsx). В HTML атрибута
+ * нет — контент виден сразу; `pending` ставит JS только блокам ниже
+ * первого экрана, `in` — когда блок доехал до кадра, а по окончании
+ * перехода атрибут снимается. Кривая и 0.7 с — те же, что были у motion,
+ * задержка каскада — через --reveal-delay.
+ *
+ * Вне @layer намеренно: слой utilities у Tailwind позже components, и
+ * утилиты вроде transition-shadow или opacity-100 на том же элементе
+ * перебивали бы эти правила независимо от специфичности.
+ */
+[data-reveal='pending'] {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+}
+[data-reveal='in'] {
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+/*
  * Мобильная шкала заголовков.
  *
  * Базовая шкала в @theme поднята на шаг относительно Tailwind — под десктоп,

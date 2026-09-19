@@ -23,6 +23,7 @@ import { getCityContent } from '@/content'
 import { getTownContent } from '@/content/towns'
 import { getDoctorsForCity, getImplantologistsForCity } from '@/config/doctors'
 import { getServicesForCity } from '@/config/services'
+import { getCityBySlug } from '@/config/cities'
 import { getNearbyTownBySlug } from '@/config/nearby-towns'
 import { getAggregatorsForCity, getMainRatingForCity } from '@/lib/data/aggregators'
 
@@ -38,8 +39,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     return <TownLanding town={town} content={townContent} />
   }
 
+  const city = getCityBySlug(citySlug)
   const content = getCityContent(citySlug)
-  if (!content) notFound()
+  if (!city || !content) notFound()
 
   // Рейтинг — только своего города (lib/data/aggregators.ts). Раньше во всех
   // городах стояла рогачёвская оценка 103.by; у города без подтверждённого
@@ -81,7 +83,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             stats={stats}
           />
         ) : (
-          <HeroSection />
+          <HeroSection city={city} content={content} />
         )}
       </Reveal>
       {/* Видеообзор клиники — вторым экраном, сразу под hero: заказчик
@@ -102,7 +104,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           услуги — ниже, компактным блоком «Также лечим». */}
       <Reveal delay={1}>
         <SectionPanel variant="lavender">
-          <ImplantTypesSection />
+          <ImplantTypesSection city={city} />
         </SectionPanel>
       </Reveal>
       {/* Блок сам не рендерится, если в городе нет реального имплантолога —
@@ -110,7 +112,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       {hasImplantologists && (
         <Reveal delay={1}>
           <SectionPanel variant="sky">
-            <ImplantologistsSection limit={2} />
+            <ImplantologistsSection city={city} limit={2} />
           </SectionPanel>
         </Reveal>
       )}
@@ -121,12 +123,12 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="mint">
-          <BeforeAfterTeaserSection />
+          <BeforeAfterTeaserSection city={city} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="dark">
-          <GuaranteeSection />
+          <GuaranteeSection content={content} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
@@ -136,17 +138,17 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       </Reveal>
       <Reveal delay={2}>
         <SectionPanel variant="indigo-bold">
-          <CalculatorTeaserSection />
+          <CalculatorTeaserSection city={city} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="sky">
-          <DoctorsCarouselSection />
+          <DoctorsCarouselSection city={city} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="aqua">
-          <WhyUsSection />
+          <WhyUsSection city={city} content={content} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
@@ -162,7 +164,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       {hasRatings && (
         <Reveal delay={1}>
           <SectionPanel variant="sky">
-            <RatingsSection />
+            <RatingsSection city={city} />
           </SectionPanel>
         </Reveal>
       )}
@@ -173,7 +175,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       </Reveal>
       <Reveal delay={0}>
         <SectionPanel variant="mint">
-          <ContactCtaSection />
+          <ContactCtaSection city={city} content={content} />
         </SectionPanel>
       </Reveal>
     </div>

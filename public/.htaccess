@@ -23,6 +23,13 @@ AddDefaultCharset UTF-8
   <If "%{REQUEST_URI} =~ m#^/video/#">
     Header set Cache-Control "public, max-age=604800"
   </If>
+  # Фото, иконки и шрифты вне /_next/static/ меняются редко: месяц кеша,
+  # чтобы при переходе между страницами (и повторном визите) логотип и
+  # фото клиник не качались заново. Заменяете картинку — кладите под новым
+  # именем файла, иначе у посетителей месяц будет старая.
+  <If "%{REQUEST_URI} !~ m#^/_next/# && %{REQUEST_URI} =~ m#\.(webp|jpe?g|png|gif|svg|ico|woff2?)$#">
+    Header set Cache-Control "public, max-age=2592000"
+  </If>
 </IfModule>
 
 # Правильный MIME для mp4 — иначе <video> в Safari может отказаться играть.

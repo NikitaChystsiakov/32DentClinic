@@ -29,7 +29,6 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
           alt={doctor.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          loading="eager"
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
         />
       </Link>

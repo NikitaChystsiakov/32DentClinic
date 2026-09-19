@@ -1,9 +1,7 @@
-'use client'
-
 import { Star, ExternalLink } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { getAggregatorsForCity, type AggregatorRating } from '@/lib/data/aggregators'
-import { useCity } from '@/lib/contexts/city-context'
+import type { City } from '@/config/cities'
 import { cn } from '@/lib/utils'
 
 function PlatformLogo({ id }: { id: AggregatorRating['id'] }) {
@@ -114,8 +112,13 @@ function RatingCard({ aggregator }: { aggregator: AggregatorRating }) {
 
 // Площадки — только своего города; для города без подтверждённых профилей
 // главная блок не рендерит (см. app/[city]/page.tsx).
-export function RatingsSection() {
-  const { city } = useCity()
+/*
+ * Серверный компонент: город и контент приходят пропсами от страницы, а не
+ * из useCity(). Так секция рендерится один раз при сборке и не попадает в
+ * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
+ * остаются клиентскими островками сами по себе).
+ */
+export function RatingsSection({ city }: { city: City }) {
   const aggregators = getAggregatorsForCity(city.slug)
   if (aggregators.length === 0) return null
 

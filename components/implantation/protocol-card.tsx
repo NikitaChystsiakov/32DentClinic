@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight, Crosshair, Grid3x3, Grip, LayoutGrid, Layers, Timer, Zap, type LucideIcon } from 'lucide-react'
 
