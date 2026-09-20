@@ -63,10 +63,10 @@ export const metadata: Metadata = {
       '32Дент — сеть стоматологий в Беларуси. Лечение, имплантация, протезирование в Минске, Рогачёве и Жлобине.',
   },
   twitter: { card: 'summary_large_image' },
+  // Знак «32» на фирменном индиго, файлы генерирует scripts/make-favicon.mjs.
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
     apple: '/apple-icon.png',
