@@ -5,8 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-golos-text), 'Golos Text Fallback', sans-serif;
-  --font-heading: var(--font-unbounded), 'Unbounded Fallback', sans-serif;
+  /* Переменные из next/font/local (app/layout.tsx) уже содержат подогнанный
+     под метрики шрифта fallback на Arial — отдельно его дописывать не нужно. */
+  --font-sans: var(--font-golos-text), sans-serif;
+  --font-heading: var(--font-unbounded), sans-serif;
   /*
    * Крупнее базовой шкалы Tailwind примерно на один шаг: сайт читают
    * пациенты разного возраста, мелкий текст здесь работает против доверия.

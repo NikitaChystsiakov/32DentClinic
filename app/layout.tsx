@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Golos_Text, Unbounded } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -14,11 +14,29 @@ import { MobileMenuProvider } from '@/components/mobile-menu-provider'
 import { siteConfig } from '@/lib/site-config'
 
 // Golos Text — основной текст, UI, кнопки, навигация. Unbounded — заголовки
-// и крупные цифры (насыщенные начертания 600-700). Оба — вариативные шрифты
-// с полноценной поддержкой кириллицы (subsets: cyrillic), поэтому вес не
-// фиксируем: конкретные font-weight задаются в компонентах через Tailwind.
-const golosText = Golos_Text({ subsets: ['latin', 'cyrillic'], variable: '--font-golos-text' })
-const unbounded = Unbounded({ subsets: ['latin', 'cyrillic'], variable: '--font-unbounded' })
+// и крупные цифры. Оба — вариативные, но не из next/font/google, а свои
+// урезанные копии (app/fonts, собираются scripts/subset-fonts.sh):
+//
+// - Google-версия шла четырьмя файлами (latin + cyrillic на каждый шрифт) на
+//   полном диапазоне весов, 142 КБ, и все четыре preload'ились с высоким
+//   приоритетом — на мобильном они шли впереди CSS и учитывались в LCP.
+// - Здесь один файл на шрифт: кириллица + базовая латиница + типографика
+//   («», —, №, ×), ось wght обрезана до реально используемых весов
+//   (Golos 400–700, Unbounded 500–700) — вместе 75 КБ.
+//
+// Вес по-прежнему не фиксируем: конкретные font-weight задаются в
+// компонентах через Tailwind. Если появится вес вне диапазона (например,
+// font-black), файл нужно пересобрать, иначе браузер тихо возьмёт крайний.
+const golosText = localFont({
+  src: './fonts/golos-text-400-700.woff2',
+  weight: '400 700',
+  variable: '--font-golos-text',
+})
+const unbounded = localFont({
+  src: './fonts/unbounded-500-700.woff2',
+  weight: '500 700',
+  variable: '--font-unbounded',
+})
 
 export const metadata: Metadata = {
   // Базовый адрес для og:image и прочих URL-полей. canonical здесь намеренно
