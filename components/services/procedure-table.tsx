@@ -63,7 +63,9 @@ export function ProcedureTable({ slug, procedures }: { slug: string; procedures:
                   {formatProcedurePrice(row.procedure)}
                 </span>
               </div>
-              <BookingButton size="sm" className="w-full" options={{ service: slug }}>
+              {/* size="lg", а не sm: кнопка на всю ширину карточки при высоте
+                  32 px выглядела сплюснутой; 44 px — ещё и нормальная цель для тапа. */}
+              <BookingButton size="lg" className="w-full" options={{ service: slug }}>
                 Записаться
               </BookingButton>
             </div>
