@@ -49,15 +49,35 @@ function clean(mixed $value, int $max): string
     return mb_substr($value, 0, $max);
 }
 
-function clientIp(): string
+function clientIp(bool $trustForwardedFor): string
 {
-    // На shared-хостинге за прокси реальный IP может быть в X-Forwarded-For;
-    // берём первый адрес, остальное — для лимита не критично.
-    $forwarded = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+    // X-Forwarded-For ставит любой клиент сам, поэтому по умолчанию верим
+    // только REMOTE_ADDR: иначе лимит обходится случайным значением
+    // заголовка. Включать trust_forwarded_for в config.php стоит только если
+    // хостинг подтвердил, что сайт стоит за его прокси и REMOTE_ADDR — это
+    // адрес прокси.
+    $forwarded = $trustForwardedFor ? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '') : '';
     if ($forwarded !== '') {
         return trim(explode(',', $forwarded)[0]);
     }
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+/**
+ * Запрос с чужого сайта: браузер всегда шлёт Origin при POST, и если он не
+ * совпадает с хостом — форму вызвали не с нашей страницы. Без Origin (curl,
+ * старые клиенты) пропускаем: это не защита от ботов, а дешёвый фильтр
+ * от встраивания формы на чужой странице.
+ */
+function foreignOrigin(): bool
+{
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if ($origin === '' || $origin === 'null') {
+        return false;
+    }
+    $host = strtolower((string) parse_url($origin, PHP_URL_HOST));
+    $self = strtolower((string) preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? ''));
+    return $host === '' || $self === '' || $host !== $self;
 }
 
 /**
@@ -141,6 +161,9 @@ function sendTelegram(string $token, string $chatId, string $text): bool
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'method_not_allowed']);
 }
+if (foreignOrigin()) {
+    respond(403, ['ok' => false, 'error' => 'forbidden_origin']);
+}
 
 $configPath = __DIR__ . '/config.php';
 $config = is_file($configPath) ? require $configPath : [];
@@ -183,7 +206,7 @@ if (!preg_match('/^375\d{9}$/', $digits)) {
     respond(422, ['ok' => false, 'error' => 'phone_invalid']);
 }
 
-if (rateLimited(clientIp())) {
+if (rateLimited(clientIp((bool) ($config['trust_forwarded_for'] ?? false)))) {
     respond(429, ['ok' => false, 'error' => 'rate_limited']);
 }
 
