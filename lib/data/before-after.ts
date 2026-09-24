@@ -4,35 +4,35 @@
 // ЮРИДИЧЕСКИЕ ПРАВИЛА (Закон РБ «О рекламе», ст. 15; врачебная тайна —
 // ст. 46 Закона «О здравоохранении»; Закон «О защите персональных данных»):
 //
-//   1. Публикуем только работы, на которые есть ПИСЬМЕННОЕ согласие пациента
-//      на публикацию именно этих фото на сайте. Оригинал хранится в клинике,
-//      здесь — дата и номер (`consent`), чтобы при проверке найти за минуту.
-//      Без заполненного `consent` кейс на сайт не попадает — это проверяет
-//      тип: поле обязательное.
-//   2. Подпись — только техническая: что за работа, какая система/материал,
-//      сколько единиц, кто выполнил. Это описание УСЛУГИ, а не случая.
-//   3. Нельзя: диагноз и жалобы пациента («обратилась со сколом», «болел
+//   1. Фото — сведения о здоровье пациента: публиковать их можно только с
+//      его письменного согласия на размещение на сайте. Согласия собирает и
+//      хранит клиника; сайт их не проверяет и не пишет о них под карточками
+//      (решение заказчика 24.09.2026).
+//   2. Работы подписаны клиникой, а не конкретным врачом (решение заказчика
+//      24.09.2026): в карточке только вид работы и техническое описание.
+//   3. Подпись — только техническая: что за работа, какая система/материал,
+//      сколько единиц. Это описание УСЛУГИ, а не случая.
+//   4. Нельзя: диагноз и жалобы пациента («обратилась со сколом», «болел
 //      зуб»), сроки и ход лечения («за полтора года», «за один визит»),
 //      ощущения («безболезненно», «комфортно»), оценки результата
 //      («идеально», «навсегда», «как свои») и любые обещания — это «ссылка на
 //      конкретный случай излечения / улучшения состояния» и «гарантия
-//      эффекта», запрещённые ст. 15. Для таких полей в структуре просто нет места.
-//   4. Лицо пациента — только если согласие на изображение дано отдельно;
+//      эффекта», запрещённые ст. 15. Тексты постов из Instagram поэтому
+//      не переносим — только вид работы.
+//   5. Лицо пациента — только если согласие на изображение дано отдельно;
 //      безопаснее кадрировать до зубов.
-//   5. Кейс привязан к клинике (`citySlug`) и врачу (`doctorSlug`): работа
-//      жлобинского врача не показывается в Минске.
+//   6. Кейс привязан к клинике (`citySlug`): работа жлобинской клиники не
+//      показывается в Минске.
 //
-// Пока реальных кейсов с согласиями нет, страницы показывают иллюстрации
-// (`illustrations` ниже) — схематичные примеры видов работ без привязки к
-// врачу и пациенту и без блока о согласии. Как появится хотя бы один
-// реальный кейс города — иллюстрации в этом городе перестают показываться.
+// Пока у города нет реальных кейсов, его страницы показывают иллюстрации
+// (`illustrations` ниже) — схематичные примеры видов работ. Как появится
+// хотя бы один реальный кейс города — иллюстрации в этом городе пропадают.
 //
 // Для не-разработчика: чтобы добавить работу, скопируйте блок в `cases`,
-// положите два фото в public/cases/ и заполните все поля. `doctorSlug` — из
-// config/doctors.ts, `serviceSlug` — из config/services.ts.
+// положите два фото в public/cases/ и заполните все поля. `serviceSlug` — из
+// config/services.ts.
 
 import type { City } from '@/config/cities'
-import { getDoctorBySlug, type Doctor } from '@/config/doctors'
 import { getServicesForCity } from '@/config/services'
 
 export interface BeforeAfterCase {
@@ -51,13 +51,9 @@ export interface BeforeAfterCase {
   work: string
   before: string
   after: string
-  /** slug врача из config/doctors.ts — имя, специализация и фото подтянутся сами. */
-  doctorSlug: string
-  /** Письменное согласие пациента на публикацию этих фото: дата и номер/имя файла в клинике. */
-  consent: { date: string; ref: string }
 }
 
-/** Иллюстрация вида работы — не фото пациента клиники. Без врача и согласия. */
+/** Иллюстрация вида работы — не фото пациента клиники. */
 export interface BeforeAfterIllustration {
   id: string
   serviceSlug: string
@@ -68,12 +64,8 @@ export interface BeforeAfterIllustration {
 }
 
 /**
- * Реальные работы с согласиями. У клиники они уже есть в Instagram — но
- * публикация в Instagram не равна согласию на публикацию на сайте: перед
- * переносом у пациента берётся отдельное письменное согласие (или проверяется,
- * что в уже подписанном согласии сайт клиники указан как место публикации).
- *
- * Шаблон записи — скопировать, заполнить, фото положить в public/cases/:
+ * Реальные работы клиник. Шаблон записи — скопировать, заполнить, фото
+ * положить в public/cases/:
  *
  *   {
  *     id: 'minsk-viniry-01',                     // латиницей, уникальный
@@ -83,20 +75,103 @@ export interface BeforeAfterIllustration {
  *     work: 'Виниры E.max, 8 единиц, верхняя челюсть',
  *     before: '/cases/minsk-viniry-01-before.webp',
  *     after: '/cases/minsk-viniry-01-after.webp',
- *     doctorSlug: 'belousova-tatyana',           // из config/doctors.ts
- *     consent: { date: '12.09.2026', ref: 'согласие № 14/2026' },
  *   },
  *
- * Фото: 1600×1200 (4:3), webp ≤ 100 КБ — `pnpm optimize-images`; лицо
- * кадрировать, если на него нет отдельного согласия.
+ * Фото: 4:3, webp ≤ 100 КБ, «до» и «после» кадрированы одинаково — слайдер
+ * накладывает их друг на друга. Лицо кадрировать, если на него нет
+ * отдельного согласия.
  */
-export const cases: BeforeAfterCase[] = []
+export const cases: BeforeAfterCase[] = [
+  // Минск — вырезаны из постов и рилс @32_dent_plus (заказчик, 24.09.2026).
+  // Исходные скрины — в assets/cases-instagram/ (не в репо).
+  {
+    id: 'minsk-viniry',
+    citySlug: 'minsk',
+    serviceSlug: 'protezirovanie',
+    title: 'Керамические виниры и накладки',
+    work: 'Керамические виниры — 6 единиц, накладки — 4 единицы, коррекция десневого контура; верхняя челюсть',
+    before: '/cases/minsk-viniry-before.webp',
+    after: '/cases/minsk-viniry-after.webp',
+  },
+  {
+    id: 'minsk-koronki-cirkoniy',
+    citySlug: 'minsk',
+    serviceSlug: 'protezirovanie',
+    title: 'Коронки из диоксида циркония',
+    work: 'Безметалловые коронки из диоксида циркония',
+    before: '/cases/minsk-koronki-cirkoniy-before.webp',
+    after: '/cases/minsk-koronki-cirkoniy-after.webp',
+  },
+  {
+    id: 'minsk-all-on-6',
+    citySlug: 'minsk',
+    serviceSlug: 'implantaciya',
+    title: 'Протезирование на имплантах All-on-6',
+    work: 'Несъёмный протез с опорой на 6 имплантов',
+    before: '/cases/minsk-all-on-6-before.webp',
+    after: '/cases/minsk-all-on-6-after.webp',
+  },
+  {
+    id: 'minsk-implantaciya-6-implantov',
+    citySlug: 'minsk',
+    serviceSlug: 'implantaciya',
+    title: 'Имплантация с немедленной нагрузкой',
+    work: 'Импланты Megagen, 6 единиц, несъёмная конструкция с немедленной нагрузкой; верхняя челюсть',
+    before: '/cases/minsk-implantaciya-6-implantov-before.webp',
+    after: '/cases/minsk-implantaciya-6-implantov-after.webp',
+  },
+  {
+    id: 'minsk-koronki-3d-skaner',
+    citySlug: 'minsk',
+    serviceSlug: 'protezirovanie',
+    title: 'Коронки по цифровому слепку',
+    work: 'Коронки на верхнюю челюсть, слепок снят 3D-сканером',
+    before: '/cases/minsk-koronki-3d-skaner-before.webp',
+    after: '/cases/minsk-koronki-3d-skaner-after.webp',
+  },
+  {
+    id: 'minsk-nesemnoe-protezirovanie',
+    citySlug: 'minsk',
+    serviceSlug: 'protezirovanie',
+    title: 'Несъёмное протезирование',
+    work: 'Несъёмные ортопедические конструкции',
+    before: '/cases/minsk-nesemnoe-protezirovanie-before.webp',
+    after: '/cases/minsk-nesemnoe-protezirovanie-after.webp',
+  },
+  // Три работы из рилс «Имплантация и протезирование» — объём по фото.
+  {
+    id: 'minsk-implantaciya-01',
+    citySlug: 'minsk',
+    serviceSlug: 'implantaciya',
+    title: 'Имплантация и протезирование',
+    work: 'Импланты и несъёмные коронки, верхняя челюсть',
+    before: '/cases/minsk-implantaciya-01-before.webp',
+    after: '/cases/minsk-implantaciya-01-after.webp',
+  },
+  {
+    id: 'minsk-implantaciya-02',
+    citySlug: 'minsk',
+    serviceSlug: 'implantaciya',
+    title: 'Имплантация и протезирование',
+    work: 'Импланты и несъёмные коронки, верхняя челюсть',
+    before: '/cases/minsk-implantaciya-02-before.webp',
+    after: '/cases/minsk-implantaciya-02-after.webp',
+  },
+  {
+    id: 'minsk-implantaciya-03',
+    citySlug: 'minsk',
+    serviceSlug: 'implantaciya',
+    title: 'Имплантация и протезирование',
+    work: 'Импланты и несъёмные коронки, верхняя челюсть',
+    before: '/cases/minsk-implantaciya-03-before.webp',
+    after: '/cases/minsk-implantaciya-03-after.webp',
+  },
+]
 
 /*
- * Иллюстрации на время, пока реальные работы не перенесены из Instagram.
- * Картинки public/cases/*.png — не фотографии пациентов 32Дент, поэтому к
- * врачам они не привязаны и без блока «опубликовано с согласия». Как только в
- * `cases` появится хотя бы одна работа города, иллюстрации там пропадают.
+ * Иллюстрации для городов, где реальных работ ещё нет (сейчас — Рогачёв и
+ * Жлобин). Картинки public/cases/*.png — не фотографии пациентов 32Дент. Как
+ * только в `cases` появится хотя бы одна работа города, иллюстрации там пропадают.
  */
 export const illustrations: BeforeAfterIllustration[] = [
   {
@@ -149,24 +224,19 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
 ]
 
-/** Карточка для рендера: либо реальный кейс с врачом, либо иллюстрация. */
+/** Карточка для рендера: либо реальная работа клиники, либо иллюстрация. */
 export type GalleryItem =
-  | { kind: 'case'; item: BeforeAfterCase; doctor: Doctor }
+  | { kind: 'case'; item: BeforeAfterCase }
   | { kind: 'illustration'; item: BeforeAfterIllustration }
 
 /**
- * Что показывать в городе: реальные работы этой клиники, у которых есть
- * согласие и существующий врач; если таких нет — иллюстрации.
+ * Что показывать в городе: реальные работы этой клиники; если таких нет —
+ * иллюстрации.
  */
 export function getGalleryItemsForCity(citySlug: string): GalleryItem[] {
-  const real: GalleryItem[] = []
-  for (const item of cases) {
-    if (item.citySlug !== citySlug) continue
-    if (!item.consent?.date || !item.consent?.ref) continue
-    const doctor = getDoctorBySlug(item.doctorSlug)
-    if (!doctor || doctor.isPlaceholder) continue
-    real.push({ kind: 'case', item, doctor })
-  }
+  const real: GalleryItem[] = cases
+    .filter((item) => item.citySlug === citySlug)
+    .map((item) => ({ kind: 'case', item }))
   if (real.length > 0) return real
   // Иллюстрации — только по направлениям, которые есть в этом городе:
   // ортодонтия только в Минске, и в Рогачёве карточка «Ортодонтическое

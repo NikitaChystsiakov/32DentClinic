@@ -24,6 +24,8 @@ assets/doctors/
 assets/clinic/
 # Оригиналы лицензий (PDF и фото от клиник) — на сайт идут webp-версии из public/clinic/<город>/license/
 assets/licenses/
+# Скрины кейсов из Инсты — в public/cases/ идут вырезанные пары до/после
+assets/cases-instagram/
 
 # Кеш инкрементальной проверки типов (tsc)
 tsconfig.tsbuildinfo

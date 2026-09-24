@@ -162,6 +162,19 @@ export const doctors: Doctor[] = [
     photo: '/images/doctors/privalov-evgeni.webp',
     cities: ['rogachev'],
   },
+  // Симанович А. А. — имя, специализация и фото от заказчика 24.09.2026;
+  // стаж не прислан, поэтому поля нет.
+  {
+    slug: 'simanovich-alina',
+    name: 'Симанович Алина Александровна',
+    specialization: 'Врач-стоматолог-ортопед',
+    categories: ['ortoped'],
+    bio: 'Алина Александровна — врач-стоматолог-ортопед клиники в Рогачёве: протезирование и восстановление зубов коронками.',
+    directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/simanovich-alina.webp',
+    cities: ['rogachev'],
+  },
   {
     slug: 'alekseychuk-vyacheslav',
     name: 'Вячеслав Алексейчук',

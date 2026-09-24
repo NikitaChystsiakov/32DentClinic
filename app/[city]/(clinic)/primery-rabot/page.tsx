@@ -38,12 +38,11 @@ export default async function GalleryPage({ params }: { params: Promise<{ city: 
           <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             Примеры работ стоматологии в {city.nameIn}
           </h1>
-          {/* Про согласие пациентов пишем только когда у города есть реальные
-              работы (cases в lib/data/before-after.ts) — под иллюстрациями это
-              было бы неправдой. */}
+          {/* «Работы клиники» — только когда у города есть реальные работы
+              (cases в lib/data/before-after.ts): иллюстрации не фото пациентов. */}
           <p className="max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
             {real
-              ? 'Работы врачей клиники, опубликованные с письменного согласия пациентов. Передвиньте ползунок, чтобы сравнить «до» и «после».'
+              ? `Работы клиники ${city.brandName} в ${city.nameIn}. Передвиньте ползунок, чтобы сравнить «до» и «после».`
               : 'Виды работ, которые выполняет клиника: реставрация, протезирование, имплантация, гигиена. Передвиньте ползунок, чтобы сравнить «до» и «после».'}
           </p>
           <p className="flex items-center gap-2 text-sm text-muted-foreground">
