@@ -21,8 +21,9 @@
 //      не переносим — только вид работы.
 //   5. Лицо пациента — только если согласие на изображение дано отдельно;
 //      безопаснее кадрировать до зубов.
-//   6. Кейс привязан к клинике (`citySlug`): работа жлобинской клиники не
-//      показывается в Минске.
+//   6. Кейс привязан к клиникам (`citySlugs`): работа жлобинской клиники не
+//      показывается в Минске. Совместную работу клиник можно показать в
+//      каждой из них.
 //
 // Пока у города нет реальных кейсов, его страницы показывают иллюстрации
 // (`illustrations` ниже) — схематичные примеры видов работ. Как появится
@@ -37,8 +38,11 @@ import { getServicesForCity } from '@/config/services'
 
 export interface BeforeAfterCase {
   id: string
-  /** Клиника, где выполнена работа — кейс показывается только на её страницах. */
-  citySlug: City['slug']
+  /**
+   * Клиники, где выполнена работа — кейс показывается только на их страницах.
+   * Несколько — если работа совместная или общая для клиник (Жлобин и Рогачёв).
+   */
+  citySlugs: City['slug'][]
   /** slug услуги из config/services.ts — для фильтра на странице примеров. */
   serviceSlug: string
   /** Вид работы, как в прайсе: «Керамические виниры», «Одиночная имплантация». */
@@ -75,7 +79,7 @@ export interface BeforeAfterIllustration {
  *
  *   {
  *     id: 'minsk-viniry-01',                     // латиницей, уникальный
- *     citySlug: 'minsk',
+ *     citySlugs: ['minsk'],
  *     serviceSlug: 'protezirovanie',             // из config/services.ts
  *     title: 'Керамические виниры',
  *     work: 'Виниры E.max, 8 единиц, верхняя челюсть',
@@ -92,7 +96,7 @@ export const cases: BeforeAfterCase[] = [
   // Исходные скрины — в assets/cases-instagram/ (не в репо).
   {
     id: 'minsk-viniry',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'protezirovanie',
     title: 'Керамические виниры и накладки',
     work: 'Керамические виниры — 6 единиц, накладки — 4 единицы, коррекция десневого контура; верхняя челюсть',
@@ -101,7 +105,7 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-koronki-cirkoniy',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'protezirovanie',
     title: 'Коронки из диоксида циркония',
     work: 'Безметалловые коронки из диоксида циркония',
@@ -110,7 +114,7 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-all-on-6',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'implantaciya',
     title: 'Протезирование на имплантах All-on-6',
     work: 'Несъёмный протез с опорой на 6 имплантов',
@@ -119,7 +123,9 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-implantaciya-6-implantov',
-    citySlug: 'minsk',
+    // Совместная работа клиник @32_dent_plus и @32_dent_stom — показываем
+    // и в Жлобине с Рогачёвым.
+    citySlugs: ['minsk', 'zhlobin', 'rogachev'],
     serviceSlug: 'implantaciya',
     title: 'Имплантация с немедленной нагрузкой',
     work: 'Импланты Megagen, 6 единиц, несъёмная конструкция с немедленной нагрузкой; верхняя челюсть',
@@ -128,7 +134,7 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-koronki-3d-skaner',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'protezirovanie',
     title: 'Коронки по цифровому слепку',
     work: 'Коронки на верхнюю челюсть, слепок снят 3D-сканером',
@@ -137,7 +143,9 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-nesemnoe-protezirovanie',
-    citySlug: 'minsk',
+    // Совместная работа клиник @32_dent_plus и @32_dent_stom — показываем
+    // и в Жлобине с Рогачёвым.
+    citySlugs: ['minsk', 'zhlobin', 'rogachev'],
     serviceSlug: 'protezirovanie',
     title: 'Несъёмное протезирование',
     work: 'Несъёмные ортопедические конструкции',
@@ -147,7 +155,7 @@ export const cases: BeforeAfterCase[] = [
   // Три работы из рилс «Имплантация и протезирование» — объём по фото.
   {
     id: 'minsk-implantaciya-01',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'implantaciya',
     title: 'Имплантация и протезирование',
     work: 'Импланты и несъёмные коронки, верхняя челюсть',
@@ -156,7 +164,7 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-implantaciya-02',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'implantaciya',
     title: 'Имплантация и протезирование',
     work: 'Импланты и несъёмные коронки, верхняя челюсть',
@@ -165,18 +173,49 @@ export const cases: BeforeAfterCase[] = [
   },
   {
     id: 'minsk-implantaciya-03',
-    citySlug: 'minsk',
+    citySlugs: ['minsk'],
     serviceSlug: 'implantaciya',
     title: 'Имплантация и протезирование',
     work: 'Импланты и несъёмные коронки, верхняя челюсть',
     before: '/cases/minsk-implantaciya-03-before.webp',
     after: '/cases/minsk-implantaciya-03-after.webp',
   },
+  // Жлобин и Рогачёв — общие работы, вырезаны из постов @32_dent_stom
+  // (заказчик, 26.09.2026). Исходные скрины — в assets/cases-instagram/zhlobin-rogachev/
+  // (не в репо).
+  {
+    id: 'regiony-restavraciya-rezcov',
+    citySlugs: ['zhlobin', 'rogachev'],
+    serviceSlug: 'terapevticheskaya-stomatologiya',
+    title: 'Художественная реставрация',
+    work: 'Восстановление формы двух центральных резцов, закрытие промежутка между ними; верхняя челюсть',
+    before: '/cases/regiony-restavraciya-rezcov-before.webp',
+    after: '/cases/regiony-restavraciya-rezcov-after.webp',
+  },
+  {
+    id: 'regiony-restavraciya-frontalnoy-gruppy',
+    citySlugs: ['zhlobin', 'rogachev'],
+    serviceSlug: 'terapevticheskaya-stomatologiya',
+    title: 'Художественная реставрация передних зубов',
+    work: 'Восстановление формы передних зубов, закрытие промежутков между ними; верхняя челюсть',
+    before: '/cases/regiony-restavraciya-frontalnoy-gruppy-before.webp',
+    after: '/cases/regiony-restavraciya-frontalnoy-gruppy-after.webp',
+  },
+  {
+    id: 'regiony-vosstanovlenie-perednih-zubov',
+    citySlugs: ['zhlobin', 'rogachev'],
+    serviceSlug: 'terapevticheskaya-stomatologiya',
+    title: 'Эстетическое восстановление резцов',
+    work: 'Восстановление формы и цвета резцов, закрытие промежутков между ними; верхняя челюсть',
+    before: '/cases/regiony-vosstanovlenie-perednih-zubov-before.webp',
+    after: '/cases/regiony-vosstanovlenie-perednih-zubov-after.webp',
+  },
 ]
 
 /*
- * Иллюстрации для городов, где реальных работ ещё нет (сейчас — Рогачёв и
- * Жлобин). У каждого города свой набор (`citySlugs`), чтобы страницы
+ * Иллюстрации для городов, где реальных работ ещё нет (сейчас таких нет: с
+ * 26.09.2026 у Рогачёва и Жлобина свои работы — набор оставлен на случай
+ * новой клиники). У каждого города свой набор (`citySlugs`), чтобы страницы
  * примеров не повторяли друг друга. Картинки public/cases/*.png — не фотографии пациентов 32Дент. Как
  * только в `cases` появится хотя бы одна работа города, иллюстрации там пропадают.
  */
@@ -249,7 +288,7 @@ export type GalleryItem =
  */
 export function getGalleryItemsForCity(citySlug: string): GalleryItem[] {
   const real: GalleryItem[] = cases
-    .filter((item) => item.citySlug === citySlug)
+    .filter((item) => item.citySlugs.includes(citySlug))
     .map((item) => ({ kind: 'case', item }))
   if (real.length > 0) return real
   // Иллюстрации — только по направлениям, которые есть в этом городе:
