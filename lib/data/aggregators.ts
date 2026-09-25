@@ -57,10 +57,9 @@ const byCity: Record<City['slug'], AggregatorRating[]> = {
       reviewsCount: 50,
     },
   ],
-  // Минск: профили найдены 25.09.2026. Оценки — по данным заказчика
-  // (103.by 5.0, 2GIS 5.0); число отзывов на 103.by — по выдаче поиска.
-  // TODO: сверить цифры с площадками перед релизом — сайты площадок из
-  // среды разработки не открываются.
+  // Минск: профили найдены 25.09.2026. Яндекс (5.0, 19 отзывов) и 2ГИС
+  // (5.0, 9 отзывов) — по данным заказчика от 25.09.2026; 103.by — 5.0,
+  // число отзывов по выдаче поиска. TODO: сверить 103.by с площадкой.
   minsk: [
     {
       id: '103by',
@@ -73,15 +72,15 @@ const byCity: Record<City['slug'], AggregatorRating[]> = {
       id: 'yandex',
       name: 'Яндекс Карты',
       href: 'https://yandex.by/maps/org/32dent_/62123372700/reviews/',
-      rating: null,
-      reviewsCount: null,
+      rating: 5.0,
+      reviewsCount: 19,
     },
     {
       id: '2gis',
       name: '2ГИС',
       href: 'https://2gis.by/minsk/firm/70000001042329625/tab/reviews',
       rating: 5.0,
-      reviewsCount: null,
+      reviewsCount: 9,
     },
   ],
   // Жлобин: профиль на 103.by найден 25.09.2026, оценку не сверяли.
