@@ -9,6 +9,7 @@ import { Phone, MapPin, ChevronDown, Star, Percent, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { MessengerIcon } from '@/components/icons/messenger-icon'
+import { MessengerCityPicker, networkMessengers } from '@/components/messenger-city-picker'
 import { BookingButton } from '@/components/booking-button'
 import { getCityChrome } from '@/content/chrome'
 import { cities } from '@/config/cities'
@@ -107,8 +108,8 @@ export function SiteHeader() {
   const shortAddress = currentCity ? formatAddressWithoutCity(currentCity.address) : null
   const phone = currentCity?.phone
   const phoneHref = currentCity?.phoneHref
-  // Мессенджеры города (без Instagram — это не «написать»); на страницах
-  // сети — Telegram сети.
+  // Мессенджеры города (без Instagram — это не «написать»). На страницах
+  // сети вместо них — кнопки с выбором клиники (MessengerCityPicker ниже).
   const messengers = getMessengerLinks(currentCity).filter((m) => m.id !== 'instagram')
   // Рейтинг — площадки своего города; у города без профилей метки нет.
   const rating = citySlug ? getMainRatingForCity(citySlug) : undefined
@@ -282,18 +283,30 @@ export function SiteHeader() {
                   как три отдельных элемента, а не как один блок. Класс на всех
                   трёх один, поэтому и наведение у них одинаковое. */}
               <div className="flex items-center gap-0.5">
-                {messengers.map((m) => (
-                  <a
-                    key={m.id}
-                    href={m.href}
-                    {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    aria-label={`Написать в ${m.label}`}
-                    title={`Написать в ${m.label}`}
-                    className="icon-action"
-                  >
-                    <MessengerIcon id={m.id} className="size-5" />
-                  </a>
-                ))}
+                {currentCity
+                  ? messengers.map((m) => (
+                      <a
+                        key={m.id}
+                        href={m.href}
+                        {...(m.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        aria-label={`Написать в ${m.label}`}
+                        title={`Написать в ${m.label}`}
+                        className="icon-action"
+                      >
+                        <MessengerIcon id={m.id} className="size-5" />
+                      </a>
+                    ))
+                  : networkMessengers.map((m) => (
+                      <MessengerCityPicker
+                        key={m.id}
+                        id={m.id}
+                        label={m.label}
+                        links={m.links}
+                        side="bottom"
+                        buttonClassName="icon-action"
+                        iconClassName="size-5"
+                      />
+                    ))}
                 <ThemeToggle />
               </div>
               <BookingButton size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">

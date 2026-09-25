@@ -8,6 +8,7 @@ import { MapPin, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { MessengerCityPicker, networkMessengers } from '@/components/messenger-city-picker'
 import { cities } from '@/config/cities'
 
 export function HomeHeader() {
@@ -91,7 +92,23 @@ export function HomeHeader() {
 
         {/* Right side — desktop */}
         <div className="hidden items-center gap-3 lg:flex">
-          <ThemeToggle />
+          {/* Мессенджеры сети: у каждой клиники свой номер, поэтому кнопка
+              сначала спрашивает город (MessengerCityPicker). Группа с почти
+              нулевым зазором — как в шапке города (site-header.tsx). */}
+          <div className="flex items-center gap-0.5">
+            {networkMessengers.map((m) => (
+              <MessengerCityPicker
+                key={m.id}
+                id={m.id}
+                label={m.label}
+                links={m.links}
+                side="bottom"
+                buttonClassName="icon-action"
+                iconClassName="size-5"
+              />
+            ))}
+            <ThemeToggle />
+          </div>
           <Button
             className="bg-accent text-accent-foreground hover:bg-accent/90"
             onClick={() => {

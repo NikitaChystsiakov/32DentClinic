@@ -39,6 +39,27 @@ export function maxHref(city: City): string {
 
 export type MessengerId = 'viber' | 'telegram' | 'whatsapp' | 'max' | 'instagram'
 
+/**
+ * Ссылка на чат именно этой клиники — или null, если у города своей нет и
+ * getMessengerLinks подставил бы общую (Telegram сети, сайт MAX). Нужна на
+ * страницах сети, где человек сам выбирает клинику: пункт «Жлобин» не должен
+ * вести в минский Telegram.
+ */
+export function cityMessengerHref(city: City, id: MessengerId): string | null {
+  switch (id) {
+    case 'viber':
+      return viberChatHref(city)
+    case 'whatsapp':
+      return whatsappHref(city)
+    case 'telegram':
+      return city.telegram ?? null
+    case 'max':
+      return city.max ?? null
+    case 'instagram':
+      return city.instagram ?? null
+  }
+}
+
 export interface MessengerLink {
   id: MessengerId
   label: string
