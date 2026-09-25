@@ -91,7 +91,7 @@ export const zhlobinContent = {
       {
         value: '∞',
         label: 'на импланты',
-        description: 'Пожизненная гарантия производителя на импланты Straumann, MegaGen и Neodent.',
+        description: 'Пожизненная гарантия производителя на импланты Straumann и MegaGen.',
         icon: 'Infinity',
       },
       {

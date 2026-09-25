@@ -258,18 +258,19 @@ export const doctors: Doctor[] = [
     // Распределение по городам — от заказчика 15.09.2026.
     cities: ['minsk'],
   },
-  // [TBD] Пулко Д.: заказчик 25.09.2026 прислал имя, город (Минск), стаж
-  // и фото. Отчество и специализация не названы — пока «врач-стоматолог» в
-  // группе терапевтов, как у Гутырчик ниже. Фото должно лежать в
-  // public/images/doctors/pulko-dmitriy.webp.
+  // Пулко Д. К. — ФИО, специализация, город и стаж от заказчика 25.09.2026.
+  // Фото должно лежать в public/images/doctors/pulko-dmitriy.webp.
   {
     slug: 'pulko-dmitriy',
-    name: 'Пулко Дмитрий',
-    specialization: 'Врач-стоматолог',
+    name: 'Пулко Дмитрий Константинович',
+    specialization: 'Врач-стоматолог-ортопед',
     experienceYears: 10,
-    categories: ['terapevt'],
-    bio: 'Дмитрий — врач-стоматолог минского центра 32Дент+ с 10-летним стажем.',
-    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    categories: ['ortoped'],
+    bio: 'Дмитрий Константинович — врач-стоматолог-ортопед минского центра 32Дент+ с 10-летним стажем: протезирование и восстановление зубов коронками, в том числе на имплантах.',
+    directions: [
+      { label: 'Протезирование', href: '/uslugi/protezirovanie/' },
+      { label: 'Имплантация', href: '/uslugi/implantaciya/' },
+    ],
     hasCertificates: false,
     photo: '/images/doctors/pulko-dmitriy.webp',
     cities: ['minsk'],

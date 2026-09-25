@@ -65,14 +65,13 @@ export interface ImplantProtocol {
 }
 
 /**
- * Системы имплантов — по прайсу клиники от 25.09.2026: MegaGen и Straumann
- * на одиночные импланты, Neodent (входит в Straumann Group) на All-on-X.
- * MIS заказчик из прайса убрал.
+ * Системы имплантов — по прайсу клиники от 25.09.2026: MegaGen и Straumann.
+ * MIS заказчик из прайса убрал; систему для All-on-4/6 на сайте не называем
+ * (заказчик, 25.09.2026) — её врач подбирает по КТ.
  */
 export const implantBrands = [
   { name: 'Straumann', country: 'Швейцария' },
   { name: 'MegaGen', country: 'Южная Корея' },
-  { name: 'Neodent', country: 'Straumann Group, для All-on-4 и All-on-6' },
 ]
 
 /**
@@ -390,7 +389,7 @@ export const implantProtocols: ImplantProtocol[] = [
     ],
     included: [
       { name: 'Консультация имплантолога — 11 BYN, КТ обеих челюстей — 46,6 BYN', status: 'extra' },
-      { name: 'Четыре имплантата Neodent (Straumann Group) и их установка', status: 'included' },
+      { name: 'Четыре имплантата и их установка', status: 'included' },
       { name: 'Анестезия', status: 'included' },
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
@@ -462,7 +461,7 @@ export const implantProtocols: ImplantProtocol[] = [
     ],
     included: [
       { name: 'Консультация имплантолога — 11 BYN, КТ обеих челюстей — 46,6 BYN', status: 'extra' },
-      { name: 'Шесть имплантатов Neodent (Straumann Group) и их установка', status: 'included' },
+      { name: 'Шесть имплантатов и их установка', status: 'included' },
       { name: 'Анестезия', status: 'included' },
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
@@ -621,7 +620,7 @@ export const implantationFaq: FaqItem[] = [
   {
     question: 'Какие импланты вы ставите?',
     answer:
-      'На одиночные и мостовидные конструкции — MegaGen (Южная Корея) и Straumann SLA (Швейцария); на All-on-4 и All-on-6 — Neodent (входит в Straumann Group). На сам имплант производитель даёт пожизненную гарантию. Какая система подойдёт и чем они отличаются по цене, врач объяснит на консультации.',
+      'На одиночные и мостовидные конструкции — MegaGen (Южная Корея) и Straumann SLA (Швейцария); систему для All-on-4 и All-on-6 врач подбирает по 3D-снимку. На сам имплант производитель даёт пожизненную гарантию. Какая система подойдёт и чем они отличаются по цене, врач объяснит на консультации.',
   },
   {
     question: 'Сколько стоит имплантация «под ключ»?',
@@ -651,7 +650,7 @@ export const implantationFaq: FaqItem[] = [
   {
     question: 'Какая гарантия?',
     answer:
-      'На импланты Straumann, MegaGen и Neodent — пожизненная гарантия производителя. Гарантия на работу врача и на коронки и протезы указана на странице клиники вашего города; она действует при соблюдении рекомендаций по уходу и регулярных осмотрах.',
+      'На импланты Straumann и MegaGen — пожизненная гарантия производителя. Гарантия на работу врача и на коронки и протезы указана на странице клиники вашего города; она действует при соблюдении рекомендаций по уходу и регулярных осмотрах.',
   },
   {
     question: 'Как ухаживать за имплантами?',

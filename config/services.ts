@@ -133,7 +133,6 @@ export const serviceCategories: ServiceCategory[] = [
       'volosova-natalya',
       'mikhalenko-olga',
       'kuznetsova-marina',
-      'pulko-dmitriy',
     ],
     faq: [
       {
@@ -321,6 +320,7 @@ export const serviceCategories: ServiceCategory[] = [
       'kovalchuk-igor',
       'belousova-tatyana',
       'makhonko-pavel',
+      'pulko-dmitriy',
     ],
     faq: [],
     // Заказчик: пока показываем во всех городах (коронки на имплантах нужны
@@ -367,8 +367,8 @@ export const serviceCategories: ServiceCategory[] = [
     icon: 'ScanLine',
     procedures: [
       { name: 'Панорамный снимок (ОПТГ, 2D), обе челюсти', priceFrom: 20 },
-      { name: 'КТ (3D КЛКТ), сегмент челюсти', priceFrom: 24, exact: true },
-      { name: 'КТ (3D КЛКТ), обе челюсти', priceFrom: 46.6, exact: true },
+      { name: 'КТ (3D КЛКТ), сегмент челюсти', priceFrom: 24 },
+      { name: 'КТ (3D КЛКТ), обе челюсти', priceFrom: 46.6 },
     ],
     whenToVisit: [
       'Перед началом любого сложного лечения',
