@@ -83,17 +83,11 @@ const byCity: Record<City['slug'], AggregatorRating[]> = {
       reviewsCount: 9,
     },
   ],
-  // Жлобин: профиль на 103.by найден 25.09.2026, оценку не сверяли.
-  // TODO: вписать оценку и число отзывов с https://32dent-1.103.by/otzyvy/
-  zhlobin: [
-    {
-      id: '103by',
-      name: '103.by',
-      href: 'https://32dent-1.103.by/otzyvy/',
-      rating: null,
-      reviewsCount: null,
-    },
-  ],
+  // Жлобин: оценок на сайте нет намеренно — отзывов на площадках мало,
+  // профиля в Google Картах нет (заказчик, 25.09.2026). Без записей блок
+  // «Оценки на площадках» и рейтинг в шапке у города не показываются.
+  // Профиль на 103.by: https://32dent-1.103.by/otzyvy/
+  zhlobin: [],
 }
 
 export function getAggregatorsForCity(citySlug: string): AggregatorRating[] {
