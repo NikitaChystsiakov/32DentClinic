@@ -26,6 +26,11 @@ export interface Procedure {
   exact?: boolean
   /** Цена ещё не получена от клиники: выводится «уточняется», priceFrom не показывается. */
   tbd?: boolean
+  /**
+   * Строка только для этих городов (slug), например цена, которую пока
+   * назвала одна клиника. Не задано — строка есть во всех городах услуги.
+   */
+  cities?: string[]
 }
 
 export interface FaqItem {
@@ -82,7 +87,13 @@ export const serviceCategories: ServiceCategory[] = [
       { name: 'Десневая пластика', priceFrom: 350, group: 'Установка импланта' },
       { name: 'All-on-4 с временным протезом', priceFrom: 12000, group: 'Комплексная имплантация всей челюсти' },
       { name: 'All-on-6 с временным протезом', priceFrom: 15000, group: 'Комплексная имплантация всей челюсти' },
-      { name: 'Постоянный протез на All-on-4 / All-on-6', priceFrom: 0, tbd: true, group: 'Комплексная имплантация всей челюсти' },
+      // Постоянный протез: цены Минска — лаборатория-партнёр «Белая
+      // лаборатория» (заказчик, 25.09.2026); в регионах пока «уточняется».
+      { name: 'Постоянный протез на All-on-4 / All-on-6', priceFrom: 0, tbd: true, group: 'Комплексная имплантация всей челюсти', cities: ['rogachev', 'zhlobin'] },
+      { name: 'All-on-4 — металлокерамика', priceFrom: 8500, group: 'Постоянный протез на All-on-4 / All-on-6', cities: ['minsk'] },
+      { name: 'All-on-4 — диоксид циркония', priceFrom: 9500, group: 'Постоянный протез на All-on-4 / All-on-6', cities: ['minsk'] },
+      { name: 'All-on-6 — металлокерамика', priceFrom: 10000, group: 'Постоянный протез на All-on-4 / All-on-6', cities: ['minsk'] },
+      { name: 'All-on-6 — диоксид циркония', priceFrom: 11500, group: 'Постоянный протез на All-on-4 / All-on-6', cities: ['minsk'] },
     ],
     whenToVisit: ['Отсутствует один или несколько зубов, съёмный протез неудобен', 'Хочется несъёмное решение'],
     steps: ['Диагностика и планирование', 'Установка импланта', 'Период приживления', 'Протезирование'],
@@ -409,6 +420,11 @@ export function formatProcedurePrice(procedure: Procedure) {
   if (procedure.tbd) return 'уточняется'
   const value = procedure.priceFrom.toLocaleString('ru-RU', { maximumFractionDigits: 1 })
   return procedure.exact ? `${value} BYN` : `от ${value} BYN`
+}
+
+/** Строки прайса, которые показываются в этом городе (см. Procedure.cities). */
+export function proceduresForCity(procedures: Procedure[], citySlug: string) {
+  return procedures.filter((p) => !p.cities || p.cities.includes(citySlug))
 }
 
 /**

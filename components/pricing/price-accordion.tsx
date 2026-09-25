@@ -3,7 +3,7 @@
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { BookingButton } from '@/components/booking-button'
-import { formatProcedurePrice, formatServicePrice, getServicesForCity, withProcedureGroups } from '@/lib/services-data'
+import { formatProcedurePrice, formatServicePrice, getServicesForCity, proceduresForCity, withProcedureGroups } from '@/lib/services-data'
 import { useCity } from '@/lib/contexts/city-context'
 
 export function PriceAccordion() {
@@ -44,7 +44,7 @@ export function PriceAccordion() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {withProcedureGroups(service.procedures).map((row) =>
+                    {withProcedureGroups(proceduresForCity(service.procedures, city.slug)).map((row) =>
                       row.type === 'group' ? (
                         <TableRow key={`group-${row.group}`} className="hover:bg-transparent">
                           <TableCell

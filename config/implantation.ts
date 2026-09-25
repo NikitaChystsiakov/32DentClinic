@@ -21,6 +21,8 @@ export type IncludedStatus = 'included' | 'extra' | 'tbd'
 
 export interface IncludedItem {
   name: string
+  /** Пункт только для этих городов (slug); не задано — во всех. */
+  cities?: string[]
   /** included — входит в цену; extra — оплачивается отдельно; tbd — клиника не подтвердила. */
   status: IncludedStatus
 }
@@ -163,6 +165,17 @@ const ALL_ON_4_PRICING: ProtocolPricing = {
 const ALL_ON_6_PRICING: ProtocolPricing = {
   from: 15000,
   note: 'шесть имплантов с временным протезом; стоимость постоянного протеза уточняется',
+}
+
+// Минск: постоянный протез — цены лаборатории-партнёра (заказчик, 25.09.2026).
+const ALL_ON_4_PRICING_MINSK: ProtocolPricing = {
+  from: 12000,
+  note: 'четыре импланта с временным протезом; постоянный протез — от 8 500 (металлокерамика) или от 9 500 (диоксид циркония)',
+}
+
+const ALL_ON_6_PRICING_MINSK: ProtocolPricing = {
+  from: 15000,
+  note: 'шесть имплантов с временным протезом; постоянный протез — от 10 000 (металлокерамика) или от 11 500 (диоксид циркония)',
 }
 
 const NAVIGATION_PRICING: ProtocolPricing = {
@@ -393,7 +406,8 @@ export const implantProtocols: ImplantProtocol[] = [
       { name: 'Анестезия', status: 'included' },
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
-      { name: 'Постоянный протез — стоимость уточняется', status: 'extra' },
+      { name: 'Постоянный протез: металлокерамика от 8 500, диоксид циркония от 9 500 BYN', status: 'extra', cities: ['minsk'] },
+      { name: 'Постоянный протез — стоимость уточняется', status: 'extra', cities: ['rogachev', 'zhlobin'] },
     ],
     steps: [
       {
@@ -419,7 +433,7 @@ export const implantProtocols: ImplantProtocol[] = [
     ],
     durationSummary: 'Временный протез — в первую неделю, постоянный — через 6–12 месяцев',
     pricing: {
-      minsk: ALL_ON_4_PRICING,
+      minsk: ALL_ON_4_PRICING_MINSK,
       rogachev: ALL_ON_4_PRICING,
       zhlobin: ALL_ON_4_PRICING,
     },
@@ -465,7 +479,8 @@ export const implantProtocols: ImplantProtocol[] = [
       { name: 'Анестезия', status: 'included' },
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
-      { name: 'Постоянный протез — стоимость уточняется', status: 'extra' },
+      { name: 'Постоянный протез: металлокерамика от 10 000, диоксид циркония от 11 500 BYN', status: 'extra', cities: ['minsk'] },
+      { name: 'Постоянный протез — стоимость уточняется', status: 'extra', cities: ['rogachev', 'zhlobin'] },
     ],
     steps: [
       {
@@ -491,7 +506,7 @@ export const implantProtocols: ImplantProtocol[] = [
     ],
     durationSummary: 'Временный протез — в первую неделю, постоянный — через 6–12 месяцев',
     pricing: {
-      minsk: ALL_ON_6_PRICING,
+      minsk: ALL_ON_6_PRICING_MINSK,
       rogachev: ALL_ON_6_PRICING,
       zhlobin: ALL_ON_6_PRICING,
     },
@@ -625,7 +640,7 @@ export const implantationFaq: FaqItem[] = [
   {
     question: 'Сколько стоит имплантация «под ключ»?',
     answer:
-      'Имплантат с установкой — от 1 200 BYN (MegaGen) или от 1 850 BYN (Straumann); формирователь десны — от 250, безметалловая коронка на импланте — от 1 100. Итого один зуб с коронкой — от 2 550 BYN. All-on-4 с временным протезом — от 12 000, All-on-6 — от 15 000; стоимость постоянного протеза на них уточняется. Точную сумму врач фиксирует в плане лечения до начала работы.',
+      'Имплантат с установкой — от 1 200 BYN (MegaGen) или от 1 850 BYN (Straumann); формирователь десны — от 250, безметалловая коронка на импланте — от 1 100. Итого один зуб с коронкой — от 2 550 BYN. All-on-4 с временным протезом — от 12 000, All-on-6 — от 15 000; постоянный протез на них оплачивается отдельно (в Минске — от 8 500 и от 10 000 BYN соответственно). Точную сумму врач фиксирует в плане лечения до начала работы.',
   },
   {
     question: 'Это больно?',

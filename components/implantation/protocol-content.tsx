@@ -139,7 +139,9 @@ export function ProtocolContent({ slug }: { slug: string }) {
           <section className="flex flex-col gap-4">
             <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Что входит в стоимость</h2>
             <ul className="divide-y divide-border overflow-hidden rounded-2xl bg-card ring-1 ring-primary/10">
-              {protocol.included.map((item) => {
+              {protocol.included
+                .filter((item) => !item.cities || item.cities.includes(city.slug))
+                .map((item) => {
                 const status = INCLUDED_LABELS[item.status]
                 return (
                   <li key={item.name} className="flex items-center justify-between gap-4 px-4 py-3">

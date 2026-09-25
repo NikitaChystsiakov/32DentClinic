@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { CheckCircle2, ShieldCheck } from 'lucide-react'
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
-import { getServiceBySlug } from '@/config/services'
+import { getServiceBySlug, proceduresForCity } from '@/config/services'
 import { getDoctorBySlug } from '@/config/doctors'
 import { useCity } from '@/lib/contexts/city-context'
 import { ServiceHeroCta } from '@/components/services/service-hero-cta'
@@ -81,7 +81,7 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
       <Reveal delay={1}>
         <div className="mb-16 flex flex-col gap-6">
           <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Процедуры и цены</h2>
-          <ProcedureTable slug={service.slug} procedures={service.procedures} />
+          <ProcedureTable slug={service.slug} procedures={proceduresForCity(service.procedures, city.slug)} />
         </div>
       </Reveal>
 

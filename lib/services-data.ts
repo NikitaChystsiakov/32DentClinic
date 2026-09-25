@@ -11,6 +11,7 @@ export {
   formatProcedurePrice,
   formatServicePrice,
   withProcedureGroups,
+  proceduresForCity,
   type Procedure,
   type FaqItem,
   type ServiceCategory,

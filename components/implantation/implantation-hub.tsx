@@ -28,7 +28,7 @@ import {
   implantationTimeline,
 } from '@/config/implantation'
 import { getImplantologistsForCity } from '@/config/doctors'
-import { getServiceBySlug } from '@/config/services'
+import { getServiceBySlug, proceduresForCity } from '@/config/services'
 import { useCity } from '@/lib/contexts/city-context'
 import { siteConfig } from '@/lib/site-config'
 
@@ -47,7 +47,7 @@ export function ImplantationHub() {
   const single = protocols.find((p) => p.slug === 'odinochnyj-implant')
   const singlePrice = single ? formatProtocolPrice(single, city.slug) : null
   // Прайс раздела — те же строки, что в /ceny/ (config/services.ts).
-  const priceList = getServiceBySlug('implantaciya')?.procedures ?? []
+  const priceList = proceduresForCity(getServiceBySlug('implantaciya')?.procedures ?? [], city.slug)
   const hasImplantologists = getImplantologistsForCity(city.slug).length > 0
   // Все системы из config/implantation.ts, включая MegaGen (заказчик
   // 16.09.2026 попросил показывать, хотя цены в прайсе пока нет).
