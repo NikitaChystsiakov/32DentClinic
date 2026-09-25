@@ -19,6 +19,7 @@ import { FEATURED_SERVICE_SLUG, getServicesForCity } from '@/config/services'
 import { siteConfig } from '@/lib/site-config'
 import { absoluteUrl, buildMetadata } from '@/lib/seo'
 import { JsonLd } from '@/components/seo/json-ld'
+import { SocialLinks } from '@/components/social-links'
 
 // Title/description хаба — из корневого layout; здесь только canonical и
 // Open Graph для самой «/» (в layout canonical не задаём, см. app/layout.tsx).
@@ -57,7 +58,7 @@ const NETWORK_STATS = [
   // из lib/site-config.ts успел устареть.
   { icon: Users, value: String(getRealDoctorsCount()), label: 'врачей в сети' },
   // Заказчик 16.09.2026: на главной — «до 2 лет», а не «до 15» (минская
-  // тройная гарантия на уровне сети не действует).
+  // гарантия 15 лет на протезы на уровне сети не действует).
   { icon: ShieldCheck, value: 'до 2 лет', label: 'гарантия на работы' },
 ]
 
@@ -197,6 +198,8 @@ export default function Page() {
                       {city.phone}
                     </a>
                   </div>
+
+                  <SocialLinks city={city} />
 
                   {/* Услуги города чипами-ссылками: человек с конкретной
                       проблемой сразу видит, есть ли нужное направление здесь.

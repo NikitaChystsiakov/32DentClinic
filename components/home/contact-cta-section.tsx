@@ -1,6 +1,7 @@
 import { MapPin, Clock, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
+import { SocialLinks } from '@/components/social-links'
 import type { City } from '@/config/cities'
 import type { CityContent } from '@/content'
 import { formatCityHours } from '@/lib/format-hours'
@@ -35,6 +36,10 @@ export function ContactCtaSection({ city, content }: { city: City; content: City
               <Phone className="size-4 text-(--panel-body)" />
               <span>{city.phone}</span>
             </a>
+          </div>
+          <div className="flex flex-col gap-2 pt-2">
+            <span className="text-sm font-medium text-(--panel-heading)">Мы в соцсетях и мессенджерах</span>
+            <SocialLinks city={city} />
           </div>
         </div>
         <div className="flex flex-col justify-center gap-3">

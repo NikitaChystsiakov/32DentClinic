@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import type { ServiceCategory } from '@/lib/services-data'
+import { formatServicePrice, type ServiceCategory } from '@/lib/services-data'
 import { useCity } from '@/lib/contexts/city-context'
 
 export function ServiceCard({ service }: { service: ServiceCategory }) {
@@ -32,7 +32,7 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="line-clamp-2 text-sm text-muted-foreground">{service.cardDescription}</p>
-        <span className="font-medium text-foreground">от {service.priceFrom.toLocaleString('ru-RU')} BYN</span>
+        <span className="font-medium text-foreground">{formatServicePrice(service)}</span>
         {/* На мобильном кнопки стоят столбиком на всю ширину — при штатных
             36 px они выглядели сплюснутыми, поэтому до sm поднимаем до 44 px. */}
         <div className="mt-auto flex flex-col gap-2 pt-1 sm:flex-row">

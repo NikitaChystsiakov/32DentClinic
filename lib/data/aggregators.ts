@@ -12,10 +12,11 @@ import type { City } from '@/config/cities'
  * массив и подставить ссылку на профиль клиники, оценку и число отзывов.
  * Цифры должны совпадать с площадкой на момент правки — сверять раз в
  * квартал. `rating: null` — оценка не подтверждена, карточка покажет
- * «Рейтинг уточняется».
+ * «Рейтинг уточняется»; `reviewsCount: null` — число отзывов не выводится,
+ * остаётся только оценка и ссылка «Читать отзывы».
  */
 
-export type AggregatorId = '103by' | 'yandex' | 'google'
+export type AggregatorId = '103by' | 'yandex' | 'google' | '2gis'
 
 export interface AggregatorRating {
   id: AggregatorId
@@ -56,19 +57,77 @@ const byCity: Record<City['slug'], AggregatorRating[]> = {
       reviewsCount: 50,
     },
   ],
-  // Минск: по данным заказчика 103.by 5.0 (89 отзывов), Google 4.8, 2GIS 5.0 —
-  // но ссылок на профили нет, а карточка без ссылки бесполезна. Появятся
-  // адреса профилей — вписать сюда (docs/ЗАГЛУШКИ-И-УТОЧНЕНИЯ.md § 5).
-  minsk: [],
-  // Жлобин: профили на площадках не найдены.
-  zhlobin: [],
+  // Минск: профили найдены 25.09.2026. Оценки — по данным заказчика
+  // (103.by 5.0, 2GIS 5.0); число отзывов на 103.by — по выдаче поиска.
+  // TODO: сверить цифры с площадками перед релизом — сайты площадок из
+  // среды разработки не открываются.
+  minsk: [
+    {
+      id: '103by',
+      name: '103.by',
+      href: 'https://32dent-plus.103.by/otzyvy/',
+      rating: 5.0,
+      reviewsCount: 388,
+    },
+    {
+      id: 'yandex',
+      name: 'Яндекс Карты',
+      href: 'https://yandex.by/maps/org/32dent_/62123372700/reviews/',
+      rating: null,
+      reviewsCount: null,
+    },
+    {
+      id: '2gis',
+      name: '2ГИС',
+      href: 'https://2gis.by/minsk/firm/70000001042329625/tab/reviews',
+      rating: 5.0,
+      reviewsCount: null,
+    },
+  ],
+  // Жлобин: профиль на 103.by найден 25.09.2026, оценку не сверяли.
+  // TODO: вписать оценку и число отзывов с https://32dent-1.103.by/otzyvy/
+  zhlobin: [
+    {
+      id: '103by',
+      name: '103.by',
+      href: 'https://32dent-1.103.by/otzyvy/',
+      rating: null,
+      reviewsCount: null,
+    },
+  ],
 }
 
 export function getAggregatorsForCity(citySlug: string): AggregatorRating[] {
   return byCity[citySlug as City['slug']] ?? []
 }
 
-/** Основная площадка города для шапки и hero — первая с подтверждённой оценкой. */
-export function getMainRatingForCity(citySlug: string): AggregatorRating | undefined {
-  return getAggregatorsForCity(citySlug).find((a) => a.rating !== null)
+/** «388 отзывов», «21 отзыв», «42 отзыва». */
+export function reviewsLabel(count: number) {
+  const mod10 = count % 10
+  const mod100 = count % 100
+  const word =
+    mod10 === 1 && mod100 !== 11
+      ? 'отзыв'
+      : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+        ? 'отзыва'
+        : 'отзывов'
+  return `${count} ${word}`
+}
+
+/** Оценка для вывода: «5.0», «4.9». */
+export function formatRating(rating: number) {
+  return rating.toFixed(1)
+}
+
+/**
+ * Основная площадка города для шапки и hero — первая, у которой подтверждены
+ * и оценка, и число отзывов: там подпись «5.0 · 388 отзывов на 103.by».
+ */
+export function getMainRatingForCity(
+  citySlug: string
+): (AggregatorRating & { rating: number; reviewsCount: number }) | undefined {
+  return getAggregatorsForCity(citySlug).find(
+    (a): a is AggregatorRating & { rating: number; reviewsCount: number } =>
+      a.rating !== null && a.reviewsCount !== null
+  )
 }

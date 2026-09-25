@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, MapPin } from 'lucide-react'
 
 import type { NearbyTown } from '@/config/nearby-towns'
-import { getServiceBySlug } from '@/config/services'
+import { formatServicePrice, getServiceBySlug } from '@/config/services'
 import type { TownContent } from '@/content/towns'
 import { getClinicForService } from '@/lib/town-clinics'
 
@@ -56,7 +56,7 @@ export function TownFeaturedServices({ town, content }: { town: NearbyTown; cont
                 <h3 className="min-w-0 font-heading text-lg leading-snug font-bold text-balance text-foreground">
                   {service.shortName}
                 </h3>
-                <span className="shrink-0 text-sm font-semibold text-primary">от {service.priceFrom.toLocaleString('ru-RU')} р.</span>
+                <span className="shrink-0 text-sm font-semibold text-primary">{formatServicePrice(service, 'р.')}</span>
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground">{note}</p>
               <span className="mt-auto inline-flex w-fit items-center gap-1 pt-2 text-sm font-medium text-primary transition-[gap] duration-300 group-hover:gap-2">

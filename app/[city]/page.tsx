@@ -25,7 +25,7 @@ import { getDoctorsForCity, getImplantologistsForCity } from '@/config/doctors'
 import { getServicesForCity } from '@/config/services'
 import { getCityBySlug } from '@/config/cities'
 import { getNearbyTownBySlug } from '@/config/nearby-towns'
-import { getAggregatorsForCity, getMainRatingForCity } from '@/lib/data/aggregators'
+import { formatRating, getAggregatorsForCity, getMainRatingForCity, reviewsLabel } from '@/lib/data/aggregators'
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: citySlug } = await params
@@ -55,8 +55,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const stats = [
     rating
       ? {
-          value: String(rating.rating),
-          label: `рейтинг · ${rating.reviewsCount} отзывов на ${rating.name}`,
+          value: formatRating(rating.rating),
+          label: `рейтинг · ${reviewsLabel(rating.reviewsCount)} на ${rating.name}`,
         }
       : { value: String(servicesCount), label: 'направлений лечения в одной клинике' },
     { value: String(doctorsCount), label: 'врачей принимают пациентов в клинике' },
@@ -156,11 +156,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <ClinicGallerySection />
         </SectionPanel>
       </Reveal>
-      {/* Блока отзывов-цитат на сайте нет намеренно: выдуманные отзывы —
-          недостоверная информация, а реальные с благодарностями за лечение
-          запрещены ст. 15 Закона «О рекламе» и требуют согласия пациента.
-          Вместо них — оценки на площадках, и только для города, у которого
-          есть подтверждённые профили (lib/data/aggregators.ts). */}
+      {/* Оценки на площадках — только для города, у которого есть профили
+          (lib/data/aggregators.ts); логотип площадки ведёт на её страницу
+          отзывов. */}
       {hasRatings && (
         <Reveal delay={1}>
           <SectionPanel variant="sky">

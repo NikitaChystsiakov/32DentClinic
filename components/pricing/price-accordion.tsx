@@ -3,7 +3,7 @@
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { BookingButton } from '@/components/booking-button'
-import { formatProcedurePrice, getServicesForCity, withProcedureGroups } from '@/lib/services-data'
+import { formatProcedurePrice, formatServicePrice, getServicesForCity, withProcedureGroups } from '@/lib/services-data'
 import { useCity } from '@/lib/contexts/city-context'
 
 export function PriceAccordion() {
@@ -29,7 +29,7 @@ export function PriceAccordion() {
                   {service.shortName}
                 </span>
                 <span className="rounded-full bg-silver-muted px-2 py-0.5 text-xs font-medium text-muted-foreground ring-1 ring-silver/25">
-                  от {service.priceFrom.toLocaleString('ru-RU')} BYN
+                  {formatServicePrice(service)}
                 </span>
               </span>
             </AccordionTrigger>

@@ -55,7 +55,7 @@ export function ImplantationHub() {
 
   const stats = [
     content.guaranteeStat,
-    { value: 'Straumann · MIS · MegaGen', label: 'системы имплантов' },
+    { value: 'Straumann · MegaGen · Neodent', label: 'системы имплантов' },
     ...(singlePrice ? [{ value: singlePrice, label: 'имплантат с установкой' }] : []),
   ]
 

@@ -1,6 +1,6 @@
 import { Star, ExternalLink } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { getAggregatorsForCity, type AggregatorRating } from '@/lib/data/aggregators'
+import { getAggregatorsForCity, reviewsLabel, type AggregatorRating } from '@/lib/data/aggregators'
 import type { City } from '@/config/cities'
 import { cn } from '@/lib/utils'
 
@@ -24,6 +24,16 @@ function PlatformLogo({ id }: { id: AggregatorRating['id'] }) {
         <span className="font-heading text-2xl font-bold tracking-tight text-[#fc3f1d]">
           Яндекс
         </span>
+      </span>
+    )
+  }
+  if (id === '2gis') {
+    return (
+      <span className="inline-flex items-center gap-2">
+        <span className="flex size-7 items-center justify-center rounded-full bg-[#1dad4b] font-heading text-sm font-bold text-white">
+          2
+        </span>
+        <span className="font-heading text-2xl font-bold tracking-tight text-[#1dad4b]">2ГИС</span>
       </span>
     )
   }
@@ -75,14 +85,16 @@ function RatingCard({ aggregator }: { aggregator: AggregatorRating }) {
               <>
                 <div className="flex items-end gap-1.5">
                   <span className="font-heading text-3xl font-bold text-foreground">
-                    {aggregator.rating}
+                    {aggregator.rating.toFixed(1)}
                   </span>
                   <span className="mb-1 text-sm text-muted-foreground">из 5</span>
                 </div>
                 <Stars rating={aggregator.rating} />
-                <p className="text-sm text-muted-foreground">
-                  {aggregator.reviewsCount} отзывов
-                </p>
+                {aggregator.reviewsCount !== null && (
+                  <p className="text-sm text-muted-foreground">
+                    {reviewsLabel(aggregator.reviewsCount)}
+                  </p>
+                )}
               </>
             ) : (
               <>

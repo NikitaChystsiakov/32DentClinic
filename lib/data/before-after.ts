@@ -56,6 +56,12 @@ export interface BeforeAfterCase {
 /** Иллюстрация вида работы — не фото пациента клиники. */
 export interface BeforeAfterIllustration {
   id: string
+  /**
+   * Города, где показывается иллюстрация. Наборы у городов разные: раньше
+   * Рогачёв и Жлобин показывали одни и те же шесть картинок, и страницы
+   * примеров выглядели копией друг друга (заказчик, 25.09.2026).
+   */
+  citySlugs: City['slug'][]
   serviceSlug: string
   title: string
   work: string
@@ -170,12 +176,14 @@ export const cases: BeforeAfterCase[] = [
 
 /*
  * Иллюстрации для городов, где реальных работ ещё нет (сейчас — Рогачёв и
- * Жлобин). Картинки public/cases/*.png — не фотографии пациентов 32Дент. Как
+ * Жлобин). У каждого города свой набор (`citySlugs`), чтобы страницы
+ * примеров не повторяли друг друга. Картинки public/cases/*.png — не фотографии пациентов 32Дент. Как
  * только в `cases` появится хотя бы одна работа города, иллюстрации там пропадают.
  */
 export const illustrations: BeforeAfterIllustration[] = [
   {
     id: 'restavraciya-zuba',
+    citySlugs: ['rogachev'],
     serviceSlug: 'terapevticheskaya-stomatologiya',
     title: 'Художественная реставрация',
     work: 'Прямая реставрация композитом светового отверждения, 1 единица',
@@ -184,6 +192,8 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
   {
     id: 'ispravlenie-prikusa',
+    // Ортодонтия есть только в Минске, а там показываются реальные работы.
+    citySlugs: [],
     serviceSlug: 'ortodontiya',
     title: 'Ортодонтическое лечение',
     work: 'Брекет-система на обе челюсти',
@@ -192,6 +202,7 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
   {
     id: 'odinochnaya-implantaciya',
+    citySlugs: ['rogachev'],
     serviceSlug: 'implantaciya',
     title: 'Одиночная имплантация',
     work: 'Имплант с коронкой из диоксида циркония, 1 единица',
@@ -200,6 +211,7 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
   {
     id: 'protezirovanie-na-implantah',
+    citySlugs: ['zhlobin'],
     serviceSlug: 'protezirovanie',
     title: 'Протезирование на имплантах',
     work: 'Несъёмная конструкция на имплантах, полная челюсть',
@@ -208,6 +220,7 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
   {
     id: 'otbelivanie',
+    citySlugs: ['rogachev'],
     serviceSlug: 'prof-gigiena-i-otbelivanie',
     title: 'Профессиональная гигиена и отбеливание',
     work: 'Снятие налёта и камня, полировка, кабинетное отбеливание',
@@ -216,6 +229,7 @@ export const illustrations: BeforeAfterIllustration[] = [
   },
   {
     id: 'udalenie-zuba',
+    citySlugs: ['zhlobin'],
     serviceSlug: 'khirurgiya',
     title: 'Удаление зуба мудрости',
     work: 'Удаление ретинированного третьего моляра',
@@ -243,7 +257,7 @@ export function getGalleryItemsForCity(citySlug: string): GalleryItem[] {
   // лечение» вела бы в услугу, которой там нет.
   const available = new Set(getServicesForCity(citySlug).map((s) => s.slug))
   return illustrations
-    .filter((item) => available.has(item.serviceSlug))
+    .filter((item) => item.citySlugs.includes(citySlug) && available.has(item.serviceSlug))
     .map((item) => ({ kind: 'illustration', item }))
 }
 
