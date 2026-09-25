@@ -33,6 +33,13 @@ async function* walk(dir) {
   }
 }
 
+const srcStat = await stat(SRC).catch(() => null)
+if (!srcStat?.isDirectory()) {
+  console.error(`Папка не найдена: ${SRC}`)
+  console.error('Подсказка: перетащите папку с фото из Finder в окно терминала — путь вставится сам.')
+  process.exit(1)
+}
+
 await mkdir(OUT, { recursive: true })
 
 let count = 0
