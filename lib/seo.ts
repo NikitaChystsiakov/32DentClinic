@@ -181,8 +181,10 @@ export function openingHoursJsonLd(hours: { days: string; time: string }[]) {
  * города — для каждой клиники, куда она ведёт (см. components/town).
  * areaServed — соседние города, откуда клиника принимает пациентов: так
  * поисковик связывает жлобинскую клинику с запросами из Светлогорска без
- * выдуманного адреса в самом Светлогорске. aggregateRating намеренно нет:
- * данные в lib/data/aggregators.ts пока только рогачёвские.
+ * выдуманного адреса в самом Светлогорске. aggregateRating намеренно нет и
+ * не будет: оценки в lib/data/aggregators.ts собраны на 103.by, Яндексе,
+ * Google и 2ГИС, а Google запрещает размечать рейтинг с чужих площадок и
+ * отзывы организации о себе — за это ручные санкции, а не звёзды в выдаче.
  */
 export function clinicJsonLd(city: City, hours: CityHours[]) {
   return {
