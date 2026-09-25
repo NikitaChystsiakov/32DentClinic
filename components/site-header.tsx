@@ -15,7 +15,7 @@ import { cities } from '@/config/cities'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
-import { getMainRatingForCity } from '@/lib/data/aggregators'
+import { formatRating, getMainRatingForCity, reviewsLabel } from '@/lib/data/aggregators'
 import { getMessengerLinks } from '@/lib/messengers'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 
@@ -188,7 +188,7 @@ export function SiteHeader() {
 
           {/* Доверительные метки — от md */}
           <div className="hidden items-center gap-4 md:flex">
-            {rating?.rating && (
+            {rating && (
               <a
                 href={rating.href}
                 target="_blank"
@@ -196,9 +196,9 @@ export function SiteHeader() {
                 className="flex items-center gap-2 text-base text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Star className="size-5 shrink-0 fill-rating text-rating" />
-                <span className="font-semibold text-foreground">{rating.rating}</span>
+                <span className="font-semibold text-foreground">{formatRating(rating.rating)}</span>
                 <span className="hidden whitespace-nowrap xl:inline">
-                  · {rating.reviewsCount} отзывов на {rating.name}
+                  · {reviewsLabel(rating.reviewsCount)} на {rating.name}
                 </span>
               </a>
             )}

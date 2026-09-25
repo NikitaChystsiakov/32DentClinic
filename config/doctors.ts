@@ -162,12 +162,13 @@ export const doctors: Doctor[] = [
     photo: '/images/doctors/privalov-evgeni.webp',
     cities: ['rogachev'],
   },
-  // Симанович А. А. — имя, специализация и фото от заказчика 24.09.2026;
-  // стаж не прислан, поэтому поля нет.
+  // Симанович А. А. — имя, специализация и фото от заказчика 24.09.2026,
+  // стаж — от 25.09.2026.
   {
     slug: 'simanovich-alina',
     name: 'Симанович Алина Александровна',
     specialization: 'Врач-стоматолог-ортопед',
+    experienceYears: 6,
     categories: ['ortoped'],
     bio: 'Алина Александровна — врач-стоматолог-ортопед клиники в Рогачёве: протезирование и восстановление зубов коронками.',
     directions: [{ label: 'Протезирование', href: '/uslugi/protezirovanie/' }],
@@ -255,6 +256,22 @@ export const doctors: Doctor[] = [
     hasCertificates: false,
     photo: '/images/doctors/molchan-aleksandr.webp',
     // Распределение по городам — от заказчика 15.09.2026.
+    cities: ['minsk'],
+  },
+  // [TBD] Пулко Д.: заказчик 25.09.2026 прислал имя, город (Минск), стаж
+  // и фото. Отчество и специализация не названы — пока «врач-стоматолог» в
+  // группе терапевтов, как у Гутырчик ниже. Фото должно лежать в
+  // public/images/doctors/pulko-dmitriy.webp.
+  {
+    slug: 'pulko-dmitriy',
+    name: 'Пулко Дмитрий',
+    specialization: 'Врач-стоматолог',
+    experienceYears: 10,
+    categories: ['terapevt'],
+    bio: 'Дмитрий — врач-стоматолог минского центра 32Дент+ с 10-летним стажем.',
+    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
+    hasCertificates: false,
+    photo: '/images/doctors/pulko-dmitriy.webp',
     cities: ['minsk'],
   },
   // [TBD] Гутырчик: заказчик прислал только имя и фото. Специализация,

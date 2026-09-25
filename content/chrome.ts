@@ -25,10 +25,10 @@ export interface CityChrome {
 export const cityChrome: Record<string, CityChrome> = {
   minsk: {
     promo: {
-      text: 'Консультация имплантолога — 35 р., КТ сегмента — 24 р.',
+      text: 'Консультация имплантолога — 11 р., КТ сегмента — 24 р.',
       href: '/minsk/uslugi/implantaciya/',
     },
-    // У Минска не «2 года на всё», а тройная гарантия (см. content/minsk.ts).
+    // У Минска не «2 года на всё», а своя гарантия (см. content/minsk.ts).
     guaranteeSummary: 'Пожизненная гарантия производителя на импланты и до 15 лет на протезы.',
     hours: [
       { days: 'Понедельник — Пятница', time: '09:00 – 21:00' },

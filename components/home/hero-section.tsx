@@ -5,7 +5,7 @@ import { BookingButton } from '@/components/booking-button'
 import type { City } from '@/config/cities'
 import type { CityContent } from '@/content'
 import { getDoctorsForCity } from '@/config/doctors'
-import { getMainRatingForCity } from '@/lib/data/aggregators'
+import { formatRating, getMainRatingForCity, reviewsLabel } from '@/lib/data/aggregators'
 
 function pluralizeDoctors(n: number): string {
   const mod10 = n % 10
@@ -51,7 +51,7 @@ export function HeroSection({ city, content }: { city: City; content: CityConten
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
               <Star className="size-4 fill-rating text-rating" />
               <span>
-                {mainRating.reviewsCount} отзывов на {mainRating.name}
+                {reviewsLabel(mainRating.reviewsCount)} на {mainRating.name}
               </span>
             </div>
           )}
@@ -81,10 +81,10 @@ export function HeroSection({ city, content }: { city: City; content: CityConten
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1 font-heading text-2xl font-bold text-foreground">
                 <Star className="size-5 fill-rating text-rating" />
-                {mainRating.rating}
+                {formatRating(mainRating.rating)}
               </span>
               <span className="max-w-28 text-xs leading-tight text-muted-foreground">
-                рейтинг на {mainRating.name} · {mainRating.reviewsCount} отзывов
+                рейтинг на {mainRating.name} · {reviewsLabel(mainRating.reviewsCount)}
               </span>
             </div>
           )}

@@ -9,6 +9,7 @@ export {
   getServicesForCity,
   serviceSelectOptions,
   formatProcedurePrice,
+  formatServicePrice,
   withProcedureGroups,
   type Procedure,
   type FaqItem,

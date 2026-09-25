@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useCity } from '@/lib/contexts/city-context'
-import { getServicesForCity } from '@/config/services'
+import { formatServicePrice, getServicesForCity } from '@/config/services'
 
 export function ServicesOverview() {
   const { city } = useCity()
@@ -118,7 +118,7 @@ export function ServicesOverview() {
                         {service.shortName}
                       </h3>
                       <span className="shrink-0 text-sm font-semibold text-primary">
-                        от {service.priceFrom.toLocaleString('ru-RU')} р.
+                        {formatServicePrice(service, 'р.')}
                       </span>
                     </div>
 

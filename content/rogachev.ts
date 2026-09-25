@@ -54,11 +54,11 @@ export const rogachevContent = {
         href: '/rogachev/uslugi/prof-gigiena-i-otbelivanie/',
       },
       {
-        title: 'Имплант MIS или Straumann',
-        description: 'Имплантат с установкой; с коронкой — от 2 720 р. Цена фиксируется в договоре.',
+        title: 'Имплант MegaGen или Straumann',
+        description: 'Имплантат с установкой; с коронкой — от 2 550 р. Цена фиксируется в договоре.',
         image: '/stickers/implant.webp',
         // Цена — из прайса; зачёркнутой «старой» нет: скидка не подтверждена.
-        price: 'от 1 260 р.',
+        price: 'от 1 200 р.',
         href: '/rogachev/uslugi/implantaciya/odinochnyj-implant/',
         // Без плашки «Горячее предложение»: это язык акции, а цена — обычная позиция прайса.
       },
@@ -93,8 +93,8 @@ export const rogachevContent = {
   guaranteeStat: { value: '2', label: 'года гарантии на все виды работ' },
 
   // Блок «Гарантия» на главной. [TBD] клиника не подтвердила, действует ли
-  // в регионах тройная гарантия Минска (7 лет на работу, 15 на протезы) —
-  // пока показываем «2 года на всё» и гарантию производителя на импланты.
+  // в регионах минская гарантия 15 лет на протезы — пока показываем
+  // «2 года на всё» и гарантию производителя на импланты.
   guarantee: {
     eyebrow: 'Гарантия',
     title: 'Гарантия на имплантацию и все виды работ',
@@ -103,7 +103,7 @@ export const rogachevContent = {
       {
         value: '∞',
         label: 'на импланты',
-        description: 'Пожизненная гарантия производителя на импланты Straumann, MIS, MegaGen и Neodent.',
+        description: 'Пожизненная гарантия производителя на импланты Straumann, MegaGen и Neodent.',
         icon: 'Infinity',
       },
       {

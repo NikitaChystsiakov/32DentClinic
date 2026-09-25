@@ -1,18 +1,23 @@
 <?php
 /**
- * Приём заявки с формы записи и пересылка в Telegram.
+ * Приём заявки с формы записи: проверка полей, защита от ботов и сборка
+ * текста. Куда заявка уходит (Telegram-бот, бот клиники, заглушка) —
+ * решает booking-transport.php по настройке `transport` в config.php.
  *
  * Единственный серверный код сайта: всё остальное — статика из out/.
  * Ожидает POST с JSON-телом:
  *   { name, phone, city, service?, doctor?, comment?, source?, website }
  * `website` — honeypot: поле скрыто от людей, боты его заполняют.
- * Токен бота и chat_id — в config.php рядом (в репозитории его нет,
- * см. config.example.php и docs/ФОРМА-ЗАПИСИ.md).
+ * Токены — в config.php (в репозитории его нет, см. config.example.php и
+ * docs/ФОРМА-ЗАПИСИ.md).
  *
  * Ответ всегда JSON: { ok: true } или { ok: false, error: '<код>' }.
  */
 
 declare(strict_types=1);
+
+define('DENT32_BOOKING', true);
+require __DIR__ . '/booking-transport.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -24,12 +29,39 @@ const MAX_NAME = 100;
 const MAX_TEXT = 200;
 const MAX_COMMENT = 1000;
 
-/** @var array<string,string> Подписи городов в сообщении по slug из адреса страницы. */
-const CITY_NAMES = [
-    'minsk' => 'Минск',
-    'rogachev' => 'Рогачёв',
-    'zhlobin' => 'Жлобин',
+/**
+ * Белый список городов: подпись и хэштег в сообщении. Заявки всех городов
+ * могут идти в одну группу — по хэштегу администратор фильтрует свой город.
+ * Slug не из списка в сообщение не попадает.
+ *
+ * @var array<string,array{0:string,1:string}>
+ */
+const CITIES = [
+    'minsk' => ['Минск', '#минск'],
+    'rogachev' => ['Рогачёв', '#рогачёв'],
+    'zhlobin' => ['Жлобин', '#жлобин'],
 ];
+
+/**
+ * config.php ищется сначала вне папки сайта (на уровень выше public_html —
+ * туда веб-сервер не отдаёт файлы вообще), затем рядом со скриптом.
+ *
+ * @return array<string,mixed>
+ */
+function loadConfig(): array
+{
+    $candidates = [
+        dirname(__DIR__, 2) . '/dent32-booking-config.php',
+        __DIR__ . '/config.php',
+    ];
+    foreach ($candidates as $path) {
+        if (is_file($path)) {
+            $config = require $path;
+            return is_array($config) ? $config : [];
+        }
+    }
+    return [];
+}
 
 function respond(int $status, array $body): never
 {
@@ -111,51 +143,6 @@ function rateLimited(string $ip): bool
     return $limited;
 }
 
-function sendTelegram(string $token, string $chatId, string $text): bool
-{
-    $url = "https://api.telegram.org/bot{$token}/sendMessage";
-    $payload = http_build_query([
-        'chat_id' => $chatId,
-        'text' => $text,
-        'disable_web_page_preview' => 'true',
-    ]);
-
-    if (function_exists('curl_init')) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 10,
-        ]);
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-    } else {
-        // Хостинг без curl — тот же запрос через stream.
-        $context = stream_context_create(['http' => [
-            'method' => 'POST',
-            'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
-            'content' => $payload,
-            'timeout' => 10,
-            'ignore_errors' => true,
-        ]]);
-        $response = @file_get_contents($url, false, $context);
-        $status = 0;
-        foreach ($http_response_header ?? [] as $h) {
-            if (preg_match('#^HTTP/\S+\s+(\d{3})#', $h, $m)) {
-                $status = (int) $m[1];
-            }
-        }
-    }
-
-    if ($response === false || $status !== 200) {
-        return false;
-    }
-    $decoded = json_decode($response, true);
-    return is_array($decoded) && ($decoded['ok'] ?? false) === true;
-}
-
 // ---------------------------------------------------------------------------
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
@@ -165,13 +152,7 @@ if (foreignOrigin()) {
     respond(403, ['ok' => false, 'error' => 'forbidden_origin']);
 }
 
-$configPath = __DIR__ . '/config.php';
-$config = is_file($configPath) ? require $configPath : [];
-$token = (string) ($config['bot_token'] ?? '');
-$chatId = (string) ($config['chat_id'] ?? '');
-if ($token === '' || $chatId === '') {
-    respond(500, ['ok' => false, 'error' => 'not_configured']);
-}
+$config = loadConfig();
 date_default_timezone_set((string) ($config['timezone'] ?? 'Europe/Minsk'));
 
 $raw = file_get_contents('php://input') ?: '';
@@ -210,10 +191,15 @@ if (rateLimited(clientIp((bool) ($config['trust_forwarded_for'] ?? false)))) {
     respond(429, ['ok' => false, 'error' => 'rate_limited']);
 }
 
-$cityName = CITY_NAMES[$citySlug] ?? ($citySlug !== '' ? $citySlug : 'город не указан');
+if (!isset(CITIES[$citySlug])) {
+    $citySlug = '';
+}
+[$cityName, $cityTag] = CITIES[$citySlug] ?? ['город не указан', '#без_города'];
 
 $lines = [
-    "🦷 Новая запись — {$cityName}",
+    "🦷 Новая заявка с сайта",
+    "📍 Город: {$cityName}",
+    '',
     "Имя: {$name}",
     "Телефон: {$phone}",
 ];
@@ -230,9 +216,15 @@ if ($source !== '') {
     $lines[] = "Откуда: {$source}";
 }
 $lines[] = 'Время: ' . date('d.m.Y H:i');
+$lines[] = '';
+$lines[] = $cityTag;
 
-if (!sendTelegram($token, $chatId, implode("\n", $lines))) {
-    respond(502, ['ok' => false, 'error' => 'telegram_failed']);
+$error = deliverBooking($config, $citySlug, implode("\n", $lines));
+if ($error === 'not_configured') {
+    respond(500, ['ok' => false, 'error' => 'not_configured']);
+}
+if ($error !== null) {
+    respond(502, ['ok' => false, 'error' => $error]);
 }
 
 respond(200, ['ok' => true]);
