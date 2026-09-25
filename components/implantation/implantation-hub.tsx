@@ -51,11 +51,11 @@ export function ImplantationHub() {
   const hasImplantologists = getImplantologistsForCity(city.slug).length > 0
   // Все системы из config/implantation.ts, включая MegaGen (заказчик
   // 16.09.2026 попросил показывать, хотя цены в прайсе пока нет).
-  const brandNames = implantBrands.map((b) => b.name).join(', ')
+  const brandNames = implantBrands.map((b) => b.name).join(' и ')
 
   const stats = [
     content.guaranteeStat,
-    { value: 'Straumann · MegaGen · Neodent', label: 'системы имплантов' },
+    { value: 'Straumann · MegaGen', label: 'системы имплантов' },
     ...(singlePrice ? [{ value: singlePrice, label: 'имплантат с установкой' }] : []),
   ]
 
