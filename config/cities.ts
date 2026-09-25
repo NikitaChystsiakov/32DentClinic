@@ -68,9 +68,6 @@ export interface ClinicPhoto {
 /**
  * Фотографии клиники города. Лежат в public/clinic/<slug>/ — у каждого
  * города своя папка, чтобы интерьер одной клиники не выдавался за другую.
- * Свои снимки есть у Рогачёва и Жлобина; Минску, пока он не прислал свои,
- * подставляется набор Рогачёва (rogachevPhotos ниже) — это временно,
- * см. docs/ИЗОБРАЖЕНИЯ-СГЕНЕРИРОВАТЬ.md.
  */
 export interface CityPhotos {
   /** Фон первого экрана главной города. Декоративный, лежит под градиентом. */
@@ -151,11 +148,7 @@ export interface City {
   legal: CityLegal
 }
 
-/**
- * Фото интерьера Рогачёва. Минск берёт их же, пока клиника не пришлёт свои:
- * так уже было до раскладки по папкам, менять на этом этапе не стали.
- * Для Минска подпись «лаборатория» неточна — там лаборатория партнёрская.
- */
+/** Фото интерьера Рогачёва. */
 const rogachevPhotos: CityPhotos = {
   hero: '/clinic/rogachev/reception.webp',
   gallery: [
@@ -164,6 +157,22 @@ const rogachevPhotos: CityPhotos = {
     { src: '/clinic/rogachev/equipment.jpg', alt: 'Оборудование клиники 32Дент' },
     { src: '/clinic/rogachev/office2.jpg', alt: 'Холл клиники 32Дент' },
     { src: '/clinic/rogachev/laboratory.jpg', alt: 'Зуботехническая лаборатория 32Дент' },
+  ],
+}
+
+/**
+ * Фото минской клиники — фотосессия заказчика (25.09.2026), кадры
+ * обрезаны под квадратные плитки галереи. Другие кадры той же съёмки стоят
+ * на странице «О нас» (content/minsk.ts → about) — здесь их не дублируем.
+ */
+const minskPhotos: CityPhotos = {
+  hero: '/clinic/minsk/reception.webp',
+  gallery: [
+    { src: '/clinic/minsk/reception.webp', alt: 'Ресепшн стоматологии 32Дент+ в Минске' },
+    { src: '/clinic/minsk/cabinet-microscope.webp', alt: 'Лечебный кабинет с дентальным микроскопом' },
+    { src: '/clinic/minsk/ct-scanner.webp', alt: 'Компьютерный томограф для 3D-диагностики' },
+    { src: '/clinic/minsk/cabinet.webp', alt: 'Стоматологическая установка в кабинете 32Дент+' },
+    { src: '/clinic/minsk/microscope.webp', alt: 'Дентальный микроскоп над стоматологическим креслом' },
   ],
 }
 
@@ -208,9 +217,7 @@ export const cities: City[] = [
     max: undefined,
     coordinates: { lat: 53.914870, lng: 27.535996 }, 
     image: '/clinic/minsk/main.webp',
-    // Своих фото интерьера пока нет (присланные скрины из Instagram в
-    // assets/clinic/minsk-insta для сайта не годятся) — временно Рогачёв.
-    photos: rogachevPhotos,
+    photos: minskPhotos,
     hasBookingForm: true,
     featureTags: ['Хирургический центр', 'All-on-4 / All-on-6', 'Помощь с трансфером и проживанием'],
     seoTitle: 'Стоматология 32Дент+ Минск — лечение и имплантация',

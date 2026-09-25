@@ -259,7 +259,7 @@ export const doctors: Doctor[] = [
     cities: ['minsk'],
   },
   // Пулко Д. К. — ФИО, специализация, город и стаж от заказчика 25.09.2026.
-  // Фото должно лежать в public/images/doctors/pulko-dmitriy.webp.
+  // Фото — от заказчика 25.09.2026.
   {
     slug: 'pulko-dmitriy',
     name: 'Пулко Дмитрий Константинович',
