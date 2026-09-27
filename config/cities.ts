@@ -154,9 +154,9 @@ const rogachevPhotos: CityPhotos = {
   gallery: [
     { src: '/clinic/rogachev/reception.webp', alt: 'Ресепшн клиники 32Дент' },
     { src: '/clinic/rogachev/office.jpg', alt: 'Лечебный кабинет 32Дент' },
-    { src: '/clinic/rogachev/equipment.jpg', alt: 'Оборудование клиники 32Дент' },
-    { src: '/clinic/rogachev/office2.jpg', alt: 'Холл клиники 32Дент' },
-    { src: '/clinic/rogachev/laboratory.jpg', alt: 'Зуботехническая лаборатория 32Дент' },
+    { src: '/clinic/rogachev/equipment.jpg', alt: 'Стоматологическая установка: наконечники и лампа для полимеризации' },
+    { src: '/clinic/rogachev/office2.jpg', alt: 'Второй лечебный кабинет 32Дент' },
+    { src: '/clinic/rogachev/xray-room.jpg', alt: 'Рентген-кабинет: панорамный и прицельный аппараты' },
   ],
 }
 

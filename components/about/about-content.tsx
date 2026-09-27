@@ -186,7 +186,14 @@ function AboutGallery({ photos }: { photos: AboutGalleryPhoto[] }) {
 
       {/* Пропорция 3:2 — под кадры заказчика: они горизонтальные, и в квадрате
           (как на главной) обрезались бы по бокам сильнее, чем хотелось бы. */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      {/* Два или четыре кадра — по два в ряд, чтобы в сетке не оставалась
+          пустая клетка. */}
+      <div
+        className={cn(
+          'grid gap-3',
+          photos.length === 2 || photos.length === 4 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'
+        )}
+      >
         {photos.map((photo, index) => (
           <button
             key={photo.src}
