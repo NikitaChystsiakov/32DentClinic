@@ -83,11 +83,26 @@ const byCity: Record<City['slug'], AggregatorRating[]> = {
       reviewsCount: 9,
     },
   ],
-  // Жлобин: оценок на сайте нет намеренно — отзывов на площадках мало,
-  // профиля в Google Картах нет (заказчик, 25.09.2026). Без записей блок
-  // «Оценки на площадках» и рейтинг в шапке у города не показываются.
-  // Профиль на 103.by: https://32dent-1.103.by/otzyvy/
-  zhlobin: [],
+  // Жлобин: цифры от заказчика 27.09.2026. Профиля в Google Картах нет.
+  // Прямая ссылка на карточку в Яндексе не подтверждена, поэтому пока ведёт
+  // на поиск по названию и адресу. TODO: заменить на ссылку карточки
+  // (yandex.by/maps/org/…/reviews/).
+  zhlobin: [
+    {
+      id: '103by',
+      name: '103.by',
+      href: 'https://32dent-1.103.by/otzyvy/',
+      rating: 4.6,
+      reviewsCount: 89,
+    },
+    {
+      id: 'yandex',
+      name: 'Яндекс Карты',
+      href: 'https://yandex.by/maps/?text=32%20%D0%94%D0%B5%D0%BD%D1%82%20%D0%96%D0%BB%D0%BE%D0%B1%D0%B8%D0%BD%20%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%2044',
+      rating: 4.5,
+      reviewsCount: 37,
+    },
+  ],
 }
 
 export function getAggregatorsForCity(citySlug: string): AggregatorRating[] {

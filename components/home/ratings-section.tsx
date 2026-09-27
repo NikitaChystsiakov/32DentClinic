@@ -146,7 +146,13 @@ export function RatingsSection({ city }: { city: City }) {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Две площадки (Жлобин) — две колонки, без пустой третьей. */}
+      <div
+        className={cn(
+          'grid gap-4 sm:grid-cols-2',
+          aggregators.length >= 3 ? 'lg:grid-cols-3' : 'lg:max-w-4xl'
+        )}
+      >
         {aggregators.map((aggregator) => (
           <RatingCard key={aggregator.id} aggregator={aggregator} />
         ))}
