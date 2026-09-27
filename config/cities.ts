@@ -122,8 +122,8 @@ export interface City {
    */
   whatsapp?: string
   /**
-   * Ссылка на чат клиники в MAX: 'https://max.ru/…'. Пусто — сайт
-   * мессенджера (siteConfig.maxHref), пока заказчик не пришлёт ссылки.
+   * Ссылка на чат клиники в MAX: 'https://max.ru/…'. Пусто — кнопки MAX
+   * у города нет (убраны 27.09.2026, пока заказчик не пришлёт ссылки).
    */
   max?: string
   coordinates: { lat: number; lng: number }
