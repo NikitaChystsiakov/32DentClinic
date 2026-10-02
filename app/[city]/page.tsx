@@ -6,6 +6,7 @@ import { ServicesOverview } from '@/components/home/services-overview'
 import { ImplantTypesSection } from '@/components/home/implant-types-section'
 import { ImplantologistsSection } from '@/components/home/implantologists-section'
 import { GuaranteeSection } from '@/components/home/guarantee-section'
+import { guaranteePageHref } from '@/config/guarantee-pages'
 import { CalculatorTeaserSection } from '@/components/home/calculator-teaser-section'
 import { DoctorsCarouselSection } from '@/components/home/doctors-carousel-section'
 import { BeforeAfterTeaserSection } from '@/components/home/before-after-teaser-section'
@@ -128,7 +129,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       </Reveal>
       <Reveal delay={1}>
         <SectionPanel variant="dark">
-          <GuaranteeSection content={content} />
+          <GuaranteeSection content={content} detailsHref={guaranteePageHref(citySlug)} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>

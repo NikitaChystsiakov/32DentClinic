@@ -155,7 +155,7 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
             <ShieldCheck className="size-5" />
           </span>
           <p className="font-heading text-base font-semibold text-foreground">
-            Гарантия 2 года на все виды работ
+            Гарантия 1 год на все виды работ
           </p>
         </div>
       </Reveal>

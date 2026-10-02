@@ -1,4 +1,5 @@
-import { Crown, Infinity, ShieldCheck, Stethoscope, type LucideIcon } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, Crown, Infinity, ShieldCheck, Stethoscope, type LucideIcon } from 'lucide-react'
 
 import { BookingButton } from '@/components/booking-button'
 import type { CityContent } from '@/content'
@@ -21,7 +22,14 @@ const iconMap: Record<string, LucideIcon> = {
  * клиентский JS — интерактивных частей в ней нет (кнопки записи и ссылки
  * остаются клиентскими островками сами по себе).
  */
-export function GuaranteeSection({ content }: { content: CityContent }) {
+export function GuaranteeSection({
+  content,
+  detailsHref,
+}: {
+  content: CityContent
+  /** Страница «Гарантии» города — если клиника опубликовала положение. */
+  detailsHref?: string
+}) {
   const { guarantee } = content
 
   return (
@@ -35,6 +43,15 @@ export function GuaranteeSection({ content }: { content: CityContent }) {
         <BookingButton variant="inverse" className="mt-2 w-fit" options={{ service: 'implantaciya' }}>
           Записаться на консультацию
         </BookingButton>
+        {detailsHref && (
+          <Link
+            href={detailsHref}
+            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-(--panel-heading) underline underline-offset-4 hover:no-underline"
+          >
+            Сроки и условия гарантии
+            <ArrowRight className="size-4" />
+          </Link>
+        )}
         <p className="text-xs text-(--panel-body)/80">{guarantee.note}</p>
       </div>
 

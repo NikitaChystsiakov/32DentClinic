@@ -11,6 +11,7 @@ import { getMessengerLinks } from '@/lib/messengers'
 import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
+import { guaranteePageHref } from '@/config/guarantee-pages'
 import { legalDocuments, legalDocHref } from '@/config/legal'
 import { getCityChrome } from '@/content/chrome'
 import { formatCityHours } from '@/lib/format-hours'
@@ -51,6 +52,7 @@ export function SiteFooter() {
   // посадочные страницы — единственный способ передать им вес с остальных
   // страниц сайта, без внутренних ссылок поисковик их почти не увидит.
   const towns = isHub ? nearbyTowns : getNearbyTownsForCity(citySlug!)
+  const guaranteeHref = guaranteePageHref(citySlug)
 
   const navLinks = isHub
     ? [
@@ -63,6 +65,8 @@ export function SiteFooter() {
         { label: 'Цены', href: `${prefix}/ceny/` },
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
         { label: 'О нас', href: `${prefix}/o-nas/` },
+        // Только у городов с опубликованным положением о гарантиях.
+        ...(guaranteeHref ? [{ label: 'Гарантии', href: guaranteeHref }] : []),
         { label: 'Контакты', href: `${prefix}/kontakty/` },
         // Блог общий для сети — без префикса города (см. app/blog).
         { label: 'Блог', href: '/blog/' },

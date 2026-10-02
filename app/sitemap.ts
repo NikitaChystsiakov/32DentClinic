@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { cities } from '@/config/cities'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { nearbyTowns } from '@/config/nearby-towns'
+import { getGuaranteePolicy } from '@/config/guarantees'
 import { getProtocolsForCity } from '@/config/implantation'
 import { getServicesForCity } from '@/config/services'
 import { getPublishedPosts } from '@/lib/blog'
@@ -42,6 +43,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),
+    // Гарантии — только у городов, где клиника опубликовала положение.
+    ...(getGuaranteePolicy(city.slug)
+      ? [{ url: `${baseUrl}/${city.slug}/garantii/`, changeFrequency: 'yearly' as const, priority: 0.5 }]
+      : []),
     ...getServicesForCity(city.slug).map((service) => ({
       url: `${baseUrl}/${city.slug}/uslugi/${service.slug}/`,
       changeFrequency: 'monthly' as const,

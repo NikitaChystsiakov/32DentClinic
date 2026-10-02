@@ -10,6 +10,7 @@ import { SectionPanel } from '@/components/section-panel'
 import { Reveal } from '@/components/reveal'
 import { Lightbox } from '@/components/home/clinic-gallery-section'
 import type { City, ClinicPhoto } from '@/config/cities'
+import { guaranteePageHref } from '@/config/guarantee-pages'
 import { legalDocuments, legalDocHref } from '@/config/legal'
 
 /*
@@ -34,6 +35,7 @@ function RequisiteRow({ label, children }: { label: string; children: React.Reac
 export function LicenseDocuments({ city }: { city: City }) {
   const { legal } = city
   const { license } = legal
+  const guaranteeHref = guaranteePageHref(city.slug)
 
   // Все страницы всех документов — один список для просмотра: стрелки листают
   // документ насквозь, а не только внутри одного. У каждого документа —
@@ -188,6 +190,36 @@ export function LicenseDocuments({ city }: { city: City }) {
           </SectionPanel>
         </Reveal>
       ))}
+
+      {/* Положение о гарантиях — у городов, где клиника его опубликовала
+          (config/guarantee-pages.ts): выжимка на своей странице, PDF — там же. */}
+      {guaranteeHref && (
+        <Reveal delay={1}>
+          <SectionPanel variant="neutral">
+            <Link
+              href={guaranteeHref}
+              className="group flex flex-col gap-4 rounded-2xl bg-card p-5 ring-1 ring-silver/25 transition-shadow duration-300 hover:shadow-lg sm:flex-row sm:items-center sm:p-6"
+            >
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent/12 text-accent ring-1 ring-accent/20">
+                <ShieldCheck className="size-5" />
+              </span>
+              <span className="flex flex-1 flex-col gap-1">
+                <span className="font-heading text-lg font-bold text-foreground">
+                  Положение о гарантийных сроках и сроках службы
+                </span>
+                <span className="text-sm text-pretty text-muted-foreground">
+                  Сроки гарантии на пломбы, коронки, протезы и имплантацию, условия и порядок обращения — коротко и
+                  полным текстом.
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Открыть
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </Link>
+          </SectionPanel>
+        </Reveal>
+      )}
 
       {/* Документы по персональным данным (config/legal.ts) — те же, что в
           подвале; здесь, чтобы «Документы» были действительно все в одном месте. */}

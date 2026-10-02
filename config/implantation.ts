@@ -209,7 +209,7 @@ export const implantProtocols: ImplantProtocol[] = [
       'Зуб только что удалён или удаление запланировано',
     ],
     included: [
-      { name: 'Консультация имплантолога — 11 BYN, КТ сегмента челюсти — 24 BYN', status: 'extra' },
+      { name: 'Консультация имплантолога — 11 BYN', status: 'extra' },
       { name: 'Имплантат MegaGen или Straumann SLA и его установка', status: 'included' },
       { name: 'Анестезия', status: 'included' },
       { name: 'Формирователь десны — от 250 BYN', status: 'extra' },

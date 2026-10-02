@@ -25,10 +25,10 @@ export interface CityChrome {
 export const cityChrome: Record<string, CityChrome> = {
   minsk: {
     promo: {
-      text: 'Консультация имплантолога — 11 р., КТ сегмента — 24 р.',
+      text: 'Консультация имплантолога — 11 р.',
       href: '/minsk/uslugi/implantaciya/',
     },
-    // У Минска не «2 года на всё», а своя гарантия (см. content/minsk.ts).
+    // У Минска не «1 год на всё», а своя гарантия (см. content/minsk.ts).
     guaranteeSummary: 'Пожизненная гарантия производителя на импланты и до 15 лет на протезы.',
     hours: [
       { days: 'Понедельник — Пятница', time: '09:00 – 21:00' },
@@ -41,7 +41,7 @@ export const cityChrome: Record<string, CityChrome> = {
       text: 'Профессиональная гигиена с Air Flow — от 11 р. за зуб',
       href: '/rogachev/ceny/',
     },
-    guaranteeSummary: 'Гарантия 2 года на все виды работ.',
+    guaranteeSummary: 'Гарантия 1 год на все виды работ.',
     hours: [
       { days: 'Понедельник — Пятница', time: '8:00 – 20:00' },
       { days: 'Суббота — Воскресенье', time: 'выходной' },
@@ -51,8 +51,8 @@ export const cityChrome: Record<string, CityChrome> = {
     // Анонса нет: строку «Лечение кариеса от 100 р.» заказчик попросил убрать
     // (16.09.2026). Чтобы вернуть — promo: { text: '…', href: '/zhlobin/ceny/' }.
     promo: undefined,
-    // Непроверенная копия с Рогачёва (см. TODO в шапке content/zhlobin.ts).
-    guaranteeSummary: 'Гарантия 2 года на все виды работ.',
+    // По проекту Положения о гарантиях от 09.09.2026 (config/guarantees.ts).
+    guaranteeSummary: 'Гарантия до 1 года на пломбы, коронки и протезы.',
     hours: [
       { days: 'Понедельник — Пятница', time: '8:00 – 20:00' },
       { days: 'Суббота — Воскресенье', time: 'выходной' },

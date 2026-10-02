@@ -378,7 +378,6 @@ export const serviceCategories: ServiceCategory[] = [
     icon: 'ScanLine',
     procedures: [
       { name: 'Панорамный снимок (ОПТГ, 2D), обе челюсти', priceFrom: 20 },
-      { name: 'КТ (3D КЛКТ), сегмент челюсти', priceFrom: 24 },
       { name: 'КТ (3D КЛКТ), обе челюсти', priceFrom: 46.6 },
     ],
     whenToVisit: [

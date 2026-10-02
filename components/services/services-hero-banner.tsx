@@ -51,7 +51,7 @@ export function ServicesHeroBanner({ title, description, calculatorHref }: Servi
             (см. правила в шапке content/rogachev.ts). */}
         <div className="flex flex-col gap-3">
           <p className="font-heading text-3xl leading-[1.12] font-bold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
-            Понятный план, понятная цена, одна клиника на всё
+            Понятный план, понятная цена, всё лечение в одном месте
           </p>
           <h1 className="text-base font-medium text-white/80">{title}</h1>
         </div>
