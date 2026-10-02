@@ -32,7 +32,7 @@ import { Lightbox } from '@/components/home/clinic-gallery-section'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
-import { getRealDoctorsForCity } from '@/config/doctors'
+import { formatYears, getRealDoctorsForCity } from '@/config/doctors'
 import { cn } from '@/lib/utils'
 import type { AboutBlock, AboutGalleryPhoto, AboutPhoto } from '@/content/types'
 
@@ -424,7 +424,7 @@ export function AboutContent() {
                         </p>
                         {doctor.experienceYears !== undefined && (
                           <p className="mt-0.5 text-[11px] leading-tight text-white/75">
-                            {doctor.experienceYears} лет практики
+                            {formatYears(doctor.experienceYears)} практики
                           </p>
                         )}
                       </div>

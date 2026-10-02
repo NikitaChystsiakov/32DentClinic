@@ -106,6 +106,11 @@ export interface AboutSection {
   eyebrow: string
   title: string
   description: string
+  /**
+   * Description страницы «О нас» для поисковиков, ≤ 160 знаков. Без него
+   * берётся description, обрезанный по длине («…Ниже — как…» в выдаче).
+   */
+  metaDescription?: string
   heroPhoto: AboutPhoto
   /** Цифры-факты города. Количество врачей секция считает сама. */
   stats: AboutStat[]

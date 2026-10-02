@@ -159,6 +159,171 @@ scp -P 2200 root@178.159.44.174:/root/old-site-*.tar.gz ~/Desktop/
 
 Обратите внимание: у `scp` порт задаётся большой `-P`, а у `ssh` маленькой `-p`.
 
+## 5а. Тестовый поддомен test.32dent.by (до переключения)
+
+Новый сайт поднимается рядом со старым на `test.32dent.by`. Так форму записи
+и всё остальное можно проверить на настоящем сервере, а основной домен
+в это время показывает старый сайт. Поддомен закрыт паролем и запрещён
+к индексации, поэтому ни посетители, ни поисковики его не увидят.
+
+Сборку менять не нужно: форма шлёт заявку на относительный адрес
+`/api/booking.php`, поэтому работает на любом домене. canonical и sitemap
+в тестовой копии указывают на `32dent.by`, так и должно быть.
+
+### 1) Адрес поддомена
+
+DNS домена — у ActiveCloud (`dig +short NS 32dent.by` → `ns1/ns2.activeby.net`).
+Есть два способа.
+
+**Настоящая запись (лучше).** В личном кабинете ActiveCloud (доступ у
+владельца аккаунта или у Ильи) в DNS-зоне `32dent.by` добавить запись:
+
+| Тип | Имя | Значение |
+|---|---|---|
+| A | `test` | `178.159.44.174` |
+
+Через 5–30 минут `dig +short test.32dent.by` вернёт `178.159.44.174`.
+
+**Без доступа к DNS (только для вашего компьютера).** На своём Mac:
+
+```bash
+sudo sh -c 'echo "178.159.44.174 test.32dent.by" >> /etc/hosts'
+```
+
+`test.32dent.by` будет открываться только у вас и только по `http://`
+(сертификат без DNS-записи не выпустить). Для проверки формы этого хватает.
+После проверки удалите строку: `sudo nano /etc/hosts`.
+
+### 2) PHP и config.php формы
+
+Сначала выполните из шага 6 блок «Если PHP нет…», затем из шага 7 блок
+«config.php формы записи». Конфиг лежит в `/var/www/dent32-booking-config.php`
+и общий для тестового и боевого сайта, поэтому делается один раз.
+
+Совет: на время теста впишите в `chat_id` свою тестовую группу в Telegram
+(с ботом в ней), чтобы пробные заявки не сыпались администраторам. Перед
+запуском поменяйте на группу клиники. Лимит: 5 заявок с одного IP за
+10 минут, после этого форма отвечает ошибкой, это нормально.
+
+Если старый сайт тоже на PHP и PHP на сервере уже есть, ничего не
+устанавливайте и не обновляйте без Ильи: старый сайт может зависеть от версии.
+
+### 3) Пароль на поддомен
+
+```bash
+apt install apache2-utils                                  # даёт команду htpasswd
+htpasswd -c /etc/nginx/.htpasswd-32dent-test test          # для nginx
+# для Apache: htpasswd -c /etc/apache2/.htpasswd-32dent-test test
+```
+
+Команда спросит пароль дважды. Логин — `test`.
+
+### 4) Залить сайт в отдельную папку
+
+На своём компьютере:
+
+```bash
+pnpm build
+find out -name .DS_Store -delete
+ssh -p 2200 root@178.159.44.174 "mkdir -p /var/www/32dent-test"
+rsync -avz --delete --exclude '.DS_Store' \
+  -e "ssh -p 2200" out/ root@178.159.44.174:/var/www/32dent-test/
+ssh -p 2200 root@178.159.44.174 "chmod -R a+rX /var/www/32dent-test"
+```
+
+### 5) Конфиг веб-сервера для поддомена
+
+Это **новый отдельный файл**: конфиг старого сайта не трогается.
+
+**Вариант A: Apache.** `nano /etc/apache2/sites-available/32dent-test.conf`:
+
+```apache
+<VirtualHost *:80>
+    ServerName test.32dent.by
+    DocumentRoot /var/www/32dent-test
+    <Directory /var/www/32dent-test>
+        AllowOverride All
+        AuthType Basic
+        AuthName "32dent test"
+        AuthUserFile /etc/apache2/.htpasswd-32dent-test
+        Require valid-user
+    </Directory>
+    Header always set X-Robots-Tag "noindex, nofollow"
+</VirtualHost>
+```
+
+```bash
+a2enmod headers deflate alias
+a2ensite 32dent-test
+apache2ctl configtest && systemctl reload apache2
+```
+
+**Вариант B: nginx.** Файл кладётся в `conf.d/`: на сервере 32dent.by `nginx.conf` подключает из `sites-enabled/` только файл `app`, а `conf.d/*.conf` — целиком (проверка: `grep -n include /etc/nginx/nginx.conf`). `nano /etc/nginx/conf.d/32dent-test.conf`:
+
+```nginx
+server {
+    listen 80;
+    server_name test.32dent.by;
+    root /var/www/32dent-test;
+    index index.html;
+    charset utf-8;
+    error_page 404 /404.html;
+
+    auth_basic "32dent test";
+    auth_basic_user_file /etc/nginx/.htpasswd-32dent-test;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    location = /api/booking.php {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;   # версию — по `ls /run/php/`
+    }
+    location ~ \.php$ {
+        return 404;
+    }
+    location ~ /\.(?!well-known) {
+        return 404;
+    }
+}
+```
+
+```bash
+nginx -t && systemctl reload nginx
+```
+
+Если при `configtest` / `nginx -t` ошибка, веб-сервер не перезагрузится
+и старый сайт продолжит работать. Пришлите текст ошибки, прежде чем что-то менять.
+
+**https (если сделана DNS-запись):**
+`certbot --nginx -d test.32dent.by` (для Apache — `--apache`). Без https
+форма тоже работает, это только тест.
+
+### 6) Проверить
+
+Откройте `http://test.32dent.by/` и введите логин `test` и пароль. Дальше:
+
+- [ ] заявка с формы приходит в Telegram: по одной из Минска, Рогачёва, Жлобина
+      (город и хэштег в сообщении правильные);
+- [ ] пустые/неверные поля показывают ошибку, а не «отправлено»;
+- [ ] закрытые файлы не отдаются: `http://test.32dent.by/api/config.example.php` → 403/404;
+- [ ] остальное из чек-листа шага 8.
+
+Не работает форма — ошибки PHP смотрите в логе на сервере:
+`tail -50 /var/log/nginx/error.log` (Apache: `/var/log/apache2/error.log`).
+
+### 7) После запуска основного сайта
+
+Тестовый поддомен можно оставить для проверки будущих обновлений (заливать
+туда же командой из пункта 4) или удалить:
+
+```bash
+rm /etc/nginx/conf.d/32dent-test.conf && systemctl reload nginx   # nginx
+a2dissite 32dent-test && systemctl reload apache2                   # Apache
+rm -r /var/www/32dent-test
+```
+
 ## 6. Подготовить сервер
 
 Новый сайт будет лежать в **`/var/www/32dent`**, а старый останется на месте.
@@ -368,3 +533,5 @@ rsync -avz --delete --exclude '.DS_Store' \
 5. Тариф: лимит трафика, бэкапы, кто платит и до какого числа?
 6. Можно ли поставить PHP 8.1+ (`php-fpm`, `php-curl`), если его нет?
 7. Не против ли он, чтобы перевести вход на SSH-ключ и сменить пароль root?
+8. Может ли он добавить в DNS (ActiveCloud) A-запись `test` → `178.159.44.174`
+   для тестового поддомена (шаг 5а)? Или дать доступ к кабинету.

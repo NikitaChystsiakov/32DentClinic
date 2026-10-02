@@ -4,7 +4,7 @@
 //   • `cities` — в каких клиниках врач принимает: ['minsk'], ['rogachev'] и т. д.
 //   • `photo` — путь к портрету в папке public, например
 //     '/images/doctors/familiya-imya.webp'.
-//   • `experienceYears` — стаж числом; подпись «лет» добавится сама. Если
+//   • `experienceYears` — стаж числом; подпись «год/года/лет» добавится сама. Если
 //     стаж неизвестен — уберите поле целиком, подпись не покажется.
 //   • Имя, фото, специализация и образование врача — его персональные данные.
 //     Перед публикацией у каждого врача должно быть письменное согласие на
@@ -33,6 +33,15 @@ export interface Doctor {
    * клиника пришлёт настоящие имена и портреты.
    */
   isPlaceholder?: boolean
+}
+
+/** «21 год», «3 года», «14 лет» — подпись стажа. Было «Стаж 21 лет». */
+export function formatYears(n: number): string {
+  const mod10 = n % 10
+  const mod100 = n % 100
+  if (mod10 === 1 && mod100 !== 11) return `${n} год`
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return `${n} года`
+  return `${n} лет`
 }
 
 export const doctorCategoryLabels: Record<DoctorCategory, string> = {
@@ -323,7 +332,7 @@ export const doctors: Doctor[] = [
     specialization: 'Врач-стоматолог-терапевт',
     experienceYears: 14,
     categories: ['terapevt'],
-    bio: 'Ольга Валерьевна — врач-терапевт: лечение кариеса, пульпита и заболеваний дёсен.',
+    bio: 'Ольга Валерьевна — врач-терапевт жлобинской клиники: лечит кариес и пульпит, проводит лечение заболеваний дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/mikhalenko-olga.webp',
@@ -335,7 +344,7 @@ export const doctors: Doctor[] = [
     specialization: 'Врач-стоматолог-терапевт',
     experienceYears: 6,
     categories: ['terapevt'],
-    bio: 'Марина Александровна — врач-терапевт: лечение кариеса, пульпита и заболеваний дёсен.',
+    bio: 'Марина Александровна — стоматолог-терапевт. Её профиль — кариес, пульпит и болезни дёсен.',
     directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
     hasCertificates: false,
     photo: '/images/doctors/kuznetsova-marina.webp',

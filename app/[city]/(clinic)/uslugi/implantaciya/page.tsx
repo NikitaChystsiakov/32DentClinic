@@ -3,7 +3,7 @@ import { getCityBySlug } from '@/config/cities'
 import { implantBrands } from '@/config/implantation'
 import { ImplantationHub } from '@/components/implantation/implantation-hub'
 import { JsonLd } from '@/components/seo/json-ld'
-import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
+import { breadcrumbJsonLd, buildMetadata, cityMetaDescription } from '@/lib/seo'
 
 /*
  * Хаб раздела «Имплантация». Статический сегмент uslugi/implantaciya/
@@ -22,10 +22,13 @@ export async function generateMetadata({
   if (!city) return {}
 
   const brands = implantBrands.map((b) => b.name).join(' и ')
-  // Название клиники и город добавит шаблон title из app/[city]/layout.tsx.
+  // Название клиники добавит шаблон title из app/[city]/layout.tsx.
   return buildMetadata({
-    title: `Имплантация зубов в ${city.nameIn} — под ключ, All-on-4, All-on-6`,
-    description: `Имплантация зубов в ${city.nameIn}: один зуб под ключ, All-on-4 и All-on-6, синус-лифтинг. Импланты ${brands}, планирование по 3D-снимку, стоимость до начала лечения.`,
+    title: `Имплантация зубов в ${city.nameIn}: под ключ и All-on-4/6`,
+    description: cityMetaDescription(
+      `Имплантация зубов {city}: один зуб под ключ, All-on-4 и All-on-6, синус-лифтинг. ${brands}, план и цена — по 3D-снимку.`,
+      city
+    ),
     path: `/${citySlug}/uslugi/implantaciya/`,
     city,
   })

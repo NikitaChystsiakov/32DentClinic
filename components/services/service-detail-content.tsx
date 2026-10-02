@@ -6,7 +6,7 @@ import { CheckCircle2, ShieldCheck } from 'lucide-react'
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { getServiceBySlug, proceduresForCity } from '@/config/services'
-import { getDoctorBySlug } from '@/config/doctors'
+import { formatYears, getDoctorBySlug } from '@/config/doctors'
 import { useCity } from '@/lib/contexts/city-context'
 import { ServiceHeroCta } from '@/components/services/service-hero-cta'
 import { ProcedureTable } from '@/components/services/procedure-table'
@@ -59,7 +59,7 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
             <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               {service.title} в {city.nameIn}
             </h1>
-            <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{service.intro}</p>
+            <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{service.cityIntro?.[city.slug] ?? service.intro}</p>
             <ServiceHeroCta slug={service.slug} />
           </div>
           <div className="relative mx-auto aspect-4/3 w-full max-w-md overflow-hidden rounded-2xl ring-1 ring-foreground/10 md:mx-0 md:ml-auto">
@@ -137,7 +137,9 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
                   <div className="flex flex-col gap-0.5">
                     <span className="font-heading text-sm font-semibold text-foreground">{doctor.name}</span>
                     <span className="text-xs text-muted-foreground">{doctor.specialization}</span>
-                    <span className="text-xs font-medium text-primary">Стаж {doctor.experienceYears} лет</span>
+                    {doctor.experienceYears !== undefined && (
+                      <span className="text-xs font-medium text-primary">Стаж {formatYears(doctor.experienceYears)}</span>
+                    )}
                   </div>
                 </Link>
               ))}

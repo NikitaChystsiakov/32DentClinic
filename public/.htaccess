@@ -48,4 +48,24 @@ AddType video/mp4 .mp4
   RedirectMatch 301 ^/kontakty/?$ /rogachev/kontakty/
   RedirectMatch 301 ^/kalkulyator/?$ /rogachev/kalkulyator/
   RedirectMatch 301 ^/primery-rabot/?$ /rogachev/primery-rabot/
+
+  # Старый сайт 32dent.by (конструктор Builder.io, до октября 2026): в его
+  # sitemap.xml было 12 адресов — главная, /doctors и 10 страниц врачей с
+  # хешем вместо имени. Хеш → врач сверен по содержимому страниц 02.10.2026.
+  # Без этих правил старые адреса из выдачи Яндекса и Google стали бы 404.
+  # nginx .htaccess не читает — на nginx эти правила переносятся в конфиг
+  # сайта (rewrite … permanent), как и редиректы выше.
+  RedirectMatch 301 ^/doctors/7af01a7dbdef40088c301a03c77cb08a/?$ /rogachev/vrachi/ilyushchenko-natalya/
+  RedirectMatch 301 ^/doctors/1d4f54856d6b4570a3a06d1907f9ac8d/?$ /minsk/vrachi/alekseychik-yuliya/
+  RedirectMatch 301 ^/doctors/4559a53c30b7429a8917699b8773cc69/?$ /zhlobin/vrachi/pavlovich-sergey/
+  RedirectMatch 301 ^/doctors/48560865387f4839ac367ac366180047/?$ /zhlobin/vrachi/makhonko-pavel/
+  RedirectMatch 301 ^/doctors/856cf2228a024b128be3fef9eff6f414/?$ /rogachev/vrachi/bychkov-ivan/
+  RedirectMatch 301 ^/doctors/a417fa552f1b44ffb9e66b3b0467366d/?$ /rogachev/vrachi/saykovskaya-tatyana/
+  RedirectMatch 301 ^/doctors/bd48e7babeaa42c0b89b1b81f94d5f4f/?$ /rogachev/vrachi/kovalchuk-igor/
+  RedirectMatch 301 ^/doctors/cb9d841ddfe44a9e9a7514a9614515f6/?$ /minsk/vrachi/belousova-tatyana/
+  RedirectMatch 301 ^/doctors/d832260bb3454b64856b17323dda2a05/?$ /zhlobin/vrachi/kireev-vladislav/
+  RedirectMatch 301 ^/doctors/f2fc83df14094fd7b7a49bf4a911a932/?$ /zhlobin/vrachi/alekseychuk-vyacheslav/
+  # Список врачей сети и неизвестные старые адреса врачей — на хаб с выбором
+  # города: общего списка врачей по всем клиникам в новом сайте нет.
+  RedirectMatch 301 ^/doctors(/.*)?$ /
 </IfModule>

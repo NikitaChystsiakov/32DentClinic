@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
 import type { City } from '@/config/cities'
-import { getDoctorsForCity } from '@/config/doctors'
+import { formatYears, getDoctorsForCity } from '@/config/doctors'
 
 /*
  * Серверный компонент: клиника приходит пропсом. Страницы «соседних»
@@ -59,7 +59,7 @@ export function DoctorsCarouselSection({ city }: { city: City }) {
                   <h3 className="font-heading text-base font-semibold text-foreground">{doctor.name}</h3>
                   <p className="text-sm text-muted-foreground">{doctor.specialization}</p>
                   {doctor.experienceYears !== undefined && (
-                    <p className="mt-1 text-sm font-medium text-primary">Стаж {doctor.experienceYears} лет</p>
+                    <p className="mt-1 text-sm font-medium text-primary">Стаж {formatYears(doctor.experienceYears)}</p>
                   )}
                 </div>
               </Link>

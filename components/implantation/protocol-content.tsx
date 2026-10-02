@@ -23,7 +23,7 @@ import {
   getProtocolBySlug,
   getProtocolPricing,
   getProtocolsForCity,
-  implantationFaq,
+  getImplantationFaq,
   type IncludedStatus,
 } from '@/config/implantation'
 import { useCity } from '@/lib/contexts/city-context'
@@ -47,7 +47,7 @@ export function ProtocolContent({ slug }: { slug: string }) {
   // Свои вопросы протокола — первыми, затем общие по имплантации без повторов.
   const faq = [
     ...protocol.faq,
-    ...implantationFaq.filter((item) => !protocol.faq.some((own) => own.question === item.question)),
+    ...getImplantationFaq(city.slug).filter((item) => !protocol.faq.some((own) => own.question === item.question)),
   ]
 
   return (
@@ -82,7 +82,7 @@ export function ProtocolContent({ slug }: { slug: string }) {
             <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               {protocol.title} в {city.nameIn}
             </h1>
-            <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{protocol.intro}</p>
+            <p className="max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">{protocol.cityIntro?.[city.slug] ?? protocol.intro}</p>
 
             {pricing && (
               <div className="flex flex-col gap-1 rounded-2xl bg-(--panel-lavender) p-5">

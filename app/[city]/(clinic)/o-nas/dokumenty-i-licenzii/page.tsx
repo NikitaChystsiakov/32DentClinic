@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const city = getCityBySlug(citySlug)
   if (!city) return {}
   return buildMetadata({
-    title: 'Документы и лицензии',
+    title: `Документы и лицензии стоматологии в ${city.nameIn}`,
     description: `Лицензия на медицинскую деятельность № ${city.legal.license.number}, реквизиты и сканы документов стоматологии ${city.brandName} в ${city.nameIn}.`,
     path: `/${citySlug}/o-nas/dokumenty-i-licenzii/`,
     city,

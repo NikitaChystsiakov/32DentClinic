@@ -67,9 +67,12 @@ export async function generateMetadata({
   return {
     // absolute — чтобы корневой шаблон «%s | 32Дент» не дописывал сеть к
     // заголовку города («…32Дент+ Минск | 32Дент»); template — для подстраниц.
+    // Город в шаблон не входит: он уже есть в title каждой подстраницы
+    // («Цены на лечение зубов в Рогачёве»), и «| 32Дент, Рогачёв» повторял
+    // его второй раз, выталкивая заголовок за 65 знаков.
     title: {
       absolute: city.seoTitle,
-      template: `%s | ${city.brandName}, ${city.name}`,
+      template: `%s | ${city.brandName}`,
     },
     description: city.seoDescription,
     robots: {

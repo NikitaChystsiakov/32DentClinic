@@ -24,7 +24,7 @@ import { ProtocolCard, formatProtocolPrice } from '@/components/implantation/pro
 import {
   getProtocolsForCity,
   implantBrands,
-  implantationFaq,
+  getImplantationFaq,
   implantationTimeline,
 } from '@/config/implantation'
 import { getImplantologistsForCity } from '@/config/doctors'
@@ -206,7 +206,7 @@ export function ImplantationHub() {
       <Reveal delay={1}>
         <SectionPanel variant="periwinkle">
           <FaqSection
-            items={implantationFaq}
+            items={getImplantationFaq(city.slug)}
             description="Что чаще всего спрашивают про импланты: системы, цены, сроки, противопоказания и уход."
           />
         </SectionPanel>

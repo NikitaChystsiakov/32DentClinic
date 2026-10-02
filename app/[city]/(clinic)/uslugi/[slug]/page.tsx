@@ -4,7 +4,7 @@ import { getCityBySlug } from '@/config/cities'
 import { getServiceBySlug, serviceCategories } from '@/config/services'
 import { ServiceDetailContent } from '@/components/services/service-detail-content'
 import { JsonLd } from '@/components/seo/json-ld'
-import { breadcrumbJsonLd, buildMetadata, faqJsonLd, truncateDescription } from '@/lib/seo'
+import { breadcrumbJsonLd, buildMetadata, cityMetaDescription, faqJsonLd } from '@/lib/seo'
 
 // «Имплантация» здесь не собирается: у неё свой статический сегмент
 // uslugi/implantaciya/ с хабом протоколов, который перекрывает [slug].
@@ -29,12 +29,10 @@ export async function generateMetadata({
   const city = getCityBySlug(citySlug)
   if (!service || !city) return {}
 
-  // Название клиники и город добавит шаблон title из app/[city]/layout.tsx.
-  // Description — из intro по границе слова; когда у услуги появится своё
-  // поле metaDescription (см. docs/АУДИТ-ТЕКСТЫ-SEO.md § 4.1), брать его.
+  // Название клиники добавит шаблон title из app/[city]/layout.tsx.
   return buildMetadata({
     title: `${service.metaTitle} в ${city.nameIn}`,
-    description: truncateDescription(`${service.intro} ${city.brandName}, ${city.name}.`),
+    description: cityMetaDescription(service.metaDescription, city, service.priceFrom),
     path: `/${citySlug}/uslugi/${slug}/`,
     city,
   })

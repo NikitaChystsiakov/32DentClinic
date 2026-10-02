@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getCityBySlug } from '@/config/cities'
-import { getDoctorBySlug, doctors } from '@/config/doctors'
+import { formatYears, getDoctorBySlug, doctors } from '@/config/doctors'
 import { DoctorDetailContent } from '@/components/doctors/doctor-detail-content'
 import { JsonLd } from '@/components/seo/json-ld'
 import { absoluteUrl, breadcrumbJsonLd, buildMetadata, truncateDescription } from '@/lib/seo'
@@ -28,17 +28,24 @@ export async function generateMetadata({
   // Заглушки (isPlaceholder — выдуманные имена) в индекс не идут: поисковик
   // не должен показывать «врача», которого в клинике нет. Из sitemap они
   // уже исключены, но без noindex страницу всё равно можно найти по ссылке.
-  // absoluteTitle: город уже в заголовке, шаблон «| 32Дент, Рогачёв» дописал
-  // бы его второй раз и вылез бы за 60–65 знаков.
+  // absoluteTitle: город уже в заголовке, шаблон «| 32Дент» дописывать не
+  // нужно — бренд добавлен здесь же. Если ФИО с отчеством не влезает в 65
+  // знаков, отчество опускаем: полное ФИО всё равно стоит в H1 страницы.
+  const role = `${shortRole(doctor.specialization)} в ${city.nameIn} | ${city.brandName}`
+  const fullTitle = `${doctor.name} — ${role}`
+  const nameParts = doctor.name.split(' ')
+  const title =
+    fullTitle.length > 65 && nameParts.length === 3 ? `${nameParts[0]} ${nameParts[1]} — ${role}` : fullTitle
+  // Стаж — только если он известен (у части врачей experienceYears нет) и
+  // ещё не назван в bio: «с 16-летним опытом работы. Стаж 16 лет» — повтор.
+  const bioHasExperience = /\d+-летн/.test(doctor.bio)
   return buildMetadata({
-    title: `${doctor.name} — ${shortRole(doctor.specialization)} в ${city.nameIn} | ${city.brandName}`,
+    title,
     absoluteTitle: true,
-    // Стаж — только если он известен: у пяти врачей без experienceYears в
-    // выдаче было «Стаж undefined лет».
     description: truncateDescription(
       [
         doctor.bio,
-        doctor.experienceYears !== undefined ? `Стаж ${doctor.experienceYears} лет.` : '',
+        doctor.experienceYears !== undefined && !bioHasExperience ? `Стаж ${formatYears(doctor.experienceYears)}.` : '',
         `Стоматология ${city.brandName} в ${city.nameIn}, запись к врачу онлайн.`,
       ]
         .filter(Boolean)

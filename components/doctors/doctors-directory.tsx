@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/reveal'
 import { BookingButton } from '@/components/booking-button'
 import { useCity } from '@/lib/contexts/city-context'
-import { getDoctorsForCity, doctorCategoryLabels, type DoctorCategory, type Doctor } from '@/config/doctors'
+import { formatYears, getDoctorsForCity, doctorCategoryLabels, type DoctorCategory, type Doctor } from '@/config/doctors'
 
 const FILTERS: { id: 'all' | DoctorCategory; label: string }[] = [
   { id: 'all', label: 'Все' },
@@ -41,7 +41,7 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
         <p className="text-sm text-muted-foreground">{doctor.specialization}</p>
         {doctor.experienceYears !== undefined && (
           <Badge variant="secondary" className="w-fit">
-            Стаж {doctor.experienceYears} лет
+            Стаж {formatYears(doctor.experienceYears)}
           </Badge>
         )}
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">

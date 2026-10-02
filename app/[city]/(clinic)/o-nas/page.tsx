@@ -19,8 +19,9 @@ export async function generateMetadata({
   if (!content) return {}
 
   return buildMetadata({
-    title: `О клинике ${city.brandName} — стоматология в ${city.nameIn}`,
-    description: truncateDescription(content.about.description),
+    // Бренд допишет шаблон («| 32Дент»), здесь его не повторяем.
+    title: `О клинике — стоматология в ${city.nameIn}`,
+    description: content.about.metaDescription ?? truncateDescription(content.about.description),
     path: `/${citySlug}/o-nas/`,
     city,
   })

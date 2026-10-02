@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getCityBySlug } from '@/config/cities'
-import { getProtocolBySlug, implantProtocols } from '@/config/implantation'
+import { getProtocolBySlug, getProtocolPricing, implantProtocols } from '@/config/implantation'
 import { ProtocolContent } from '@/components/implantation/protocol-content'
 import { JsonLd } from '@/components/seo/json-ld'
-import { breadcrumbJsonLd, buildMetadata, faqJsonLd, truncateDescription } from '@/lib/seo'
+import { breadcrumbJsonLd, buildMetadata, cityMetaDescription, faqJsonLd } from '@/lib/seo'
 
 // Только пары «город + протокол» из availableIn: страница All-on-4 для
 // города, где протокол не делают, в сборку не попадает и отдаёт 404.
@@ -26,7 +26,7 @@ export async function generateMetadata({
 
   return buildMetadata({
     title: `${protocol.metaTitle} в ${city.nameIn}`,
-    description: truncateDescription(`${protocol.intro} ${city.brandName}, ${city.name}.`),
+    description: cityMetaDescription(protocol.metaDescription, city, getProtocolPricing(protocol, citySlug)?.from),
     path: `/${citySlug}/uslugi/implantaciya/${protocolSlug}/`,
     city,
   })

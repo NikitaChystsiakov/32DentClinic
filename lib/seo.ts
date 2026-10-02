@@ -23,7 +23,7 @@ import { siteConfig } from '@/lib/site-config'
  */
 
 interface BuildMetadataOptions {
-  /** Собственная часть title. Шаблон « | 32Дент, Рогачёв» добавит layout города. */
+  /** Собственная часть title, с городом. Шаблон « | 32Дент» добавит layout города. */
   title: string
   description: string
   /** Путь страницы от корня сайта, со слешем на конце: '/minsk/uslugi/'. */
@@ -66,7 +66,8 @@ export function buildMetadata({
   noindex = false,
 }: BuildMetadataOptions): Metadata {
   const url = absoluteUrl(path)
-  const suffix = city ? `${city.brandName}, ${city.name}` : siteConfig.name
+  // Как шаблон title в app/[city]/layout.tsx: город уже в самом заголовке.
+  const suffix = city ? city.brandName : siteConfig.name
   const fullTitle = absoluteTitle ? title : `${title} | ${suffix}`
 
   return {
@@ -98,6 +99,28 @@ export function truncateDescription(text: string, max = 158): string {
   const lastSpace = cut.lastIndexOf(' ')
   const base = lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut
   return `${base.replace(/[,;:—\-–\s]+$/, '')}…`
+}
+
+/** «ул. Ленина, 60» — адрес клиники без города, с маленькой буквы. */
+export function cityStreet(city: City): string {
+  const street = city.address.replace(/^г\.\s*[^,]+,\s*/, '')
+  return street.charAt(0).toLowerCase() + street.slice(1)
+}
+
+/**
+ * Description страницы услуги или протокола для конкретного города.
+ * Шаблон — metaDescription из config/services.ts или config/implantation.ts:
+ * {city} → «в Рогачёве», {price} → «1 200». В конце — клиника и адрес.
+ *
+ * Раньше description резался из intro, а город дописывался в хвост и
+ * отрезался обрезкой по длине — у всех трёх городов выходил один и тот же
+ * текст. Теперь город стоит в начале, адрес в конце, и описания разные.
+ */
+export function cityMetaDescription(template: string, city: City, price?: number | null): string {
+  const text = template
+    .replace('{city}', `в ${city.nameIn}`)
+    .replace('{price}', price != null ? price.toLocaleString('ru-RU') : '')
+  return `${text} ${city.brandName}, ${cityStreet(city)}.`
 }
 
 /** Элемент хлебных крошек для schema.org BreadcrumbList. */

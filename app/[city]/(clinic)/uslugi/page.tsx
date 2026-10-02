@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getCityBySlug } from '@/config/cities'
 import { getServicesForCity } from '@/config/services'
 import { ServicesPageContent } from '@/components/services/services-page-content'
-import { buildMetadata, truncateDescription } from '@/lib/seo'
+import { buildMetadata } from '@/lib/seo'
 
 // Страница серверная ради generateMetadata: раньше она была 'use client'
 // без метаданных и наследовала title главной города — в выдаче четыре
@@ -14,16 +14,13 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const city = getCityBySlug(citySlug)
   if (!city) return {}
 
-  const names = getServicesForCity(citySlug)
-    .map((s) => s.shortName.toLowerCase())
-    .join(', ')
+  // Список — словами из запросов, а не shortName подряд: тот давал
+  // «проф.гигиена и отбеливание, 3d…» и обрезался посреди слова.
+  const hasOrthodontics = getServicesForCity(citySlug).some((s) => s.slug === 'ortodontiya')
 
   return buildMetadata({
     title: `Услуги стоматологии и цены в ${city.nameIn}`,
-    description: truncateDescription(
-      `Направления стоматологии ${city.brandName} в ${city.nameIn} с ценами «от»: ${names}. Точную стоимость врач называет после осмотра.`,
-      165
-    ),
+    description: `Услуги и цены ${city.brandName} в ${city.nameIn}: имплантация, лечение зубов, протезирование, хирургия${hasOrthodontics ? ', ортодонтия' : ''}, гигиена и 3D-диагностика. Точная цена — после осмотра.`,
     path: `/${citySlug}/uslugi/`,
     city,
   })

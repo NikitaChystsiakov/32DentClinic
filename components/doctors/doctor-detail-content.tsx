@@ -7,7 +7,7 @@ import { Award } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Badge } from '@/components/ui/badge'
 import { useCity } from '@/lib/contexts/city-context'
-import { getDoctorBySlug } from '@/config/doctors'
+import { formatYears, getDoctorBySlug } from '@/config/doctors'
 import { DoctorHeroCta, DoctorFinalCta } from '@/components/doctors/doctor-cta'
 import { Reveal } from '@/components/reveal'
 
@@ -47,7 +47,7 @@ export function DoctorDetailContent({ slug }: { slug: string }) {
             <p className="text-lg text-muted-foreground">{doctor.specialization}</p>
             {doctor.experienceYears !== undefined && (
               <Badge variant="secondary" className="w-fit">
-                Стаж {doctor.experienceYears} лет
+                Стаж {formatYears(doctor.experienceYears)}
               </Badge>
             )}
             <DoctorHeroCta slug={doctor.slug} name={doctor.name} />

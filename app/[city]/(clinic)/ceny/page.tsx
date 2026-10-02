@@ -23,12 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     ['имплант', price('implantaciya')],
   ]
     .filter(([, v]) => typeof v === 'number')
-    .map(([name, v]) => `${name} от ${v} р.`)
+    .map(([name, v]) => `${name} от ${(v as number).toLocaleString('ru-RU')} р.`)
     .join(', ')
 
   return buildMetadata({
     title: `Цены на лечение зубов в ${city.nameIn}`,
-    description: `Прайс стоматологии ${city.brandName} в ${city.nameIn}: ${parts}. Цены «от», точный расчёт после осмотра.`,
+    // parts кончается на «р.» — вторую точку не ставим («1200 р..» было в выдаче).
+    description: `Прайс стоматологии ${city.brandName} в ${city.nameIn}: ${parts} Точная сумма — после осмотра.`,
     path: `/${citySlug}/ceny/`,
     city,
   })

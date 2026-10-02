@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const city = getCityBySlug(citySlug)
   if (!city || !getGuaranteePolicy(citySlug)) return {}
   return buildMetadata({
-    title: 'Гарантии и сроки службы',
+    title: `Гарантии и сроки службы в ${city.nameIn}`,
     description: `Гарантийные сроки на пломбы, коронки, протезы и имплантацию в ${city.brandName} ${city.name}: на что даётся гарантия, условия и как обратиться. Полный текст положения — в PDF.`,
     path: `/${citySlug}/garantii/`,
     city,

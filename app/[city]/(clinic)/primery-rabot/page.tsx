@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
   return buildMetadata({
     title: `Примеры работ до и после — стоматология в ${city.nameIn}`,
-    description: `Примеры работ врачей стоматологии ${city.brandName} в ${city.nameIn}: реставрация, коронки, протезирование, имплантация. Фото до и после с ползунком сравнения; план лечения определяет врач после осмотра.`,
+    description: `Фото до и после: реставрация, коронки, протезирование и имплантация в стоматологии ${city.brandName} в ${city.nameIn}. План лечения врач определяет после осмотра.`,
     path: `/${citySlug}/primery-rabot/`,
     city,
   })

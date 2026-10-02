@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import { getImplantologistsForCity } from '@/config/doctors'
+import { formatYears, getImplantologistsForCity } from '@/config/doctors'
 import type { City } from '@/config/cities'
 
 /**
@@ -73,7 +73,7 @@ export function ImplantologistsSection({ city, limit }: { city: City; limit?: nu
               </h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{doctor.specialization}</p>
               {doctor.experienceYears !== undefined && (
-                <p className="mt-1.5 text-sm font-medium text-primary">Стаж {doctor.experienceYears} лет</p>
+                <p className="mt-1.5 text-sm font-medium text-primary">Стаж {formatYears(doctor.experienceYears)}</p>
               )}
               <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">{doctor.bio}</p>
             </div>
