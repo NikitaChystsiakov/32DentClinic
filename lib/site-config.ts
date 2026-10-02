@@ -9,7 +9,7 @@ export const siteConfig = {
   // Адрес, по которому сайт открывается в интернете, без слэша на конце.
   // Используется в sitemap, robots и canonical-ссылках — после переезда
   // на боевой домен поменять здесь один раз.
-  siteUrl: 'https://32dent-beta.vercel.app',
+  siteUrl: 'https://32dent.by',
   city: 'Рогачёв',
   address: 'г. Рогачёв, ул. Ленина, 60',
   hoursShort: 'Пн–Пт 8:00–20:00',
