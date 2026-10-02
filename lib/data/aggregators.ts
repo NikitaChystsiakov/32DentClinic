@@ -22,6 +22,8 @@ export interface AggregatorRating {
   id: AggregatorId
   /** Полное название площадки, выводится в карточке. */
   name: string
+  /** Название после «на»: «89 отзывов на Яндекс Картах». */
+  nameOn: string
   /** Ссылка на страницу отзывов клиники на площадке. */
   href: string
   rating: number | null
@@ -31,63 +33,81 @@ export interface AggregatorRating {
 }
 
 const byCity: Record<City['slug'], AggregatorRating[]> = {
-  // Рогачёв — единственный город с подтверждёнными профилями (сверено 16.09.2026).
+  // Цифры всех городов — по данным заказчика от 02.10.2026. На 103.by у всех
+  // трёх клиник показывается одинаковое число отзывов (89) — похоже на сбой
+  // площадки, поэтому для 103.by выводим только оценку. Основной рейтинг в
+  // шапке и hero берётся с первой площадки, где есть и оценка, и число.
   rogachev: [
     {
       id: '103by',
       name: '103.by',
+      nameOn: '103.by',
       href: 'https://32dent.103.by/otzyvy/',
       rating: 4.9,
-      reviewsCount: 89,
+      reviewsCount: null,
     },
     {
       id: 'yandex',
       name: 'Яндекс Карты',
+      nameOn: 'Яндекс Картах',
       href: 'https://yandex.by/maps/org/32dent/1679633446/reviews/?ll=30.051943%2C53.081320&z=16',
-      // TODO: цифры не сверялись с картой — проверить перед релизом
-      rating: 4.9,
-      reviewsCount: 27,
+      rating: 5.0,
+      reviewsCount: 115,
     },
     {
       id: 'google',
       name: 'Google Карты',
+      nameOn: 'Google Картах',
       href: 'https://www.google.com/maps/place/Стоматологический+центр+%2232Дент%22/@53.0811508,30.0518887,17z/data=!4m8!3m7!1s0x46d13481a574ca05:0x646910a9e50222b2!8m2!3d53.0811508!4d30.0518887!9m1!1b1!16s%2Fg%2F11bv30h42d?entry=ttu',
-      // TODO: цифры не сверялись с картой — проверить перед релизом
       rating: 4.5,
       reviewsCount: 50,
     },
   ],
-  // Минск: профили найдены 25.09.2026. Яндекс (5.0, 19 отзывов) и 2ГИС
-  // (5.0, 9 отзывов) — по данным заказчика от 25.09.2026; 103.by — 5.0,
-  // число отзывов по выдаче поиска. TODO: сверить 103.by с площадкой.
   minsk: [
     {
       id: '103by',
       name: '103.by',
+      nameOn: '103.by',
       href: 'https://32dent-plus.103.by/otzyvy/',
       rating: 5.0,
-      reviewsCount: 388,
+      reviewsCount: null,
     },
     {
       id: 'yandex',
       name: 'Яндекс Карты',
+      nameOn: 'Яндекс Картах',
       href: 'https://yandex.by/maps/org/32dent_/62123372700/reviews/',
-      rating: 5.0,
-      reviewsCount: 19,
+      rating: 4.9,
+      reviewsCount: 41,
     },
     {
       id: '2gis',
       name: '2ГИС',
+      nameOn: '2ГИС',
       href: 'https://2gis.by/minsk/firm/70000001042329625/tab/reviews',
       rating: 5.0,
       reviewsCount: 9,
     },
   ],
-  // Жлобин: оценок на сайте нет намеренно — отзывов на площадках мало,
-  // профиля в Google Картах нет (заказчик, 25.09.2026). Без записей блок
-  // «Оценки на площадках» и рейтинг в шапке у города не показываются.
-  // Профиль на 103.by: https://32dent-1.103.by/otzyvy/
-  zhlobin: [],
+  // Жлобин: профиля в Google Картах нет (заказчик, 25.09.2026).
+  zhlobin: [
+    {
+      id: '103by',
+      name: '103.by',
+      nameOn: '103.by',
+      href: 'https://32dent-1.103.by/otzyvy/',
+      rating: 4.6,
+      reviewsCount: null,
+    },
+    {
+      id: 'yandex',
+      name: 'Яндекс Карты',
+      nameOn: 'Яндекс Картах',
+      href: 'https://yandex.by/maps/org/32_dent_ekspert/202717535430/reviews/',
+      rating: 4.6,
+      reviewsCount: 37,
+    },
+  ],
 }
 
 export function getAggregatorsForCity(citySlug: string): AggregatorRating[] {
@@ -114,7 +134,7 @@ export function formatRating(rating: number) {
 
 /**
  * Основная площадка города для шапки и hero — первая, у которой подтверждены
- * и оценка, и число отзывов: там подпись «5.0 · 388 отзывов на 103.by».
+ * и оценка, и число отзывов: там подпись «5.0 · 115 отзывов на Яндекс Картах».
  */
 export function getMainRatingForCity(
   citySlug: string

@@ -199,7 +199,7 @@ export function SiteHeader() {
                 <Star className="size-5 shrink-0 fill-rating text-rating" />
                 <span className="font-semibold text-foreground">{formatRating(rating.rating)}</span>
                 <span className="hidden whitespace-nowrap xl:inline">
-                  · {reviewsLabel(rating.reviewsCount)} на {rating.name}
+                  · {reviewsLabel(rating.reviewsCount)} на {rating.nameOn}
                 </span>
               </a>
             )}

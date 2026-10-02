@@ -51,7 +51,7 @@ export function HeroSection({ city, content }: { city: City; content: CityConten
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
               <Star className="size-4 fill-rating text-rating" />
               <span>
-                {reviewsLabel(mainRating.reviewsCount)} на {mainRating.name}
+                {reviewsLabel(mainRating.reviewsCount)} на {mainRating.nameOn}
               </span>
             </div>
           )}
@@ -84,7 +84,7 @@ export function HeroSection({ city, content }: { city: City; content: CityConten
                 {formatRating(mainRating.rating)}
               </span>
               <span className="max-w-28 text-xs leading-tight text-muted-foreground">
-                рейтинг на {mainRating.name} · {reviewsLabel(mainRating.reviewsCount)}
+                рейтинг на {mainRating.nameOn} · {reviewsLabel(mainRating.reviewsCount)}
               </span>
             </div>
           )}

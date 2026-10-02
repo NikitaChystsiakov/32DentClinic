@@ -57,7 +57,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     rating
       ? {
           value: formatRating(rating.rating),
-          label: `рейтинг · ${reviewsLabel(rating.reviewsCount)} на ${rating.name}`,
+          label: `рейтинг · ${reviewsLabel(rating.reviewsCount)} на ${rating.nameOn}`,
         }
       : { value: String(servicesCount), label: 'направлений лечения в одной клинике' },
     { value: String(doctorsCount), label: 'врачей принимают пациентов в клинике' },

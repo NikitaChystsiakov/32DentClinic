@@ -224,7 +224,7 @@ export const doctors: Doctor[] = [
   },
 
   // --- Минск. Имена, специализации и стаж — с 32dentminsk.by и 103.by;
-  // фото прислал заказчик. Согласия врачей на публикацию — [TBD].
+  // фото прислал заказчик. Согласия врачей на публикацию есть (02.10.2026).
   // Кто в каком городе — по списку заказчика от 15.09.2026. ---
   {
     slug: 'zhilevich-vladimir',
@@ -275,21 +275,6 @@ export const doctors: Doctor[] = [
     photo: '/images/doctors/pulko-dmitriy.webp',
     cities: ['minsk'],
   },
-  // [TBD] Гутырчик: заказчик прислал только имя и фото. Специализация,
-  // стаж и профиль — уточняются; пока «врач-стоматолог» в группе
-  // терапевтов, без стажа, город не назван.
-  {
-    slug: 'gutyrchik-mariya',
-    name: 'Гутырчик Мария',
-    specialization: 'Врач-стоматолог',
-    categories: ['terapevt'],
-    bio: 'Мария — врач-стоматолог минского центра 32Дент+.',
-    directions: [{ label: 'Терапия', href: '/uslugi/terapevticheskaya-stomatologiya/' }],
-    hasCertificates: false,
-    photo: '/images/doctors/gutyrchik-mariya.webp',
-    // [TBD] Заказчик не назвал город (список от 15.09) — врач нигде не показывается, пока не уточним.
-    cities: [],
-  },
   {
     slug: 'ukhvatova-ekaterina',
     name: 'Ухватова Екатерина',
@@ -307,7 +292,7 @@ export const doctors: Doctor[] = [
   },
 
   // --- Жлобин, дополнение от заказчика 15.09.2026 (ФИО и профиль),
-  // стаж — от 16.09.2026; образование — [TBD]. ---
+  // стаж — от 16.09.2026; образование клиника не предоставила. ---
   {
     slug: 'fedorova-natalya',
     name: 'Федорова Наталья Васильевна',

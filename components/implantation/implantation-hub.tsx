@@ -52,6 +52,16 @@ export function ImplantationHub() {
   // Все системы из config/implantation.ts, включая MegaGen (заказчик
   // 16.09.2026 попросил показывать, хотя цены в прайсе пока нет).
   const brandNames = implantBrands.map((b) => b.name).join(' и ')
+  // Фото этапов — с главной своего города (content.treatmentTimeline), по
+  // названию этапа: в общем implantationTimeline фото нет, и без них на месте
+  // снимка стоял бриф на съёмку.
+  const cityStepPhotos = new Map(
+    (content.treatmentTimeline?.steps ?? []).flatMap((s) => (s.photo ? [[s.title, s.photo] as const] : []))
+  )
+  const timeline = {
+    ...implantationTimeline,
+    steps: implantationTimeline.steps.map((s) => ({ ...s, photo: s.photo ?? cityStepPhotos.get(s.title) })),
+  }
 
   const stats = [
     content.guaranteeStat,
@@ -152,7 +162,7 @@ export function ImplantationHub() {
       <Reveal delay={1}>
         <SectionPanel variant="indigo-light" className="overflow-hidden">
           <TreatmentSteps
-            timeline={implantationTimeline}
+            timeline={timeline}
             title="Этапы имплантации"
             description="От консультации до постоянной коронки — что происходит на каждом визите и сколько это занимает."
           />

@@ -83,7 +83,11 @@ export function LegalDocumentPage({ doc, city }: { doc: LegalDocument; city?: Ci
       ) : (
         <div className="mt-8 rounded-2xl border border-dashed border-border bg-muted/30 p-6">
           <p className="font-medium text-foreground">Документ готовится к публикации.</p>
-          <p className="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">{doc.description}</p>
+          {/* Подсказка «чего не хватает» — только в pnpm dev. На живом сайте
+              фраза «должен быть опубликован до…» читалась бы как признание. */}
+          {process.env.NODE_ENV === 'development' && (
+            <p className="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">{doc.description}</p>
+          )}
           {city && (
             <p className="mt-4 text-sm text-muted-foreground">
               По вопросам обработки персональных данных пишите на {city.legal.privacyEmail} или звоните{' '}

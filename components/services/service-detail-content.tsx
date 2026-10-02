@@ -154,9 +154,14 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
             <ShieldCheck className="size-5" />
           </span>
-          <p className="font-heading text-base font-semibold text-foreground">
-            Гарантия 1 год на все виды работ
-          </p>
+          <div>
+            <p className="font-heading text-base font-semibold text-foreground">
+              Гарантия до 1 года на пломбы, коронки и протезы
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Срок зависит от вида работы — врач назовёт его до начала лечения.
+            </p>
+          </div>
         </div>
       </Reveal>
 

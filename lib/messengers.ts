@@ -32,16 +32,12 @@ export function whatsappHref(city: City): string {
   return `https://wa.me/${digits}`
 }
 
-/** Чат в MAX: ссылка из City.max, а пока её нет — сайт мессенджера. */
-export function maxHref(city: City): string {
-  return city.max ?? siteConfig.maxHref
-}
 
 export type MessengerId = 'viber' | 'telegram' | 'whatsapp' | 'max' | 'instagram'
 
 /**
  * Ссылка на чат именно этой клиники — или null, если у города своей нет и
- * getMessengerLinks подставил бы общую (Telegram сети, сайт MAX). Нужна на
+ * getMessengerLinks подставил бы общую (Telegram сети). Нужна на
  * страницах сети, где человек сам выбирает клинику: пункт «Жлобин» не должен
  * вести в минский Telegram.
  */
@@ -70,9 +66,9 @@ export interface MessengerLink {
 
 /**
  * Все способы написать клинике города в одном порядке — для страницы
- * контактов, подвала и мобильного меню. У каждого города всегда четыре:
- * Viber, Telegram, WhatsApp, MAX (заказчик, 17.09.2026); Instagram — только
- * если заполнен в config/cities.ts. Без города (страницы сети) — Telegram сети.
+ * контактов, подвала и мобильного меню. У каждого города всегда три:
+ * Viber, Telegram, WhatsApp; MAX и Instagram — только если заполнены в
+ * config/cities.ts. Без города (страницы сети) — Telegram сети.
  */
 export function getMessengerLinks(city: City | null | undefined): MessengerLink[] {
   const links: MessengerLink[] = []
@@ -80,7 +76,7 @@ export function getMessengerLinks(city: City | null | undefined): MessengerLink[
   links.push({ id: 'telegram', label: 'Telegram', href: telegramHref(city), external: true })
   if (city) {
     links.push({ id: 'whatsapp', label: 'WhatsApp', href: whatsappHref(city), external: true })
-    links.push({ id: 'max', label: 'MAX', href: maxHref(city), external: true })
+    if (city.max) links.push({ id: 'max', label: 'MAX', href: city.max, external: true })
     if (city.instagram) links.push({ id: 'instagram', label: 'Instagram', href: city.instagram, external: true })
   }
   return links
