@@ -59,7 +59,9 @@ export function PriceAccordion() {
                           <TableCell className="whitespace-normal font-medium text-foreground">
                             {row.procedure.name}
                           </TableCell>
-                          <TableCell className="whitespace-nowrap">{formatProcedurePrice(row.procedure)}</TableCell>
+                          <TableCell className={row.procedure.tbd ? 'whitespace-normal' : 'whitespace-nowrap'}>
+                            {formatProcedurePrice(row.procedure)}
+                          </TableCell>
                           <TableCell>
                             <BookingButton
                               size="sm"

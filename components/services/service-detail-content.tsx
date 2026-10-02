@@ -119,11 +119,11 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
         </Reveal>
       )}
 
-      {/* Doctors */}
-      <Reveal delay={1}>
-        <div className="mb-16 flex flex-col gap-6">
-          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Врачи направления</h2>
-          {doctors.length > 0 ? (
+      {/* Doctors — блок только если в городе есть врачи направления */}
+      {doctors.length > 0 && (
+        <Reveal delay={1}>
+          <div className="mb-16 flex flex-col gap-6">
+            <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">Врачи направления</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {doctors.map((doctor) => (
                 <Link
@@ -142,11 +142,9 @@ export function ServiceDetailContent({ slug }: { slug: string }) {
                 </Link>
               ))}
             </div>
-          ) : (
-            <p className="text-muted-foreground">Информация уточняется</p>
-          )}
-        </div>
-      </Reveal>
+          </div>
+        </Reveal>
+      )}
 
       {/* Guarantee */}
       <Reveal delay={1}>

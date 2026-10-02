@@ -171,7 +171,7 @@ export const serviceCategories: ServiceCategory[] = [
     priceFrom: null,
     icon: 'Microscope',
     procedures: [
-      { name: 'Лечение под микроскопом — стоимость назовёт администратор или врач после консультации', priceFrom: 0, tbd: true },
+      { name: 'Лечение под микроскопом', priceFrom: 0, tbd: true },
     ],
     whenToVisit: [
       'Зуб уже лечили, но он снова болит или на снимке видно воспаление у корня',
@@ -405,17 +405,17 @@ export function getServicesForCity(citySlug: string) {
 export const serviceSelectOptions = serviceCategories.map((s) => ({ value: s.slug, label: s.shortName }))
 
 /**
- * Цена направления для карточек: «от 1 200 BYN» или «цена уточняется», если
- * клиника её не публикует. `unit` — «BYN» или «р.», как принято в блоке.
+ * Цена направления для карточек: «от 1 200 BYN» или «по индивидуальному
+ * расчёту», если клиника её не публикует. `unit` — «BYN» или «р.», как принято в блоке.
  */
 export function formatServicePrice(service: Pick<ServiceCategory, 'priceFrom'>, unit = 'BYN') {
-  if (service.priceFrom === null) return 'цена уточняется'
+  if (service.priceFrom === null) return 'по индивидуальному расчёту'
   return `от ${service.priceFrom.toLocaleString('ru-RU')} ${unit}`
 }
 
 /** «от 1 260 BYN», «135 BYN» для точных тарифов, «46,6 BYN» для дробных. */
 export function formatProcedurePrice(procedure: Procedure) {
-  if (procedure.tbd) return 'уточняется'
+  if (procedure.tbd) return 'по индивидуальному расчёту'
   const value = procedure.priceFrom.toLocaleString('ru-RU', { maximumFractionDigits: 1 })
   return procedure.exact ? `${value} BYN` : `от ${value} BYN`
 }

@@ -30,11 +30,11 @@ import { useCity } from '@/lib/contexts/city-context'
 import { siteConfig } from '@/lib/site-config'
 
 // Статус позиции в таблице «Что входит»: tbd — клиника ещё не подтвердила,
-// показываем честное «уточняется», а не выдуманное «входит».
+// показываем «индивидуально» (зависит от случая), а не выдуманное «входит».
 const INCLUDED_LABELS: Record<IncludedStatus, { label: string; icon: typeof Check; className: string }> = {
   included: { label: 'входит', icon: Check, className: 'bg-(--panel-mint) text-secondary' },
   extra: { label: 'отдельно', icon: Plus, className: 'bg-(--panel-lavender) text-primary' },
-  tbd: { label: 'уточняется', icon: CircleDashed, className: 'bg-muted text-muted-foreground' },
+  tbd: { label: 'индивидуально', icon: CircleDashed, className: 'bg-muted text-muted-foreground' },
 }
 
 export function ProtocolContent({ slug }: { slug: string }) {

@@ -159,12 +159,12 @@ const IMMEDIATE_PRICING: ProtocolPricing = {
 
 const ALL_ON_4_PRICING: ProtocolPricing = {
   from: 12000,
-  note: 'четыре импланта с временным протезом; стоимость постоянного протеза уточняется',
+  note: 'четыре импланта с временным протезом; постоянный протез — по индивидуальному расчёту',
 }
 
 const ALL_ON_6_PRICING: ProtocolPricing = {
   from: 15000,
-  note: 'шесть имплантов с временным протезом; стоимость постоянного протеза уточняется',
+  note: 'шесть имплантов с временным протезом; постоянный протез — по индивидуальному расчёту',
 }
 
 // Минск: постоянный протез — цены лаборатории-партнёра (заказчик, 25.09.2026).
@@ -407,7 +407,7 @@ export const implantProtocols: ImplantProtocol[] = [
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
       { name: 'Постоянный протез: металлокерамика от 8 500, диоксид циркония от 9 500 BYN', status: 'extra', cities: ['minsk'] },
-      { name: 'Постоянный протез — стоимость уточняется', status: 'extra', cities: ['rogachev', 'zhlobin'] },
+      { name: 'Постоянный протез — по индивидуальному расчёту', status: 'extra', cities: ['rogachev', 'zhlobin'] },
     ],
     steps: [
       {
@@ -480,7 +480,7 @@ export const implantProtocols: ImplantProtocol[] = [
       { name: 'Временный несъёмный протез', status: 'included' },
       { name: 'Удаление оставшихся зубов — от 120 BYN за зуб', status: 'extra' },
       { name: 'Постоянный протез: металлокерамика от 10 000, диоксид циркония от 11 500 BYN', status: 'extra', cities: ['minsk'] },
-      { name: 'Постоянный протез — стоимость уточняется', status: 'extra', cities: ['rogachev', 'zhlobin'] },
+      { name: 'Постоянный протез — по индивидуальному расчёту', status: 'extra', cities: ['rogachev', 'zhlobin'] },
     ],
     steps: [
       {
