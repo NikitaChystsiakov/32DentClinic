@@ -85,17 +85,47 @@ function sendTelegram(string $token, string $chatId, string $topicId, string $te
         $fields['message_thread_id'] = $topicId;
     }
 
-    [$status, $response] = httpPost(
+    $result = telegramSendMessage($token, $fields);
+    if (($result['ok'] ?? false) === true) {
+        return true;
+    }
+
+    // Обычная группа стала супергруппой (включили историю для новых
+    // участников, публичную ссылку, темы и т. п.) — у неё новый id, старый
+    // больше не принимает сообщения. Telegram сам называет новый id:
+    // переотправляем туда, чтобы заявка не потерялась, и пишем в лог,
+    // какой chat_id заменить в config.php.
+    $newChatId = (string) ($result['parameters']['migrate_to_chat_id'] ?? '');
+    if ($newChatId !== '' && $newChatId !== $chatId) {
+        error_log("[dent32-booking] telegram: группа {$chatId} стала супергруппой {$newChatId} — замените chat_id в config.php");
+        $fields['chat_id'] = $newChatId;
+        unset($fields['message_thread_id']); // у обычной группы тем не было
+        $result = telegramSendMessage($token, $fields);
+        if (($result['ok'] ?? false) === true) {
+            return true;
+        }
+    }
+
+    // Причина отказа без текста заявки: «chat not found», «bot was kicked»…
+    error_log('[dent32-booking] telegram: ' . ($result['description'] ?? 'нет ответа от api.telegram.org') . ", chat_id={$fields['chat_id']}");
+    return false;
+}
+
+/**
+ * @param array<string,string> $fields
+ * @return array<string,mixed> ответ Telegram API; [] — сеть или не JSON
+ */
+function telegramSendMessage(string $token, array $fields): array
+{
+    [, $response] = httpPost(
         "https://api.telegram.org/bot{$token}/sendMessage",
         'application/x-www-form-urlencoded',
         http_build_query($fields),
         []
     );
-    if ($response === null || $status !== 200) {
-        return false;
-    }
-    $decoded = json_decode($response, true);
-    return is_array($decoded) && ($decoded['ok'] ?? false) === true;
+    // BIGINT_AS_STRING — id супергрупп (-100…) не должны терять точность.
+    $decoded = $response === null ? null : json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
+    return is_array($decoded) ? $decoded : [];
 }
 
 /**
