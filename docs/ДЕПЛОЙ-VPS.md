@@ -226,7 +226,7 @@ htpasswd -c /etc/nginx/.htpasswd-32dent-test test          # для nginx
 pnpm build
 find out -name .DS_Store -delete
 ssh -p 2200 root@178.159.44.174 "mkdir -p /var/www/32dent-test"
-rsync -avz --delete --exclude '.DS_Store' \
+rsync -avz --delete --exclude '.DS_Store' --exclude 'api/config.php' \
   -e "ssh -p 2200" out/ root@178.159.44.174:/var/www/32dent-test/
 ssh -p 2200 root@178.159.44.174 "chmod -R a+rX /var/www/32dent-test"
 ```
@@ -440,7 +440,7 @@ certbot сам пропишет https в конфиг и будет продле
 ```bash
 pnpm build
 find out -name .DS_Store -delete
-rsync -avz --delete --exclude '.DS_Store' \
+rsync -avz --delete --exclude '.DS_Store' --exclude 'api/config.php' \
   -e "ssh -p 2200" out/ root@178.159.44.174:/var/www/32dent/
 ```
 
@@ -516,11 +516,20 @@ apache2ctl configtest && systemctl reload apache2  # Apache
 ```bash
 pnpm build
 find out -name .DS_Store -delete
-rsync -avz --delete --exclude '.DS_Store' \
+rsync -avz --delete --exclude '.DS_Store' --exclude 'api/config.php' \
   -e "ssh -p 2200" out/ root@178.159.44.174:/var/www/32dent/
 ```
 
 Перезапускать веб-сервер не нужно: новые файлы отдаются сразу.
+
+`--exclude 'api/config.php'` обязателен: при сборке в `out/api/` попадает
+локальный `config.php` с токеном бота, а на сервере конфиг лежит вне папки
+сайта (`/var/www/dent32-booking-config.php`).
+
+Сайт запущен 04.10.2026. Боевой конфиг nginx (`/etc/nginx/sites-enabled/app`) —
+копия `docs/nginx-32dent.by.conf`; бэкап старого сайта и прежнего `app` —
+`/root/backup/2026-10-03/` (откат: вернуть `app.conf` и `nginx -t && systemctl reload nginx`).
+Старый Next (pm2 `32dentplus`) пока работает как запасной.
 
 ---
 
