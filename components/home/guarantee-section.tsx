@@ -70,17 +70,20 @@ export function GuaranteeSection({
                   : 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10'
               }
             >
-              <div className="flex shrink-0 items-center gap-3">
+              {/* Иконка — внутри <dt>, а не в отдельной обёртке рядом с ним:
+                  в <dl> внутри <div> допустимы только <dt> и <dd>, иначе
+                  Lighthouse и скринридеры считают список битым. */}
+              <dt className="flex shrink-0 items-center gap-3">
                 {Icon && (
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <Icon className="size-5" />
                   </span>
                 )}
-                <dt className="flex flex-col">
+                <span className="flex flex-col">
                   <span className="font-heading text-3xl leading-none font-bold text-foreground">{item.value}</span>
                   <span className="mt-1 text-sm font-medium whitespace-nowrap text-primary">{item.label}</span>
-                </dt>
-              </div>
+                </span>
+              </dt>
               <dd className="text-sm leading-relaxed text-muted-foreground">{item.description}</dd>
             </div>
           )

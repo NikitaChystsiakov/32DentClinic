@@ -49,28 +49,30 @@ export function TownRoute({ town, content }: { town: NearbyTown; content: TownCo
                 <p className="text-sm text-muted-foreground">{route.summary}</p>
               </div>
 
+              {/* Иконка — внутри <dt>: в <dl> внутри <div> допустимы только
+                  <dt> и <dd>, лишняя обёртка ломала список для скринридеров. */}
               <dl className="flex flex-col gap-4 text-sm">
-                <div className="flex gap-3">
-                  <Car className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <div className="flex flex-col gap-0.5">
-                    <dt className="font-medium text-foreground">На машине</dt>
-                    <dd className="leading-relaxed text-muted-foreground">{route.car}</dd>
-                  </div>
+                <div className="flex flex-col gap-0.5">
+                  <dt className="flex items-center gap-3 font-medium text-foreground">
+                    <Car className="size-4 shrink-0 text-primary" />
+                    На машине
+                  </dt>
+                  <dd className="pl-7 leading-relaxed text-muted-foreground">{route.car}</dd>
                 </div>
-                <div className="flex gap-3">
-                  <Bus className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <div className="flex flex-col gap-0.5">
-                    <dt className="font-medium text-foreground">Поездом или маршруткой</dt>
-                    <dd className="leading-relaxed text-muted-foreground">{route.publicTransport}</dd>
-                  </div>
+                <div className="flex flex-col gap-0.5">
+                  <dt className="flex items-center gap-3 font-medium text-foreground">
+                    <Bus className="size-4 shrink-0 text-primary" />
+                    Поездом или маршруткой
+                  </dt>
+                  <dd className="pl-7 leading-relaxed text-muted-foreground">{route.publicTransport}</dd>
                 </div>
                 {route.parking && (
-                  <div className="flex gap-3">
-                    <ParkingSquare className="mt-0.5 size-4 shrink-0 text-primary" />
-                    <div className="flex flex-col gap-0.5">
-                      <dt className="font-medium text-foreground">Парковка</dt>
-                      <dd className="leading-relaxed text-muted-foreground">{route.parking}</dd>
-                    </div>
+                  <div className="flex flex-col gap-0.5">
+                    <dt className="flex items-center gap-3 font-medium text-foreground">
+                      <ParkingSquare className="size-4 shrink-0 text-primary" />
+                      Парковка
+                    </dt>
+                    <dd className="pl-7 leading-relaxed text-muted-foreground">{route.parking}</dd>
                   </div>
                 )}
               </dl>
