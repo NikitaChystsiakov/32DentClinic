@@ -4,9 +4,35 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Шрифты подключает скрипт в app/layout.tsx после первого кадра (там же —
+ * почему не next/font). До этого текст рисуется Arial'ом, подогнанным под
+ * метрики каждого шрифта, — поэтому подмена не сдвигает вёрстку. Числа —
+ * те, что генерировал next/font для этих же файлов; пересобрали шрифты
+ * scripts/subset-fonts.sh — пересчитайте и их.
+ */
+@font-face {
+  font-family: 'Golos Text Fallback';
+  src: local(Arial);
+  ascent-override: 90.05%;
+  descent-override: 20.21%;
+  line-gap-override: 0%;
+  size-adjust: 108.83%;
+}
+@font-face {
+  font-family: 'Unbounded Fallback';
+  src: local(Arial);
+  ascent-override: 71.16%;
+  descent-override: 17.52%;
+  line-gap-override: 0%;
+  size-adjust: 139.83%;
+}
+:root {
+  --font-golos-text: 'Golos Text', 'Golos Text Fallback';
+  --font-unbounded: 'Unbounded', 'Unbounded Fallback';
+}
+
 @theme inline {
-  /* Переменные из next/font/local (app/layout.tsx) уже содержат подогнанный
-     под метрики шрифта fallback на Arial — отдельно его дописывать не нужно. */
   --font-sans: var(--font-golos-text), sans-serif;
   --font-heading: var(--font-unbounded), sans-serif;
   /*

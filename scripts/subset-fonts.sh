@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Сборка урезанных шрифтов для app/fonts (см. комментарий в app/layout.tsx).
+# Сборка урезанных шрифтов для public/fonts (см. комментарий в app/layout.tsx).
 # Запускать вручную, когда нужен новый вес или символ: `zsh scripts/subset-fonts.sh`.
 # Нужны python3 и fonttools с brotli: `pip3 install fonttools brotli`.
 #
@@ -11,7 +11,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 tmp=$(mktemp -d)
-out=app/fonts
+out=public/fonts
 
 # Что оставляем: пробел…~ (латиница, цифры, пунктуация), NBSP © « ® ° · » ×,
 # кириллица с Ёё/Іі/Ўў, Ґґ, тире, кавычки, •, …, №, ™, −, ∞, ≈, ₽.

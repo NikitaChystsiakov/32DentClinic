@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next'
-import localFont from 'next/font/local'
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -15,7 +14,7 @@ import { siteConfig } from '@/lib/site-config'
 
 // Golos Text — основной текст, UI, кнопки, навигация. Unbounded — заголовки
 // и крупные цифры. Оба — вариативные, но не из next/font/google, а свои
-// урезанные копии (app/fonts, собираются scripts/subset-fonts.sh):
+// урезанные копии (public/fonts, собираются scripts/subset-fonts.sh):
 //
 // - Google-версия шла четырьмя файлами (latin + cyrillic на каждый шрифт) на
 //   полном диапазоне весов, 142 КБ, и все четыре preload'ились с высоким
@@ -27,16 +26,28 @@ import { siteConfig } from '@/lib/site-config'
 // Вес по-прежнему не фиксируем: конкретные font-weight задаются в
 // компонентах через Tailwind. Если появится вес вне диапазона (например,
 // font-black), файл нужно пересобрать, иначе браузер тихо возьмёт крайний.
-const golosText = localFont({
-  src: './fonts/golos-text-400-700.woff2',
-  weight: '400 700',
-  variable: '--font-golos-text',
-})
-const unbounded = localFont({
-  src: './fonts/unbounded-500-700.woff2',
-  weight: '500 700',
-  variable: '--font-unbounded',
-})
+//
+// Подключаются скриптом ниже после первого кадра, а не через next/font.
+// Headless Chrome (на нём работают PageSpeed и Lighthouse) при сетевой
+// задержке не рисует первый кадр, пока грузится шрифт, — с preload или
+// просто из @font-face: первая отрисовка уходила с 0,3 на 1,3–2,3 с, и
+// мобильная оценка прыгала между 79 и 98. Теперь первый кадр рисуется
+// запасным Arial с поправками метрик под каждый шрифт (@font-face
+// «… Fallback» в globals.css — те же числа, что генерировал next/font),
+// а через долю секунды текст без сдвига вёрстки переключается на Golos и
+// Unbounded. Повторные визиты берут файлы из кеша.
+//
+// Сигнал — именно first-contentful-paint: requestAnimationFrame не гарантирует,
+// что кадр уже показан, и шрифт успевал запроситься раньше. Таймер на 3 с —
+// для браузеров без Paint Timing API.
+const fontLoaderScript = `(function(){
+if(typeof FontFace!=='function'||!document.fonts)return;
+var faces=[['Golos Text','/fonts/golos-text-400-700.woff2','400 700'],['Unbounded','/fonts/unbounded-500-700.woff2','500 700']];
+var started=false;
+function load(){if(started)return;started=true;faces.forEach(function(f){var face=new FontFace(f[0],'url('+f[1]+') format("woff2")',{weight:f[2],display:'swap'});document.fonts.add(face);face.load().catch(function(){})})}
+try{new PerformanceObserver(function(list){if(list.getEntriesByName('first-contentful-paint').length)load()}).observe({type:'paint',buffered:true})}catch(e){}
+setTimeout(load,3000);
+})()`
 
 export const metadata: Metadata = {
   // Базовый адрес для og:image и прочих URL-полей. canonical здесь намеренно
@@ -111,7 +122,10 @@ export default function RootLayout({
   // app/[city]/layout.tsx.
   return (
     <html lang="ru" className="bg-(--page-surface)" suppressHydrationWarning>
-      <body className={`${golosText.variable} ${unbounded.variable} font-sans antialiased`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: fontLoaderScript }} />
+      </head>
+      <body className="font-sans antialiased">
         <ThemeProvider>
           <BookingModalProvider>
             <MobileMenuProvider>

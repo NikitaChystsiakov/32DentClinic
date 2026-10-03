@@ -20,6 +20,9 @@ const nextConfig = {
   // нужно, чтобы Next умел их компилировать; страницами они не становятся —
   // маршрут отдаёт app/blog/[slug]/page.tsx (см. lib/blog.ts).
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  experimental: {
+    inlineCss: true,
+  },
 }
 
 // Плагины remark/rehype намеренно не подключены: с Turbopack их можно

@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import Image from 'next/image'
-import { ParticleField } from '@/components/particle-field'
 import {
   Stethoscope,
   ScanLine,
@@ -22,6 +21,25 @@ import { useReveal } from '@/components/reveal'
 import { PhotoPlaceholder } from '@/components/photo-placeholder'
 import { getDoctorsForCity, type Doctor, type DoctorCategory } from '@/config/doctors'
 import type { TreatmentTimeline, TreatmentTimelineStep, TreatmentTimelineGapLabel } from '@/content/types'
+
+// Частицы — отдельным чанком и только с md (см. TreatmentSteps): на телефоне
+// их не видно, а при CSS-скрытии код всё равно скачивался и при запуске
+// мерил скрытый canvas — PageSpeed считал это принудительной компоновкой.
+const ParticleField = lazy(() =>
+  import('@/components/particle-field').then((mod) => ({ default: mod.ParticleField }))
+)
+
+function useIsDesktop() {
+  const [matches, setMatches] = useState(false)
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 48rem)')
+    const update = () => setMatches(query.matches)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+  return matches
+}
 
 const iconMap: Record<string, LucideIcon> = {
   Stethoscope,
@@ -543,6 +561,7 @@ export function TreatmentSteps({
     gapLabels.find((g) => g.afterStep === stepNum)
 
   const clusterDoctors = pickDoctorCluster(getDoctorsForCity(city.slug))
+  const isDesktop = useIsDesktop()
 
   return (
     <>
@@ -552,12 +571,16 @@ export function TreatmentSteps({
       />
       {/* Частицы и шарики — только с md: на телефоне мелкий декор поверх
           узкой колонки читается как грязь и зря нагружает отрисовку. */}
-      <ParticleField
-        className="pointer-events-none absolute inset-0 hidden size-full md:block"
-        particleCount={180}
-        minSize={1.6}
-        maxSize={4.5}
-      />
+      {isDesktop && (
+        <Suspense fallback={null}>
+          <ParticleField
+            className="pointer-events-none absolute inset-0 size-full"
+            particleCount={180}
+            minSize={1.6}
+            maxSize={4.5}
+          />
+        </Suspense>
+      )}
       <BackgroundOrbs />
       <div className="relative">
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
