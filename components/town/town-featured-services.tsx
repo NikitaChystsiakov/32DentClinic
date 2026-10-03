@@ -52,7 +52,7 @@ export function TownFeaturedServices({ town, content }: { town: NearbyTown; cont
               <span className="inline-flex w-fit items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                 <MapPin className="size-3" />в {clinic.city.nameIn} · {clinic.distanceKm} км
               </span>
-              <div className="flex items-baseline justify-between gap-x-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h3 className="min-w-0 font-heading text-lg leading-snug font-bold text-balance text-foreground">
                   {service.shortName}
                 </h3>

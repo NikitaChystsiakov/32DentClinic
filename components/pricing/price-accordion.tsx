@@ -34,13 +34,17 @@ export function PriceAccordion() {
               </span>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="mt-2 rounded-lg bg-silver-muted/60 px-3 py-1 sm:px-4">
+              <div className="mt-2 rounded-lg bg-silver-muted/60 px-1.5 py-1 sm:px-4">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Процедура</TableHead>
                       <TableHead>Цена</TableHead>
-                      <TableHead className="w-px" />
+                      {/* Колонка с кнопкой — только с sm: на телефоне три
+                          колонки не помещаются, таблица уезжала вбок и кнопки
+                          обрезались по краю. Там вместо них одна кнопка под
+                          таблицей. */}
+                      <TableHead className="hidden w-px sm:table-cell" />
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -62,7 +66,7 @@ export function PriceAccordion() {
                           <TableCell className={row.procedure.tbd ? 'whitespace-normal' : 'whitespace-nowrap'}>
                             {formatProcedurePrice(row.procedure)}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell">
                             <BookingButton
                               size="sm"
                               className="bg-accent text-accent-foreground hover:bg-accent/90"
@@ -76,6 +80,13 @@ export function PriceAccordion() {
                     )}
                   </TableBody>
                 </Table>
+                <BookingButton
+                  size="lg"
+                  className="my-3 w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:hidden"
+                  options={{ service: service.slug }}
+                >
+                  Записаться
+                </BookingButton>
               </div>
             </AccordionContent>
           </AccordionItem>

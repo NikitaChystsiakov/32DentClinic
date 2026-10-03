@@ -59,9 +59,11 @@ export function ProcedureTable({ slug, procedures }: { slug: string; procedures:
               key={row.procedure.name}
               className="flex flex-col gap-3 rounded-xl border border-border p-4"
             >
-              <div className="flex items-start justify-between gap-3">
+              {/* flex-wrap: «по индивидуальному расчёту» с nowrap не
+                  помещалась рядом с длинным названием и вылезала за карточку. */}
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                 <span className="font-medium text-foreground">{row.procedure.name}</span>
-                <span className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
+                <span className={`text-sm text-muted-foreground ${row.procedure.tbd ? '' : 'whitespace-nowrap'}`}>
                   {formatProcedurePrice(row.procedure)}
                 </span>
               </div>

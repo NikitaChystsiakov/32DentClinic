@@ -72,7 +72,7 @@ export function ProtocolCard({
       </div>
 
       <div className={cn('flex min-w-0 flex-1 flex-col gap-1.5', compact && 'sm:w-full')}>
-        <div className="flex items-baseline justify-between gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
           <h3 className="font-heading text-lg leading-snug font-bold text-balance text-foreground">
             {protocol.shortName}
           </h3>

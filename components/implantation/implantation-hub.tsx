@@ -30,7 +30,10 @@ import {
 import { getImplantologistsForCity } from '@/config/doctors'
 import { getServiceBySlug, proceduresForCity } from '@/config/services'
 import { useCity } from '@/lib/contexts/city-context'
+import { cn } from '@/lib/utils'
 import { siteConfig } from '@/lib/site-config'
+
+const brandsStatLabel = 'системы имплантов'
 
 /**
  * Хаб раздела «Имплантация» — /<город>/uslugi/implantaciya/. Заменяет
@@ -65,7 +68,7 @@ export function ImplantationHub() {
 
   const stats = [
     content.guaranteeStat,
-    { value: 'Straumann · MegaGen', label: 'системы имплантов' },
+    { value: 'Straumann · MegaGen', label: brandsStatLabel },
     ...(singlePrice ? [{ value: singlePrice, label: 'имплантат с установкой' }] : []),
   ]
 
@@ -123,11 +126,21 @@ export function ImplantationHub() {
               </div>
             </div>
 
-            {/* На телефоне — три компактные плитки в ряд, а не три полосы
-                во всю ширину: иначе шапка растягивалась на лишний экран. */}
-            <dl className="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-1">
+            {/* На телефоне — сетка 2×2, а не три полосы во всю ширину: иначе
+                шапка растягивалась на лишний экран. Плитка с брендами уходит
+                вниз на всю ширину: в трети экрана «Straumann» не помещался
+                и вылезал за плитку. С sm — снова три в ряд. */}
+            <dl className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-1">
               {stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl bg-(--panel-lavender) p-3 sm:p-5">
+                <div
+                  key={stat.label}
+                  className={cn(
+                    'rounded-2xl bg-(--panel-lavender) p-3 sm:p-5',
+                    stat.label === brandsStatLabel &&
+                      stats.length === 3 &&
+                      'order-last col-span-2 sm:order-none sm:col-span-1'
+                  )}
+                >
                   <dt className="font-heading text-base leading-tight font-bold text-balance text-foreground sm:text-2xl">
                     {stat.value}
                   </dt>

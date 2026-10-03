@@ -34,11 +34,13 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
         <p className="line-clamp-2 text-sm text-muted-foreground">{service.cardDescription}</p>
         <span className="font-medium text-foreground">{formatServicePrice(service)}</span>
         {/* На мобильном кнопки стоят столбиком на всю ширину — при штатных
-            36 px они выглядели сплюснутыми, поэтому до sm поднимаем до 44 px. */}
+            36 px они выглядели сплюснутыми, поэтому до sm поднимаем до 44 px.
+            flex-1 — только с sm: в колонке он обнуляет базовую высоту и
+            перебивает h-11, кнопки снова сплющиваются. */}
         <div className="mt-auto flex flex-col gap-2 pt-1 sm:flex-row">
           <Button
             variant="outline"
-            className="h-11 flex-1 sm:h-9"
+            className="h-11 sm:h-9 sm:flex-1"
             render={<Link href={`/${city.slug}/uslugi/${service.slug}/`} />}
             nativeButton={false}
           >
@@ -46,7 +48,7 @@ export function ServiceCard({ service }: { service: ServiceCategory }) {
             <ArrowRight data-icon="inline-end" />
           </Button>
           <BookingButton
-            className="h-11 flex-1 bg-accent text-accent-foreground hover:bg-accent/90 sm:h-9"
+            className="h-11 bg-accent text-accent-foreground hover:bg-accent/90 sm:h-9 sm:flex-1"
             options={{ service: service.slug }}
           >
             Записаться

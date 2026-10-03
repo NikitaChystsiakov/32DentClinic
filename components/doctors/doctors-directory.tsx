@@ -44,11 +44,13 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
             Стаж {formatYears(doctor.experienceYears)}
           </Badge>
         )}
+        {/* sm:flex-1, а не flex-1: в колонке (телефон) flex-1 обнуляет
+            базовую высоту, и кнопки сплющивались в полоски. */}
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="sm:flex-1"
             render={<Link href={`/${citySlug}/vrachi/${doctor.slug}/`} />}
             nativeButton={false}
           >
@@ -56,7 +58,7 @@ function DoctorCard({ doctor, citySlug }: { doctor: Doctor; citySlug: string }) 
           </Button>
           <BookingButton
             size="sm"
-            className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
+            className="bg-accent text-accent-foreground hover:bg-accent/90 sm:flex-1"
             options={{ doctor: doctor.slug }}
           >
             Записаться

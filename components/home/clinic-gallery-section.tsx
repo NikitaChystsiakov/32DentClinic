@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, ChevronLeft, ChevronRight, X, Expand } from 'lucide-react'
@@ -50,7 +51,11 @@ export function Lightbox({
     }
   }, [onClose, onStep])
 
-  return (
+  // Портал в body: секции на странице анимируются через transform, а такой
+  // предок становится опорой для position: fixed — просмотр открывался бы
+  // внутри секции, а не на весь экран. Рендерится только после клика,
+  // поэтому document здесь уже есть.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -58,7 +63,9 @@ export function Lightbox({
       // Клик по фону закрывает; сама фотография и кнопки клик не пропускают
       // дальше — по ним закрывать не нужно.
       onClick={onClose}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-brand-ink/92 p-4 backdrop-blur-sm sm:p-8"
+      // Фон почти чёрный, а не фирменный синий: на ярком фоне фотография
+      // терялась, а просвечивающая сквозь blur страница выглядела как баг.
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/90 p-4 backdrop-blur-sm sm:p-8"
     >
       <button
         type="button"
@@ -110,7 +117,8 @@ export function Lightbox({
       <p className="max-w-2xl text-center text-sm text-white/85">
         {tile.alt} · {index + 1} из {tiles.length}
       </p>
-    </div>
+    </div>,
+    document.body
   )
 }
 
