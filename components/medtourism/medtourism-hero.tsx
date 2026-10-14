@@ -30,19 +30,19 @@ export function MedTourismHero({ city, content }: { city: City; content: MedTour
         <div className="absolute inset-0 bg-background/40" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100svh-var(--header-h))] max-w-6xl flex-col justify-center gap-8 px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-        <div className="flex max-w-2xl flex-col gap-6">
+      <div className="relative mx-auto flex min-h-[calc(100svh-var(--header-h)-1px)] max-w-6xl flex-col justify-center gap-8 px-4 py-16 sm:px-6 md:py-20 lg:px-8 snug:gap-5 snug:py-8 short:py-5">
+        <div className="flex max-w-2xl flex-col gap-6 snug:gap-4 short:gap-3">
           <div className="inline-flex w-fit items-center gap-2 rounded-full bg-background/70 px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm ring-1 ring-silver/25 backdrop-blur">
             <Plane className="size-4 text-secondary" />
             <span>
               {content.hero.eyebrow} · {city.brandName} {city.name}
             </span>
           </div>
-          <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="text-balance font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl snug:lg:text-5xl short:lg:text-4xl">
             {content.hero.title}
           </h1>
-          <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">{content.hero.subtitle}</p>
-          <ul className="flex flex-col gap-2 text-sm text-foreground">
+          <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground short:text-base">{content.hero.subtitle}</p>
+          <ul className="flex flex-col gap-2 text-sm text-foreground short:gap-1">
             {content.hero.highlights.map((item) => (
               <li key={item} className="flex items-center gap-2">
                 <Check className="size-4 shrink-0 text-secondary" />
@@ -71,7 +71,7 @@ export function MedTourismHero({ city, content }: { city: City; content: MedTour
           </div>
         </div>
 
-        <div className="flex max-w-2xl flex-wrap items-center gap-x-8 gap-y-4 border-t border-silver/25 pt-6">
+        <div className="flex max-w-2xl flex-wrap items-center gap-x-8 gap-y-4 border-t border-silver/25 pt-6 snug:pt-4 short:hidden">
           {facts.map((fact, index) => (
             <div key={fact.label} className="contents">
               {index > 0 && <div aria-hidden className="hidden h-9 w-px bg-silver/30 sm:block" />}
