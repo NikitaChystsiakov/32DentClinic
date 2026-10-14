@@ -93,7 +93,7 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
     // group-hover.
     <Link
       href={offer.href}
-      className="group relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--card),var(--panel-sky))] p-6 text-card-foreground ring-1 ring-primary/12 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+      className="group relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-[linear-gradient(140deg,var(--card),var(--panel-sky))] p-6 short:p-4 text-card-foreground ring-1 ring-primary/12 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
     >
       {/* Слот под стикер: без рамки, ринга и обрезки — просто область
           200×200px под PNG-стикер без фона (схема имплантации, зубная дуга).
@@ -120,9 +120,9 @@ function OfferCard({ offer }: { offer: HeroOffer }) {
         <h2 className="font-heading text-xl leading-tight font-bold text-balance text-foreground">
           {offer.title}
         </h2>
-        <p className="text-sm leading-relaxed text-muted-foreground">{offer.description}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground short:hidden">{offer.description}</p>
 
-        <div className="mt-auto flex flex-col items-start gap-3 pt-5">
+        <div className="mt-auto flex flex-col items-start gap-3 pt-5 short:gap-2 short:pt-2">
           <span className="flex items-baseline gap-2">
             <span className="font-heading text-2xl font-bold text-primary">{offer.price}</span>
             {offer.oldPrice && (
@@ -166,7 +166,7 @@ export function HeroSplit({
     // см. globals.css). svh, а не vh, — на телефоне vh считается по свёрнутой
     // адресной строке, и низ секции уезжал под неё. Это min-height, поэтому
     // если контент выше экрана (узкий телефон), секция просто вырастет.
-    <section className="flex min-h-[calc(100svh-var(--header-h))] flex-col px-3 py-6 sm:px-4 lg:px-6">
+    <section className="flex min-h-[calc(100svh-var(--header-h))] flex-col px-3 py-6 sm:px-4 lg:px-6 short:py-3">
       <div className="mx-auto flex w-full max-w-[100rem] flex-1 flex-col">
         {/* Ширину сначала забирает правая колонка (clamp), большая карточка
             получает остаток. Ниже lg сетка перестраивается: большая карточка
@@ -179,7 +179,7 @@ export function HeroSplit({
           {/* Левая карточка: предложение месяца */}
           <div
             data-variant="dark"
-            className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--hero-surface),var(--hero-surface-accent))] p-6 sm:p-8 lg:p-10"
+            className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--hero-surface),var(--hero-surface-accent))] p-6 sm:p-8 lg:p-10 short:p-6 short:lg:p-7"
           >
             {/* Два мягких пятна поверх ровного градиента: голубое сверху и
                 бирюзовое снизу. Оба сильно прозрачные — они добавляют глубины,
@@ -246,7 +246,7 @@ export function HeroSplit({
 
             {/* Высоту левой карточки задаёт правая колонка, поэтому контент
                 центрируем: иначе весь запас воздуха собирается под кнопкой. */}
-            <div className="relative flex h-full flex-col justify-center gap-5 sm:max-w-[52%] lg:max-w-[60%]">
+            <div className="relative flex h-full flex-col justify-center gap-5 short:gap-3 sm:max-w-[52%] lg:max-w-[60%]">
               {(urgencyBadge || (tags && tags.length > 0) || countdown) && (
                 <div className="flex flex-wrap gap-2">
                   {urgencyBadge && (
@@ -271,11 +271,11 @@ export function HeroSplit({
                 </div>
               )}
 
-              <h1 className="font-heading text-3xl leading-[1.08] font-bold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl">
+              <h1 className="font-heading text-3xl leading-[1.08] font-bold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl short:xl:text-4xl">
                 {title}
               </h1>
 
-              <ul className="flex flex-col gap-2.5">
+              <ul className="flex flex-col gap-2.5 short:gap-1.5">
                 {highlights.map((highlight) => (
                   <li key={highlight} className="flex items-start gap-3 text-white/95">
                     <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-white text-(--brand-ink)">
@@ -311,7 +311,7 @@ export function HeroSplit({
         </div>
 
         {stats && stats.length > 0 && (
-          <div className="mt-5 grid gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-3">
+          <div className="mt-5 grid gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-3 lg:hidden roomy:grid">
             {stats.map((stat) => (
               <div key={stat.label} className="flex items-center gap-3 bg-card px-6 py-5">
                 <span className="font-heading text-2xl font-bold text-primary">{stat.value}</span>

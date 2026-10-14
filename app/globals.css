@@ -3,6 +3,11 @@
 @import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
+/* Ноутбучная высота окна на десктопной раскладке: hero главной сжимается,
+   чтобы целиком влезть в первый экран. */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 55rem));
+/* Высокий экран: под hero помещается строка метрик, не повисая «наполовину». */
+@custom-variant roomy (@media (min-width: 64rem) and (min-height: 70rem));
 
 /*
  * Шрифты подключает скрипт в app/layout.tsx после первого кадра (там же —

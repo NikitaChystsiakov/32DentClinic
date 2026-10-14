@@ -37,7 +37,8 @@ export function GuaranteeSection({
       <div className="flex flex-col gap-4">
         <span className="text-sm font-medium text-(--panel-eyebrow)">{guarantee.eyebrow}</span>
         <h2 className="font-heading text-3xl font-bold tracking-tight text-(--panel-heading) sm:text-4xl">
-          {guarantee.title}
+          {/* «и» не должно оставаться последним словом строки. */}
+          {guarantee.title.replace(/ и /g, ' и\u00a0')}
         </h2>
         <p className="text-pretty text-(--panel-body)">{guarantee.subtitle}</p>
         <BookingButton variant="inverse" className="mt-2 w-fit" options={{ service: 'implantaciya' }}>
