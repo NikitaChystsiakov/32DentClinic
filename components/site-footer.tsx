@@ -12,6 +12,7 @@ import { getServicesForCity } from '@/config/services'
 import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
 import { guaranteePageHref } from '@/config/guarantee-pages'
+import { medTourismPageHref } from '@/config/medtourism-pages'
 import { legalDocuments, legalDocHref } from '@/config/legal'
 import { getCityChrome } from '@/content/chrome'
 import { formatCityHours } from '@/lib/format-hours'
@@ -53,6 +54,7 @@ export function SiteFooter() {
   // страниц сайта, без внутренних ссылок поисковик их почти не увидит.
   const towns = isHub ? nearbyTowns : getNearbyTownsForCity(citySlug!)
   const guaranteeHref = guaranteePageHref(citySlug)
+  const medTourismHref = medTourismPageHref(citySlug)
 
   const navLinks = isHub
     ? [
@@ -64,6 +66,7 @@ export function SiteFooter() {
         { label: 'Врачи', href: `${prefix}/vrachi/` },
         { label: 'Цены', href: `${prefix}/ceny/` },
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
+        ...(medTourismHref ? [{ label: 'Медтуризм', href: medTourismHref }] : []),
         { label: 'О нас', href: `${prefix}/o-nas/` },
         // Только у городов с опубликованным положением о гарантиях.
         ...(guaranteeHref ? [{ label: 'Гарантии', href: guaranteeHref }] : []),

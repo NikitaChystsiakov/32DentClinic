@@ -13,6 +13,7 @@ import { MessengerCityPicker, networkMessengers } from '@/components/messenger-c
 import { BookingButton } from '@/components/booking-button'
 import { getCityChrome } from '@/content/chrome'
 import { cities } from '@/config/cities'
+import { medTourismPageHref } from '@/config/medtourism-pages'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
@@ -71,6 +72,7 @@ export function SiteHeader() {
   const currentCity = useCurrentCity()
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
+  const medTourismHref = medTourismPageHref(citySlug)
   const styles = layoutStyles[HEADER_LAYOUT]
 
   // На страницах сети (/blog, /dokumenty, 404) городских разделов нет:
@@ -85,6 +87,8 @@ export function SiteHeader() {
         { label: 'Врачи', href: `${prefix}/vrachi/` },
         { label: 'Цены', href: `${prefix}/ceny/` },
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
+        // Только у городов со страницей для пациентов из России.
+        ...(medTourismHref ? [{ label: 'Медтуризм', href: medTourismHref }] : []),
         { label: 'О нас', href: `${prefix}/o-nas/` },
         { label: 'Контакты', href: `${prefix}/kontakty/` },
         // Блог общий для сети — без префикса города.
@@ -386,7 +390,9 @@ export function SiteHeader() {
           {promo && (
             <Link
               href={promo.href}
-              className="group flex min-w-0 items-start gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground lg:ml-auto lg:items-center"
+              // На 1024–1279 пунктам меню и так тесно: без места для текста акции торчала
+              // одна «Подробнее» и страница получала горизонтальную прокрутку.
+              className="group flex min-w-0 items-start gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground lg:ml-auto lg:items-center lg:max-xl:hidden"
             >
               <Percent className="mt-0.5 size-4 shrink-0 text-accent lg:mt-0" />
               <span className="line-clamp-2 lg:truncate">{promo.text}</span>
