@@ -58,22 +58,32 @@ export function GuaranteeSection({
       <dl className="grid gap-4 sm:grid-cols-2">
         {guarantee.items.map((item, index) => {
           const Icon = iconMap[item.icon]
+          // При трёх карточках первая (гарантия на импланты) растянута на две
+          // колонки: это главный аргумент блока, и сетка 2×2 иначе оставляла бы
+          // пустую ячейку. При двух — обе во всю ширину, друг под другом: в ряд
+          // им тесно (подпись «на пломбы, коронки и протезы» вылезала за
+          // карточку), а справа от заголовка оставалась пустота.
+          const stacked = guarantee.items.length <= 2
+          const wide = index === 0 && guarantee.items.length === 3
           return (
             <div
               key={item.label}
-              // Первая карточка (гарантия на импланты) растянута на две колонки:
-              // это главный аргумент блока, и при трёх карточках сетка 2×2
-              // иначе оставляла бы пустую ячейку.
+              // Две карточки друг под другом встают в строку только с xl: на sm
+              // и lg описанию в строке остаётся ~130–160px, а это тесно.
               className={
-                index === 0 && guarantee.items.length === 3
-                  ? 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10 sm:col-span-2 sm:flex-row sm:items-center sm:gap-6'
-                  : 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10'
+                stacked
+                  ? 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10 sm:col-span-2 xl:flex-row xl:items-center xl:gap-6'
+                  : wide
+                    ? 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10 sm:col-span-2 sm:flex-row sm:items-center sm:gap-6'
+                    : 'flex flex-col gap-3 rounded-2xl bg-white/85 p-5 ring-1 ring-primary/10'
               }
             >
               {/* Иконка — внутри <dt>, а не в отдельной обёртке рядом с ним:
                   в <dl> внутри <div> допустимы только <dt> и <dd>, иначе
                   Lighthouse и скринридеры считают список битым. */}
-              <dt className="flex shrink-0 items-center gap-3">
+              {/* Карточки друг под другом — <dt> одной ширины (под самую длинную
+                  подпись), чтобы описания начинались с одной линии. */}
+              <dt className={stacked ? 'flex shrink-0 items-center gap-3 xl:w-72' : 'flex shrink-0 items-center gap-3'}>
                 {Icon && (
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <Icon className="size-5" />
