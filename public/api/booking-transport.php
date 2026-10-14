@@ -33,9 +33,11 @@ if (!defined('DENT32_BOOKING')) {
  * @param array<string,mixed> $config   содержимое config.php
  * @param string              $citySlug slug города из белого списка или ''
  * @param string              $text     готовый текст сообщения
- * @return string|null null — доставлено; иначе код ошибки для ответа формы
+ * @param list<array{path:string,name:string,mime:string}> $files снимки к заявке (уже проверены)
+ * @return string|null null — доставлено; 'files_failed' — текст доставлен,
+ *                     снимки нет; иначе код ошибки для ответа формы
  */
-function deliverBooking(array $config, string $citySlug, string $text): ?string
+function deliverBooking(array $config, string $citySlug, string $text, array $files = []): ?string
 {
     $transport = (string) ($config['transport'] ?? 'telegram');
 
@@ -47,7 +49,14 @@ function deliverBooking(array $config, string $citySlug, string $text): ?string
             if ($token === '' || $chatId === '') {
                 return 'not_configured';
             }
-            return sendTelegram($token, $chatId, $topicId, $text) ? null : 'delivery_failed';
+            $sent = sendTelegram($token, $chatId, $topicId, $text);
+            if ($sent === null) {
+                return 'delivery_failed';
+            }
+            if ($files === []) {
+                return null;
+            }
+            return sendTelegramFiles($token, $sent, $files) ? null : 'files_failed';
 
         case 'webhook':
             $url = (string) ($config['webhook_url'] ?? '');
@@ -56,11 +65,16 @@ function deliverBooking(array $config, string $citySlug, string $text): ?string
             if ($url === '' || $secret === '' || !str_starts_with($url, 'https://')) {
                 return 'not_configured';
             }
-            return sendWebhook($url, $secret, $citySlug, $text) ? null : 'delivery_failed';
+            if (!sendWebhook($url, $secret, $citySlug, $text)) {
+                return 'delivery_failed';
+            }
+            // Формат передачи файлов в их API неизвестен — снимки не уходят,
+            // форма попросит пациента прислать их в мессенджер.
+            return $files === [] ? null : 'files_failed';
 
         case 'stub':
             // Без персональных данных: имя и телефон в логи не пишем.
-            error_log('[dent32-booking] stub: заявка не отправлена, город=' . ($citySlug !== '' ? $citySlug : '-'));
+            error_log('[dent32-booking] stub: заявка не отправлена, город=' . ($citySlug !== '' ? $citySlug : '-') . ', файлов=' . count($files));
             return null;
 
         default:
@@ -68,13 +82,17 @@ function deliverBooking(array $config, string $citySlug, string $text): ?string
     }
 }
 
-function sendTelegram(string $token, string $chatId, string $topicId, string $text): bool
+/**
+ * @return array{chat_id:string,message_id:int,topic_id:string}|null куда
+ *         легло сообщение — туда же ответом уйдут снимки; null — не доставлено
+ */
+function sendTelegram(string $token, string $chatId, string $topicId, string $text): ?array
 {
     // Токен подставляется в путь запроса — проверяем формат, чтобы опечатка
     // в config.php не превратилась в запрос на чужой адрес.
     if (!preg_match('/^\d+:[A-Za-z0-9_-]+$/', $token)) {
         error_log('[dent32-booking] telegram: неверный формат bot_token');
-        return false;
+        return null;
     }
     $fields = [
         'chat_id' => $chatId,
@@ -87,7 +105,7 @@ function sendTelegram(string $token, string $chatId, string $topicId, string $te
 
     $result = telegramSendMessage($token, $fields);
     if (($result['ok'] ?? false) === true) {
-        return true;
+        return sentMessage($result, $fields);
     }
 
     // Обычная группа стала супергруппой (включили историю для новых
@@ -102,13 +120,88 @@ function sendTelegram(string $token, string $chatId, string $topicId, string $te
         unset($fields['message_thread_id']); // у обычной группы тем не было
         $result = telegramSendMessage($token, $fields);
         if (($result['ok'] ?? false) === true) {
-            return true;
+            return sentMessage($result, $fields);
         }
     }
 
     // Причина отказа без текста заявки: «chat not found», «bot was kicked»…
     error_log('[dent32-booking] telegram: ' . ($result['description'] ?? 'нет ответа от api.telegram.org') . ", chat_id={$fields['chat_id']}");
-    return false;
+    return null;
+}
+
+/**
+ * @param array<string,mixed>  $result ответ sendMessage
+ * @param array<string,string> $fields запрос, с которым он ушёл
+ * @return array{chat_id:string,message_id:int,topic_id:string}
+ */
+function sentMessage(array $result, array $fields): array
+{
+    return [
+        'chat_id' => $fields['chat_id'],
+        'message_id' => (int) ($result['result']['message_id'] ?? 0),
+        'topic_id' => $fields['message_thread_id'] ?? '',
+    ];
+}
+
+/**
+ * Снимки — документами (sendDocument), а не фото: sendPhoto пережимает
+ * картинку, а на панорамном снимке важна каждая деталь. Каждый файл —
+ * ответом на сообщение заявки, чтобы в общей группе было видно, чьи они.
+ *
+ * @param array{chat_id:string,message_id:int,topic_id:string} $sent
+ * @param list<array{path:string,name:string,mime:string}>     $files
+ */
+function sendTelegramFiles(string $token, array $sent, array $files): bool
+{
+    $ok = true;
+    $count = count($files);
+    foreach ($files as $i => $file) {
+        $fields = [
+            'chat_id' => $sent['chat_id'],
+            'caption' => sprintf('Снимок %d из %d к заявке выше', $i + 1, $count),
+        ];
+        if ($sent['message_id'] > 0) {
+            $fields['reply_parameters'] = (string) json_encode([
+                'message_id' => $sent['message_id'],
+                'allow_sending_without_reply' => true,
+            ]);
+        }
+        if ($sent['topic_id'] !== '') {
+            $fields['message_thread_id'] = $sent['topic_id'];
+        }
+
+        [$contentType, $body] = multipartBody($fields, 'document', $file);
+        [, $response] = httpPost("https://api.telegram.org/bot{$token}/sendDocument", $contentType, $body, [], 60);
+        $decoded = $response === null ? null : json_decode($response, true);
+        if (!is_array($decoded) || ($decoded['ok'] ?? false) !== true) {
+            error_log('[dent32-booking] telegram sendDocument: ' . (is_array($decoded) ? ($decoded['description'] ?? '?') : 'нет ответа'));
+            $ok = false;
+        }
+    }
+    return $ok;
+}
+
+/**
+ * multipart/form-data вручную, а не CURLFile: так тот же httpPost работает
+ * и на хостинге без curl.
+ *
+ * @param array<string,string>                    $fields
+ * @param array{path:string,name:string,mime:string} $file
+ * @return array{0:string,1:string} [Content-Type с boundary, тело]
+ */
+function multipartBody(array $fields, string $fileField, array $file): array
+{
+    $boundary = '----dent32' . bin2hex(random_bytes(12));
+    $body = '';
+    foreach ($fields as $name => $value) {
+        $body .= "--{$boundary}\r\nContent-Disposition: form-data; name=\"{$name}\"\r\n\r\n{$value}\r\n";
+    }
+    // Имя файла собрано в booking.php из номера и расширения — кавычек и
+    // переводов строк в нём нет.
+    $body .= "--{$boundary}\r\nContent-Disposition: form-data; name=\"{$fileField}\"; filename=\"{$file['name']}\"\r\n"
+        . "Content-Type: {$file['mime']}\r\n\r\n"
+        . (string) file_get_contents($file['path']) . "\r\n--{$boundary}--\r\n";
+    return ["multipart/form-data; boundary={$boundary}", $body];
 }
 
 /**
@@ -145,13 +238,13 @@ function sendWebhook(string $url, string $secret, string $citySlug, string $text
 }
 
 /**
- * POST с таймаутом 10 с и проверкой TLS-сертификата. Хостинг без curl —
- * тот же запрос через stream.
+ * POST с таймаутом (10 с; файлы — дольше) и проверкой TLS-сертификата.
+ * Хостинг без curl — тот же запрос через stream.
  *
  * @param list<string> $headers
  * @return array{0:int,1:?string} [HTTP-статус (0 — сеть), тело ответа]
  */
-function httpPost(string $url, string $contentType, string $body, array $headers): array
+function httpPost(string $url, string $contentType, string $body, array $headers, int $timeout = 10): array
 {
     $headers[] = 'Content-Type: ' . $contentType;
 
@@ -162,7 +255,7 @@ function httpPost(string $url, string $contentType, string $body, array $headers
             CURLOPT_POSTFIELDS => $body,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 10,
+            CURLOPT_TIMEOUT => $timeout,
             CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
@@ -178,7 +271,7 @@ function httpPost(string $url, string $contentType, string $body, array $headers
             'method' => 'POST',
             'header' => implode("\r\n", $headers) . "\r\n",
             'content' => $body,
-            'timeout' => 10,
+            'timeout' => $timeout,
             'ignore_errors' => true,
             'follow_location' => 0,
         ],

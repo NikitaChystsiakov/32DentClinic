@@ -3,6 +3,7 @@ import { cities } from '@/config/cities'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { nearbyTowns } from '@/config/nearby-towns'
 import { getGuaranteePolicy } from '@/config/guarantees'
+import { MEDTOURISM_CITY_SLUGS, MEDTOURISM_DRAFT } from '@/content/medtourism'
 import { getProtocolsForCity } from '@/config/implantation'
 import { getServicesForCity } from '@/config/services'
 import { getPublishedPosts } from '@/lib/blog'
@@ -43,6 +44,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),
+    // Медтуризм — только у городов с контентом и не в черновике (пока
+    // черновик, страница noindex и в карту не идёт).
+    ...(!MEDTOURISM_DRAFT && MEDTOURISM_CITY_SLUGS.includes(city.slug)
+      ? [{ url: `${baseUrl}/${city.slug}/medturizm/`, changeFrequency: 'monthly' as const, priority: 0.7 }]
+      : []),
     // Гарантии — только у городов, где клиника опубликовала положение.
     ...(getGuaranteePolicy(city.slug)
       ? [{ url: `${baseUrl}/${city.slug}/garantii/`, changeFrequency: 'yearly' as const, priority: 0.5 }]

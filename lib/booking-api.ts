@@ -42,6 +42,48 @@ export async function submitBooking(payload: BookingPayload): Promise<void> {
   }
 }
 
+/**
+ * Заявка со снимками (страница медтуризма): тот же endpoint, но
+ * multipart/form-data — JSON файлы не везёт. Поля — как у BookingPayload,
+ * плюс город пациента, способ связи и файлы `files[]`. Сервер помечает
+ * заявку #медтуризм по `form`.
+ */
+export interface ScanRequestPayload extends BookingPayload {
+  /** Откуда пациент: «Москва». */
+  fromCity?: string
+  /** Как удобнее связаться: «Telegram», «Звонок». */
+  contactVia?: string
+}
+
+/**
+ * true — файлы дошли; false — заявка доставлена, а файлы нет (Telegram не
+ * принял): форма попросит прислать снимок в мессенджер.
+ */
+export async function submitScanRequest(payload: ScanRequestPayload, files: File[]): Promise<boolean> {
+  const form = new FormData()
+  form.append('form', 'medturizm')
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== undefined) form.append(key, value)
+  }
+  for (const file of files) form.append('files[]', file, file.name)
+
+  let response: Response
+  try {
+    // Content-Type не ставим: браузер сам добавит boundary для multipart.
+    response = await fetch('/api/booking.php', { method: 'POST', body: form })
+  } catch {
+    throw new BookingError('network')
+  }
+
+  const body = (await response.json().catch(() => null)) as
+    | { ok?: boolean; error?: string; files?: boolean }
+    | null
+  if (!response.ok || !body?.ok) {
+    throw new BookingError(body?.error ?? `http_${response.status}`)
+  }
+  return body.files !== false
+}
+
 /** Адрес текущей страницы + тип формы для строки «Откуда» в сообщении. */
 export function bookingSource(form: string): string {
   if (typeof window === 'undefined') return form

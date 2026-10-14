@@ -21,8 +21,11 @@
 
 import { readdir, readFile, rm } from 'node:fs/promises'
 import { join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const root = new URL('../out/', import.meta.url).pathname
+// fileURLToPath, а не .pathname: в пути с кириллицей pathname остаётся
+// в %-кодировке, и readdir не находит папку.
+const root = fileURLToPath(new URL('../out/', import.meta.url))
 const marker = '<meta name="robots" content="noindex"/>'
 
 async function* pages(dir) {

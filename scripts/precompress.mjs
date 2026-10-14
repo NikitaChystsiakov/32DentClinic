@@ -14,8 +14,11 @@
 import { readdir, readFile, writeFile, stat } from 'node:fs/promises'
 import { join, extname } from 'node:path'
 import { brotliCompressSync, gzipSync, constants } from 'node:zlib'
+import { fileURLToPath } from 'node:url'
 
-const root = new URL('../out/', import.meta.url).pathname
+// fileURLToPath, а не .pathname: в пути с кириллицей pathname остаётся
+// в %-кодировке, и readdir не находит папку.
+const root = fileURLToPath(new URL('../out/', import.meta.url))
 const extensions = new Set(['.html', '.css', '.js', '.txt', '.json', '.xml', '.svg', '.map', '.webmanifest'])
 // Меньше ~1 КБ сжатие почти ничего не даёт, а файлов становится втрое больше.
 const minSize = 1024
