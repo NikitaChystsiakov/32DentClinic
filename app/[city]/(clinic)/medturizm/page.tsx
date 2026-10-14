@@ -61,10 +61,8 @@ export default async function MedTourismPage({ params }: { params: Promise<{ cit
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="sky">
-          <div id="ceny" className="scroll-mt-24">
-            <MedTourismPrices content={content} />
-          </div>
+        <SectionPanel variant="sky" id="ceny">
+          <MedTourismPrices content={content} />
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
@@ -90,7 +88,7 @@ export default async function MedTourismPage({ params }: { params: Promise<{ cit
         </SectionPanel>
       </Reveal>
       <Reveal delay={1}>
-        <SectionPanel variant="ice">
+        <SectionPanel variant="ice" id="raschet">
           <MedTourismRequest city={city} content={content} />
         </SectionPanel>
       </Reveal>

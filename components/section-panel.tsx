@@ -35,15 +35,17 @@ const variantClasses: Record<SectionPanelVariant, string> = {
 interface SectionPanelProps {
   variant?: SectionPanelVariant
   className?: string
+  /** Якорь: прокрутка по ссылке #id останавливается под залипающей шапкой, на верхнем крае панели. */
+  id?: string
   children: React.ReactNode
 }
 
-export function SectionPanel({ variant = 'neutral', className, children }: SectionPanelProps) {
+export function SectionPanel({ variant = 'neutral', className, id, children }: SectionPanelProps) {
   return (
     // Поля на телефоне заметно уже: при px-4 снаружи и p-8 внутри на экране
     // 390px контенту оставалось ~294px — текст рвался на короткие строки.
     // Теперь остаётся ~326px, а с sm вёрстка возвращается к прежним отступам.
-    <section className="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+    <section id={id} className="scroll-mt-(--header-h) px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
       <div
         data-variant={variant}
         className={cn(
