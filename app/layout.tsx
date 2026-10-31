@@ -74,8 +74,11 @@ export const metadata: Metadata = {
       '32Дент — сеть стоматологий в Беларуси. Лечение, имплантация, протезирование в Минске, Рогачёве и Жлобине.',
   },
   twitter: { card: 'summary_large_image' },
-  // Подтверждение прав в Яндекс Вебмастере (метатег на главной).
-  verification: { yandex: 'd22626e692f18e18' },
+  // Подтверждение прав в Яндекс Вебмастере и Google Search Console (метатеги на главной).
+  verification: {
+    yandex: 'd22626e692f18e18',
+    google: 'eeBdsYoovsom-qhO9rfndRvM8iu1RfHLccNCc2EApWg',
+  },
   // Знак «32» на фирменном индиго, файлы генерирует scripts/make-favicon.mjs.
   icons: {
     icon: [
