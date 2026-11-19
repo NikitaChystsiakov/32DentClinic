@@ -258,10 +258,10 @@ export function HeroSplit({
                   alt={photo.alt}
                   fill
                   sizes="(min-width: 1280px) 42vw, 46vw"
-                  className="object-cover saturate-[0.8]"
+                  className="object-cover brightness-105 saturate-[0.9]"
                 />
-                <div className="absolute inset-0 bg-(--hero-surface-accent) opacity-35 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--hero-surface),transparent_55%),transparent_35%,transparent_70%,color-mix(in_oklch,var(--hero-surface-accent),transparent_45%))]" />
+                <div className="absolute inset-0 bg-(--hero-surface-accent) opacity-20 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--hero-surface),transparent_70%),transparent_30%,transparent_75%,color-mix(in_oklch,var(--hero-surface-accent),transparent_60%))]" />
               </div>
             ) : (video || photo) ? (
               <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] sm:block lg:w-[44%]">
