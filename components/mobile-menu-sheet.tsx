@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Images,
   Plane,
+  Wallet,
   MapPin,
   Phone,
   Mail,
@@ -28,6 +29,7 @@ import { useMobileMenu } from '@/components/mobile-menu-provider'
 import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { cities } from '@/config/cities'
 import { medTourismPageHref } from '@/config/medtourism-pages'
+import { paymentPageHref } from '@/config/payment-pages'
 import { getMessengerLinks } from '@/lib/messengers'
 
 /*
@@ -43,6 +45,7 @@ const NAV_ICONS = {
   ceny: Tag,
   'primery-rabot': Images,
   medturizm: Plane,
+  oplata: Wallet,
   'o-nas': Info,
   kontakty: MapPin,
   blog: BookOpen,
@@ -55,6 +58,7 @@ export function MobileMenuSheet() {
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
   const medTourismHref = medTourismPageHref(citySlug)
+  const paymentHref = paymentPageHref(citySlug)
 
   // Городские разделы — только когда город известен. На страницах сети
   // (/blog, /dokumenty, 404) раньше ссылки шли без города на /uslugi/ и т. п.,
@@ -66,6 +70,7 @@ export function MobileMenuSheet() {
     { key: 'uslugi', label: 'Услуги', href: `${prefix}/uslugi/` },
     { key: 'vrachi', label: 'Врачи', href: `${prefix}/vrachi/` },
     { key: 'ceny', label: 'Цены', href: `${prefix}/ceny/` },
+    ...(paymentHref ? [{ key: 'oplata', label: 'Оплата и рассрочка', href: paymentHref } as const] : []),
     { key: 'primery-rabot', label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
     ...(medTourismHref ? [{ key: 'medturizm', label: 'Медтуризм', href: medTourismHref } as const] : []),
     { key: 'o-nas', label: 'О нас', href: `${prefix}/o-nas/` },

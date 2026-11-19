@@ -17,6 +17,7 @@ import { RatingsSection } from '@/components/home/ratings-section'
 import { FaqSection } from '@/components/home/faq-section'
 import { ContactCtaSection } from '@/components/home/contact-cta-section'
 import { TreatmentSteps } from '@/components/home/treatment-steps'
+import { OrthodonticsHomeSection } from '@/components/orthodontics/orthodontics-sections'
 import { Reveal } from '@/components/reveal'
 import { SectionPanel } from '@/components/section-panel'
 import { TownLanding } from '@/components/town/town-landing'
@@ -52,6 +53,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const servicesCount = getServicesForCity(citySlug).length
   const hasImplantologists = getImplantologistsForCity(citySlug).length > 0
   const hasRatings = getAggregatorsForCity(citySlug).length > 0
+  // Ортодонт есть только в Минске (config/services.ts → availableIn).
+  const hasOrthodontics = getServicesForCity(citySlug).some((service) => service.slug === 'ortodontiya')
 
   const stats = [
     rating
@@ -79,6 +82,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             badge={content.hero.badge}
             offers={content.hero.offers}
             photo={content.hero.photo}
+            perks={content.hero.perks}
             video={content.hero.video}
             promo={content.hero.promo}
             stats={stats}
@@ -132,6 +136,16 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <GuaranteeSection content={content} detailsHref={guaranteePageHref(citySlug)} />
         </SectionPanel>
       </Reveal>
+      {/* Ортодонтия — отдельным блоком перед остальными услугами: клиника
+          развивает направление (элайнеры, брекеты) и попросила вынести его
+          на главную, 17.11.2026. */}
+      {hasOrthodontics && (
+        <Reveal delay={1}>
+          <SectionPanel variant="ice">
+            <OrthodonticsHomeSection city={city} />
+          </SectionPanel>
+        </Reveal>
+      )}
       <Reveal delay={1}>
         <SectionPanel variant="lavender">
           <ServicesOverview />

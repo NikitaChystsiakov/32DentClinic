@@ -13,6 +13,7 @@ import { cities, getCityBySlug, type City } from '@/config/cities'
 import { getNearbyTownsForCity, nearbyTowns } from '@/config/nearby-towns'
 import { guaranteePageHref } from '@/config/guarantee-pages'
 import { medTourismPageHref } from '@/config/medtourism-pages'
+import { paymentPageHref } from '@/config/payment-pages'
 import { legalDocuments, legalDocHref } from '@/config/legal'
 import { getCityChrome } from '@/content/chrome'
 import { formatCityHours } from '@/lib/format-hours'
@@ -55,6 +56,7 @@ export function SiteFooter() {
   const towns = isHub ? nearbyTowns : getNearbyTownsForCity(citySlug!)
   const guaranteeHref = guaranteePageHref(citySlug)
   const medTourismHref = medTourismPageHref(citySlug)
+  const paymentHref = paymentPageHref(citySlug)
 
   const navLinks = isHub
     ? [
@@ -65,6 +67,7 @@ export function SiteFooter() {
         { label: 'Услуги', href: `${prefix}/uslugi/` },
         { label: 'Врачи', href: `${prefix}/vrachi/` },
         { label: 'Цены', href: `${prefix}/ceny/` },
+        ...(paymentHref ? [{ label: 'Оплата и рассрочка', href: paymentHref }] : []),
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
         ...(medTourismHref ? [{ label: 'Медтуризм', href: medTourismHref }] : []),
         { label: 'О нас', href: `${prefix}/o-nas/` },

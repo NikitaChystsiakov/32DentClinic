@@ -6,11 +6,13 @@ import { ServiceDetailContent } from '@/components/services/service-detail-conte
 import { JsonLd } from '@/components/seo/json-ld'
 import { breadcrumbJsonLd, buildMetadata, cityMetaDescription, faqJsonLd } from '@/lib/seo'
 
-// «Имплантация» здесь не собирается: у неё свой статический сегмент
-// uslugi/implantaciya/ с хабом протоколов, который перекрывает [slug].
+// «Имплантация» и «Ортодонтия» здесь не собираются: у них свои статические
+// сегменты uslugi/implantaciya/ и uslugi/ortodontiya/, которые перекрывают [slug].
+const OWN_PAGE_SLUGS = new Set(['implantaciya', 'ortodontiya'])
+
 export function generateStaticParams() {
   return serviceCategories
-    .filter((service) => service.slug !== 'implantaciya')
+    .filter((service) => !OWN_PAGE_SLUGS.has(service.slug))
     .flatMap((service) =>
       service.availableIn.map((city) => ({
         city,

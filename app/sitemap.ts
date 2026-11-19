@@ -3,6 +3,7 @@ import { cities } from '@/config/cities'
 import { getRealDoctorsForCity } from '@/config/doctors'
 import { nearbyTowns } from '@/config/nearby-towns'
 import { getGuaranteePolicy } from '@/config/guarantees'
+import { PAYMENT_PAGE_CITIES } from '@/config/payment-pages'
 import { MEDTOURISM_CITY_SLUGS, MEDTOURISM_DRAFT } from '@/content/medtourism'
 import { getProtocolsForCity } from '@/config/implantation'
 import { getServicesForCity } from '@/config/services'
@@ -48,6 +49,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // черновик, страница noindex и в карту не идёт).
     ...(!MEDTOURISM_DRAFT && MEDTOURISM_CITY_SLUGS.includes(city.slug)
       ? [{ url: `${baseUrl}/${city.slug}/medturizm/`, changeFrequency: 'monthly' as const, priority: 0.7 }]
+      : []),
+    // Оплата и рассрочка — только у городов со страницей (config/payment-pages.ts).
+    ...(PAYMENT_PAGE_CITIES.includes(city.slug)
+      ? [{ url: `${baseUrl}/${city.slug}/oplata/`, changeFrequency: 'monthly' as const, priority: 0.6 }]
       : []),
     // Гарантии — только у городов, где клиника опубликовала положение.
     ...(getGuaranteePolicy(city.slug)

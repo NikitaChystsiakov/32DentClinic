@@ -3,7 +3,7 @@
 // рекламных текстах, а что запрещено).
 // Тексты должны отличаться от Рогачёва для SEO-оптимизации.
 
-import type { ClinicVideo, GuaranteeSection, HeroPromo } from './types'
+import type { ClinicVideo, GuaranteeSection, HeroPerk, HeroPromo } from './types'
 import { cityChrome } from './chrome'
 
 export const minskContent = {
@@ -31,13 +31,17 @@ export const minskContent = {
       centerLabel: 'на импланты',
     },
     tags: ['Имплантация под ключ'],
-    // Директор минской клиники — портрет по её фото с ресепшн, подготовлен
-    // заказчиком (25.09.2026): 9:16, прозрачный фон — hero-split вписывает
-    // такой стикер в карточку и прижимает к низу.
-    photo: {
-      src: '/images/hero-minsk.webp',
-      alt: 'Директор стоматологии 32Дент+ в Минске',
-    },
+    // Портрет директора клиники убран по её просьбе (17.11.2026). Вместо него
+    // в большой карточке — плитки-преимущества: рассрочка, кредит, способы
+    // оплаты и ортодонтия; каждая ведёт на свою страницу. Плитки рендерятся,
+    // только пока не задан ни photo, ни video.
+    photo: undefined as { src: string; alt: string } | undefined,
+    perks: [
+      { icon: 'CalendarClock', value: '0 %', label: 'рассрочка картой до 8 месяцев', href: '/minsk/oplata/#rassrochka' },
+      { icon: 'Landmark', value: 'до 7 лет', label: 'кредит на лечение в банке', href: '/minsk/oplata/#kredit' },
+      { icon: 'CreditCard', value: 'Как удобно', label: 'карта, наличные или перевод по счёту', href: '/minsk/oplata/' },
+      { icon: 'Smile', value: 'Элайнеры', label: 'и брекеты для детей и взрослых', href: '/minsk/uslugi/ortodontiya/' },
+    ] as HeroPerk[],
     // Видео пока не готово в качестве без фона — используем статичное фото
     // (photo выше) через тот же fallback в hero-split.tsx.
     video: undefined as string | undefined,

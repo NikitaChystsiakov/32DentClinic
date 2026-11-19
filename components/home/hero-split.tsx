@@ -3,12 +3,24 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Check, Flame } from 'lucide-react'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CalendarClock,
+  Check,
+  CreditCard,
+  Flame,
+  Landmark,
+  ShieldCheck,
+  Smile,
+  Sparkles,
+  type LucideIcon,
+} from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { BookingButton } from '@/components/booking-button'
-import type { HeroBadge, HeroOffer, HeroPromo } from '@/content/types'
+import type { HeroBadge, HeroOffer, HeroPerk, HeroPromo } from '@/content/types'
 import { usePromoCountdown } from '@/lib/hero-schedule'
 
 interface HeroStat {
@@ -24,7 +36,13 @@ interface HeroSplitProps {
   highlights: string[]
   badge: HeroBadge
   offers: HeroOffer[]
-  photo: { src: string; alt: string }
+  /** Портрет справа в большой карточке. Без него и без video место занимают плитки `perks`. */
+  photo?: { src: string; alt: string }
+  /**
+   * Плитки-преимущества в большой карточке вместо портрета: рассрочка,
+   * кредит, способы оплаты… Каждая — ссылка на свою страницу.
+   */
+  perks?: HeroPerk[]
   /** Видеопортрет вместо статичного фото — если передан, рендерится вместо `photo`. */
   video?: string
   /**
@@ -40,6 +58,33 @@ interface HeroSplitProps {
 
 // Радиус окружности, по которой идёт текст бейджа, и её длина —
 // textLength растягивает любую надпись ровно на полный круг.
+// Иконки, доступные полю `icon` у плиток hero (content/<город>.ts → hero.perks).
+const perkIcons: Record<string, LucideIcon> = { CalendarClock, CreditCard, Landmark, ShieldCheck, Smile }
+
+function PerkTile({ perk }: { perk: HeroPerk }) {
+  const Icon = perkIcons[perk.icon] ?? Sparkles
+  return (
+    // Полупрозрачное «стекло» на синем градиенте: плитки читаются как часть
+    // карточки, а не как отдельные белые блоки, которые спорили бы с
+    // карточками предложений справа.
+    <Link
+      href={perk.href}
+      className="group flex flex-col gap-3 rounded-2xl bg-white/12 p-4 text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors duration-300 hover:bg-white/20 focus-visible:ring-3 focus-visible:ring-white/60 focus-visible:outline-none short:gap-2 short:p-3 xl:p-5"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <span className="flex size-10 items-center justify-center rounded-xl bg-white text-(--brand-ink) short:size-8">
+          <Icon className="size-5 short:size-4" />
+        </span>
+        <ArrowUpRight className="size-4 text-white/70 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
+      </div>
+      <div className="flex flex-col gap-0.5">
+        <span className="font-heading text-2xl leading-tight font-bold xl:text-xl 2xl:text-2xl short:text-xl">{perk.value}</span>
+        <span className="text-sm leading-snug text-white/85">{perk.label}</span>
+      </div>
+    </Link>
+  )
+}
+
 const BADGE_RADIUS = 38
 const BADGE_CIRCUMFERENCE = 2 * Math.PI * BADGE_RADIUS
 
@@ -150,10 +195,13 @@ export function HeroSplit({
   badge,
   offers,
   photo,
+  perks,
   video,
   promo,
   stats,
 }: HeroSplitProps) {
+  // Плитки — только когда нет портрета: иначе им негде встать.
+  const showPerks = !video && !photo && perks && perks.length > 0
   const countdown = usePromoCountdown(promo?.endsAt)
   const urgencyBadge = countdown ? promo?.badge : undefined
 
@@ -197,42 +245,44 @@ export function HeroSplit({
                 object-contain вписывает её целиком, object-bottom прижимает
                 к нижнему краю карточки — сверху фото обрезано (кадр начинается
                 от груди), поэтому object-top показывал бы обрезанный край. */}
-            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] sm:block lg:w-[44%]">
-              {video ? (
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="size-full object-cover object-top"
-                >
-                  <source src={video} type="video/mp4" />
-                </video>
-              ) : (
-                <>
-                  {/* Колонка скрыта ниже sm, но <img> браузер скачал бы всё
-                      равно, а с preload — ещё и раньше H1: на телефоне это
-                      175 КБ впустую до LCP. Поэтому картинка lazy (в
-                      display:none такие не грузятся), а на широких экранах
-                      её заранее тянет preload с media-условием — React
-                      поднимает <link> в <head>. */}
-                  <link
-                    rel="preload"
-                    as="image"
-                    href={photo.src}
-                    media="(min-width: 640px)"
-                    fetchPriority="high"
-                  />
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    sizes="(min-width: 1024px) 46vw, 52vw"
-                    className="object-contain object-bottom drop-shadow-2xl"
-                  />
-                </>
-              )}
-            </div>
+            {(video || photo) && (
+              <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] sm:block lg:w-[44%]">
+                {video ? (
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="size-full object-cover object-top"
+                  >
+                    <source src={video} type="video/mp4" />
+                  </video>
+                ) : photo ? (
+                  <>
+                    {/* Колонка скрыта ниже sm, но <img> браузер скачал бы всё
+                        равно, а с preload — ещё и раньше H1: на телефоне это
+                        175 КБ впустую до LCP. Поэтому картинка lazy (в
+                        display:none такие не грузятся), а на широких экранах
+                        её заранее тянет preload с media-условием — React
+                        поднимает <link> в <head>. */}
+                    <link
+                      rel="preload"
+                      as="image"
+                      href={photo.src}
+                      media="(min-width: 640px)"
+                      fetchPriority="high"
+                    />
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(min-width: 1024px) 46vw, 52vw"
+                      className="object-contain object-bottom drop-shadow-2xl"
+                    />
+                  </>
+                ) : null}
+              </div>
+            )}
 
             {/* От sm — свободный угол над фото, бейдж можно позиционировать
                 абсолютно. На узких экранах там же начинаются плашки тегов,
@@ -246,56 +296,76 @@ export function HeroSplit({
 
             {/* Высоту левой карточки задаёт правая колонка, поэтому контент
                 центрируем: иначе весь запас воздуха собирается под кнопкой. */}
-            <div className="relative flex h-full flex-col justify-center gap-5 short:gap-3 sm:max-w-[52%] lg:max-w-[60%]">
-              {(urgencyBadge || (tags && tags.length > 0) || countdown) && (
-                <div className="flex flex-wrap gap-2">
-                  {urgencyBadge && (
-                    <span className="rounded-md bg-secondary px-3 py-1.5 text-xs font-bold tracking-wide text-secondary-foreground uppercase">
-                      {urgencyBadge}
-                    </span>
-                  )}
-                  {tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-slate-900 uppercase"
-                    >
-                      {tag}
-                    </span>
+            <div
+              className={cn(
+                'relative flex h-full flex-col justify-center gap-8 short:gap-4',
+                showPerks && 'xl:flex-row xl:items-center xl:gap-8'
+              )}
+            >
+              <div
+                className={cn(
+                  'flex flex-col justify-center gap-5 short:gap-3',
+                  showPerks ? 'xl:max-w-[58%] xl:flex-[1.3]' : 'h-full sm:max-w-[52%] lg:max-w-[60%]'
+                )}
+              >
+                {(urgencyBadge || (tags && tags.length > 0) || countdown) && (
+                  <div className="flex flex-wrap gap-2">
+                    {urgencyBadge && (
+                      <span className="rounded-md bg-secondary px-3 py-1.5 text-xs font-bold tracking-wide text-secondary-foreground uppercase">
+                        {urgencyBadge}
+                      </span>
+                    )}
+                    {tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-md bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-slate-900 uppercase"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {countdown && (
+                      <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm sm:hidden">
+                        <Flame className="size-3.5 text-secondary" />
+                        {countdown}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <h1 className="font-heading text-3xl leading-[1.08] font-bold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl short:xl:text-4xl">
+                  {title}
+                </h1>
+
+                <ul className="flex flex-col gap-2.5 short:gap-1.5">
+                  {highlights.map((highlight) => (
+                    <li key={highlight} className="flex items-start gap-3 text-white/95">
+                      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-white text-(--brand-ink)">
+                        <Check className="size-3.5" />
+                      </span>
+                      {highlight}
+                    </li>
                   ))}
-                  {countdown && (
-                    <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm sm:hidden">
-                      <Flame className="size-3.5 text-secondary" />
-                      {countdown}
-                    </span>
-                  )}
+                </ul>
+
+                {/* Без привязки к конкретному времени: пока нет системы записи/CRM,
+                    показывать вычисленный «ближайший слот» нельзя — это выглядело бы
+                    как реальная запись, а по факту никем не подтверждено. */}
+                <div className="relative mt-1 flex items-center gap-4">
+                  <BookingButton size="lg" variant="inverse">
+                    Записаться
+                    <ArrowRight data-icon="inline-end" />
+                  </BookingButton>
+                  <SpinningBadge badge={badge} className="hidden shrink-0 lg:block" />
+                </div>
+              </div>
+
+              {showPerks && (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:flex-1 short:gap-2">
+                  {perks.map((perk) => (
+                    <PerkTile key={perk.href + perk.value} perk={perk} />
+                  ))}
                 </div>
               )}
-
-              <h1 className="font-heading text-3xl leading-[1.08] font-bold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl short:xl:text-4xl">
-                {title}
-              </h1>
-
-              <ul className="flex flex-col gap-2.5 short:gap-1.5">
-                {highlights.map((highlight) => (
-                  <li key={highlight} className="flex items-start gap-3 text-white/95">
-                    <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-white text-(--brand-ink)">
-                      <Check className="size-3.5" />
-                    </span>
-                    {highlight}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Без привязки к конкретному времени: пока нет системы записи/CRM,
-                  показывать вычисленный «ближайший слот» нельзя — это выглядело бы
-                  как реальная запись, а по факту никем не подтверждено. */}
-              <div className="relative mt-1 flex items-center gap-4">
-                <BookingButton size="lg" variant="inverse">
-                  Записаться
-                  <ArrowRight data-icon="inline-end" />
-                </BookingButton>
-                <SpinningBadge badge={badge} className="hidden shrink-0 lg:block" />
-              </div>
             </div>
           </div>
 

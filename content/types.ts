@@ -187,3 +187,14 @@ export interface GuaranteeSection {
   /** Подпись под карточками: где закреплены условия. */
   note: string
 }
+
+/**
+ * Плитка-преимущество на первом экране (hero-split.tsx): крупное значение,
+ * подпись и ссылка. Иконка — имя из perkIcons в hero-split.tsx.
+ */
+export interface HeroPerk {
+  icon: string
+  value: string
+  label: string
+  href: string
+}
