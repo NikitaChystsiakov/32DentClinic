@@ -3,7 +3,7 @@
 // рекламных текстах, а что запрещено).
 // Тексты должны отличаться от Рогачёва для SEO-оптимизации.
 
-import type { ClinicVideo, GuaranteeSection, HeroPerk, HeroPromo } from './types'
+import type { ClinicVideo, GuaranteeSection, HeroPerk, HeroPhoto, HeroPromo } from './types'
 import { cityChrome } from './chrome'
 
 export const minskContent = {
@@ -31,16 +31,20 @@ export const minskContent = {
       centerLabel: 'на импланты',
     },
     tags: ['Имплантация под ключ'],
-    // Портрет директора клиники убран по её просьбе (17.11.2026). Вместо него
-    // в большой карточке — плитки-преимущества: рассрочка, кредит, способы
-    // оплаты и ортодонтия; каждая ведёт на свою страницу. Плитки рендерятся,
-    // только пока не задан ни photo, ни video.
-    photo: undefined as { src: string; alt: string } | undefined,
+    // Портрет директора клиники убран по её просьбе (17.11.2026). Вместо
+    // него — фото кабинета (фотосессия клиники 25.09.2026, людей в кадре нет),
+    // а под карточками — полоса плашек: рассрочка, кредит, способы оплаты,
+    // ортодонтия; каждая ведёт на свою страницу.
+    photo: {
+      src: '/clinic/minsk/cabinet.webp',
+      alt: 'Кабинет стоматологии 32Дент+ на пр. Победителей, 41',
+      fit: 'cover',
+    } as HeroPhoto | undefined,
     perks: [
       { icon: 'CalendarClock', value: '0 %', label: 'рассрочка картой до 8 месяцев', href: '/minsk/oplata/#rassrochka' },
       { icon: 'Landmark', value: 'до 7 лет', label: 'кредит на лечение в банке', href: '/minsk/oplata/#kredit' },
-      { icon: 'CreditCard', value: 'Как удобно', label: 'карта, наличные или перевод по счёту', href: '/minsk/oplata/' },
-      { icon: 'Smile', value: 'Элайнеры', label: 'и брекеты для детей и взрослых', href: '/minsk/uslugi/ortodontiya/' },
+      { icon: 'CreditCard', value: 'Как удобно', label: 'картой, наличными или по счёту', href: '/minsk/oplata/' },
+      { icon: 'Smile', value: 'Ортодонтия', label: 'элайнеры и брекеты для детей и взрослых', href: '/minsk/uslugi/ortodontiya/' },
     ] as HeroPerk[],
     // Видео пока не готово в качестве без фона — используем статичное фото
     // (photo выше) через тот же fallback в hero-split.tsx.

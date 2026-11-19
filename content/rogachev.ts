@@ -7,7 +7,7 @@
 // сравнивайте с другими клиниками — ст. 15 Закона «О рекламе». Отзывов-цитат
 // на сайте нет (см. lib/data/aggregators.ts), примеры работ — lib/data/before-after.ts.
 
-import type { AboutSection, ClinicVideo, GuaranteeSection, HeroPerk, HeroPromo, TreatmentTimeline } from './types'
+import type { AboutSection, ClinicVideo, GuaranteeSection, HeroPerk, HeroPhoto, HeroPromo, TreatmentTimeline } from './types'
 import { cityChrome } from './chrome'
 
 export const rogachevContent = {
@@ -35,8 +35,8 @@ export const rogachevContent = {
     photo: {
       src: '/images/doctors/saykovskaya-tatyana.webp',
       alt: 'Врач-стоматолог 32Дент в Рогачёве',
-    } as { src: string; alt: string } | undefined,
-    // Плитки-преимущества вместо портрета — пока только у Минска (hero-split.tsx).
+    } as HeroPhoto | undefined,
+    // Плашки-преимущества под первым экраном — пока только у Минска (hero-split.tsx).
     perks: undefined as HeroPerk[] | undefined,
     // Видео в hero пока обкатывается только в Минске (см. hero-split.tsx) —
     // здесь просто держим поле в форме типа, чтобы CityContent совпадал.

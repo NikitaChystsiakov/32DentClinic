@@ -188,9 +188,17 @@ export interface GuaranteeSection {
   note: string
 }
 
+/** Картинка в большой карточке hero (см. hero-split.tsx → photo). */
+export interface HeroPhoto {
+  src: string
+  alt: string
+  /** 'contain' — стикер/портрет без фона (по умолчанию), 'cover' — обычное фото. */
+  fit?: 'contain' | 'cover'
+}
+
 /**
- * Плитка-преимущество на первом экране (hero-split.tsx): крупное значение,
- * подпись и ссылка. Иконка — имя из perkIcons в hero-split.tsx.
+ * Плашка-преимущество в полосе под первым экраном (hero-split.tsx): крупное
+ * значение, подпись и ссылка. Иконка — имя из perkIcons в hero-split.tsx.
  */
 export interface HeroPerk {
   icon: string
