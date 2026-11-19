@@ -41,9 +41,9 @@ export const minskContent = {
       fit: 'cover',
     } as HeroPhoto | undefined,
     perks: [
-      { icon: 'CalendarClock', value: '0 %', label: 'рассрочка картой до 8 месяцев', href: '/minsk/oplata/#rassrochka' },
-      { icon: 'Landmark', value: 'до 7 лет', label: 'кредит на лечение в банке', href: '/minsk/oplata/#kredit' },
-      { icon: 'CreditCard', value: 'Как удобно', label: 'картой, наличными или по счёту', href: '/minsk/oplata/' },
+      { icon: 'CalendarClock', value: 'Рассрочка 0\u00a0%', label: '«Халва» и «Черепаха», до 8\u00a0месяцев', href: '/minsk/oplata/#rassrochka' },
+      { icon: 'Landmark', value: 'Кредит до 7\u00a0лет', label: 'поможем оформить заявку в банке', href: '/minsk/oplata/#kredit' },
+      { icon: 'CreditCard', value: 'Способы оплаты', label: 'карта, наличные, перевод по счёту', href: '/minsk/oplata/' },
       { icon: 'Smile', value: 'Ортодонтия', label: 'элайнеры и брекеты для детей и взрослых', href: '/minsk/uslugi/ortodontiya/' },
     ] as HeroPerk[],
     // Видео пока не готово в качестве без фона — используем статичное фото

@@ -72,16 +72,16 @@ function PerkCard({ perk }: { perk: HeroPerk }) {
     // продолжение первого экрана, а не как отдельная секция.
     <Link
       href={perk.href}
-      className="group flex flex-col items-start gap-3 rounded-3xl bg-card p-4 sm:flex-row sm:items-center sm:gap-4 sm:px-5 text-card-foreground ring-1 ring-primary/12 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none short:py-3"
+      className="group flex flex-col items-start gap-3 rounded-3xl bg-card p-4 sm:flex-row sm:items-center sm:gap-4 sm:px-5 xl:gap-3 2xl:gap-4 text-card-foreground ring-1 ring-primary/12 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none short:py-3"
     >
       <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary short:size-10">
         <Icon className="size-6 short:size-5" />
       </span>
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className="font-heading text-lg leading-tight font-bold text-foreground sm:text-xl">{perk.value}</span>
+        <span className="font-heading text-base leading-tight font-bold text-foreground sm:text-xl xl:text-base">{perk.value}</span>
         <span className="text-sm leading-snug text-muted-foreground">{perk.label}</span>
       </span>
-      <ArrowUpRight className="hidden size-5 shrink-0 text-primary/60 sm:block transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+      <ArrowUpRight className="hidden size-5 shrink-0 text-primary/60 sm:block xl:hidden min-[1800px]:block transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
     </Link>
   )
 }
@@ -246,20 +246,22 @@ export function HeroSplit({
                 к нижнему краю карточки — сверху фото обрезано (кадр начинается
                 от груди), поэтому object-top показывал бы обрезанный край. */}
             {coverPhoto && photo ? (
-              // Фото интерьера — скруглённой вставкой с отступом от края
-              // карточки: обычное фото с фоном нельзя «вписать» в градиент, как
-              // стикер, а вставка выглядит законченной на любой высоте. На
-              // 1024–1279 карточка узкая, и фото скрыто — иначе заголовок
-              // заезжал на него.
-              <div className="pointer-events-none absolute inset-y-4 right-4 hidden w-[42%] overflow-hidden rounded-2xl ring-1 ring-white/25 sm:block lg:hidden xl:inset-y-5 xl:right-5 xl:block xl:w-[40%]">
+              // Фото интерьера во всю высоту правой части карточки, без рамки:
+              // левый край растворяется в градиенте маской, а синяя тонировка
+              // поверх приглушает белый кабинет — иначе яркое фото спорило с
+              // карточкой и заголовком. На 1024–1279 карточка узкая, и фото
+              // скрыто — иначе заголовок заезжал на него.
+              <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] mask-[linear-gradient(to_right,transparent,black_38%)] sm:block lg:hidden xl:block xl:w-[45%]">
                 <link rel="preload" as="image" href={photo.src} media="(min-width: 640px)" fetchPriority="high" />
                 <Image
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  sizes="(min-width: 1024px) 36vw, 42vw"
-                  className="object-cover"
+                  sizes="(min-width: 1280px) 42vw, 46vw"
+                  className="object-cover saturate-[0.8]"
                 />
+                <div className="absolute inset-0 bg-(--hero-surface-accent) opacity-35 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--hero-surface),transparent_55%),transparent_35%,transparent_70%,color-mix(in_oklch,var(--hero-surface-accent),transparent_45%))]" />
               </div>
             ) : (video || photo) ? (
               <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] sm:block lg:w-[44%]">
