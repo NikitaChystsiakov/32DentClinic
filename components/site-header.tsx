@@ -14,6 +14,8 @@ import { BookingButton } from '@/components/booking-button'
 import { getCityChrome } from '@/content/chrome'
 import { cities } from '@/config/cities'
 import { medTourismPageHref } from '@/config/medtourism-pages'
+import { paymentPageHref } from '@/config/payment-pages'
+import { getServicesForCity } from '@/config/services'
 import { HEADER_LAYOUT, type HeaderLayout } from '@/config/header'
 import { formatAddressWithoutCity } from '@/lib/format-address'
 import { useMobileMenu } from '@/components/mobile-menu-provider'
@@ -73,6 +75,10 @@ export function SiteHeader() {
   const citySlug = currentCity?.slug
   const prefix = citySlug ? `/${citySlug}` : ''
   const medTourismHref = medTourismPageHref(citySlug)
+  const paymentHref = paymentPageHref(citySlug)
+  const hasOrthodontics = citySlug
+    ? getServicesForCity(citySlug).some((service) => service.slug === 'ortodontiya')
+    : false
   const styles = layoutStyles[HEADER_LAYOUT]
 
   // На страницах сети (/blog, /dokumenty, 404) городских разделов нет:
@@ -83,9 +89,12 @@ export function SiteHeader() {
         // Имплантация — главное направление сети, поэтому первой и отдельно от
         // общего списка услуг: ведёт на хаб раздела с протоколами и ценами.
         { label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
+        // Ортодонтия и оплата — только у городов, где они есть (сейчас Минск).
+        ...(hasOrthodontics ? [{ label: 'Ортодонтия', href: `${prefix}/uslugi/ortodontiya/` }] : []),
         { label: 'Услуги', href: `${prefix}/uslugi/` },
         { label: 'Врачи', href: `${prefix}/vrachi/` },
         { label: 'Цены', href: `${prefix}/ceny/` },
+        ...(paymentHref ? [{ label: 'Оплата', href: paymentHref }] : []),
         { label: 'Примеры работ', href: `${prefix}/primery-rabot/` },
         // Только у городов со страницей для пациентов из России.
         ...(medTourismHref ? [{ label: 'Медтуризм', href: medTourismHref }] : []),
@@ -202,7 +211,9 @@ export function SiteHeader() {
               >
                 <Star className="size-5 shrink-0 fill-rating text-rating" />
                 <span className="font-semibold text-foreground">{formatRating(rating.rating)}</span>
-                <span className="hidden whitespace-nowrap xl:inline">
+                {/* Подпись про отзывы — с 1380px: на 1280 она выталкивала
+                    кнопку «Записаться» за край экрана. */}
+                <span className="hidden whitespace-nowrap min-[1380px]:inline">
                   · {reviewsLabel(rating.reviewsCount)} на {rating.nameOn}
                 </span>
               </a>
@@ -369,7 +380,7 @@ export function SiteHeader() {
             styles.bottomBar
           )}
         >
-          <nav className={cn('hidden shrink-0 items-center gap-6 lg:flex xl:gap-7', styles.navOffset)}>
+          <nav className={cn('hidden shrink-0 items-center gap-3.5 lg:flex xl:gap-6', styles.navOffset)}>
             {navLinks.map((link) => {
               const isActive = link.href === activeHref
               return (
@@ -377,7 +388,7 @@ export function SiteHeader() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'relative whitespace-nowrap text-base font-medium text-muted-foreground transition-colors hover:text-foreground',
+                    'relative whitespace-nowrap text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground xl:text-base',
                     isActive && 'text-primary'
                   )}
                 >

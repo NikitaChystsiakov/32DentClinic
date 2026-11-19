@@ -24,10 +24,10 @@ export interface CityChrome {
 
 export const cityChrome: Record<string, CityChrome> = {
   minsk: {
-    promo: {
-      text: 'Консультация имплантолога — 11 р.',
-      href: '/minsk/uslugi/implantaciya/',
-    },
+    // Анонс «Консультация имплантолога — 11 р.» убран по просьбе клиники
+    // (19.11.2026): на его месте в меню — «Ортодонтия» и «Оплата».
+    // Цена консультации осталась в прайсе имплантации.
+    promo: undefined,
     // Положение о гарантиях у всех городов одно (config/guarantees.ts).
     guaranteeSummary: 'Пожизненная гарантия производителя на импланты, до 1 года на коронки и протезы.',
     hours: [

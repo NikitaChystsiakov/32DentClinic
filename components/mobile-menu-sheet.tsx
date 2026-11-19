@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Images,
   Plane,
+  Smile,
   Wallet,
   MapPin,
   Phone,
@@ -30,6 +31,7 @@ import { useCurrentCity } from '@/lib/hooks/use-current-city'
 import { cities } from '@/config/cities'
 import { medTourismPageHref } from '@/config/medtourism-pages'
 import { paymentPageHref } from '@/config/payment-pages'
+import { getServicesForCity } from '@/config/services'
 import { getMessengerLinks } from '@/lib/messengers'
 
 /*
@@ -45,6 +47,7 @@ const NAV_ICONS = {
   ceny: Tag,
   'primery-rabot': Images,
   medturizm: Plane,
+  ortodontiya: Smile,
   oplata: Wallet,
   'o-nas': Info,
   kontakty: MapPin,
@@ -59,6 +62,9 @@ export function MobileMenuSheet() {
   const prefix = citySlug ? `/${citySlug}` : ''
   const medTourismHref = medTourismPageHref(citySlug)
   const paymentHref = paymentPageHref(citySlug)
+  const hasOrthodontics = citySlug
+    ? getServicesForCity(citySlug).some((service) => service.slug === 'ortodontiya')
+    : false
 
   // Городские разделы — только когда город известен. На страницах сети
   // (/blog, /dokumenty, 404) раньше ссылки шли без города на /uslugi/ и т. п.,
@@ -67,6 +73,7 @@ export function MobileMenuSheet() {
   const cityLinks = [
     // Имплантация — главное направление сети, поэтому первой (см. site-header.tsx).
     { key: 'implantaciya', label: 'Имплантация', href: `${prefix}/uslugi/implantaciya/` },
+    ...(hasOrthodontics ? [{ key: 'ortodontiya', label: 'Ортодонтия', href: `${prefix}/uslugi/ortodontiya/` } as const] : []),
     { key: 'uslugi', label: 'Услуги', href: `${prefix}/uslugi/` },
     { key: 'vrachi', label: 'Врачи', href: `${prefix}/vrachi/` },
     { key: 'ceny', label: 'Цены', href: `${prefix}/ceny/` },
